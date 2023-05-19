@@ -1,0 +1,71 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install the dependencies
+        run: |
+          python -m pip install -r requirements.txt
+      - name: Check the Pyodide version
+        run: |
+          echo "PYODIDE_SHA_SHORT=$(git submodule status pyodide | cut -c 2-8)" >> $GITHUB_ENV
+      - name: Cache the Pyodide build
+        uses: actions/cache@v3
+        with:
+          path: ./pyodide
+          key: pyodide-${{ env.PYODIDE_SHA_SHORT }}-${{ hashFiles('patches/pyodide.patch') }}
+          restore-keys: |
+            pyodide-${{ env.PYODIDE_SHA_SHORT }}-${{ hashFiles('patches/pyodide.patch') }}
+            pyodide-${{ env.PYODIDE_SHA_SHORT }}
+      - name: Build Pyodide
+        run: |
+          git submodule init pyodide
+          git submodule update pyodide
+          cd pyodide
+          git apply --whitespace=nowarn ../patches/pyodide.patch
+          ./run_docker --non-interactive PYODIDE_PACKAGES="Cartopy" make
+          git apply --whitespace=nowarn --reverse ../patches/pyodide.patch
+          cd ..
+          mkdir -p static
+          cp -r pyodide/dist static/pyodide
+          rm -rf static/pyodide/*-tests.tar
+          rm -f static/pyodide/tsconfig.tsbuildinfo
+      - name: Build the JupyterLite site
+        run: |
+          jupyter lite build --output-dir dist
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./dist
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1

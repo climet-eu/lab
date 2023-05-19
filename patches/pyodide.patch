@@ -1,0 +1,184 @@
+diff --git a/packages/Cartopy/meta.yaml b/packages/Cartopy/meta.yaml
+new file mode 100644
+index 00000000..e9f45ec2
+--- /dev/null
++++ b/packages/Cartopy/meta.yaml
+@@ -0,0 +1,44 @@
++package:
++  name: Cartopy
++  version: 0.21.1
++  top-level:
++    - cartopy
++source:
++  url: https://files.pythonhosted.org/packages/e8/11/ed3e364b3910f0951821e6b5a03a03ce425464b72aa3da08d47b78ae17bd/Cartopy-0.21.1.tar.gz
++  sha256: 89d5649712c8582231c6e11825a04c85f6f0cee94dbb89e4db23eabca1cc250a
++  patches:
++    - patches/0000-geos-config-pre-existing-data.patch
++test:
++  imports:
++    - cartopy
++    - cartopy.trace
++    - cartopy.mpl.geoaxes
++    - cartopy.crs
++requirements:
++  host:
++    - geos
++    - numpy
++  run:
++    - shapely
++    - pyshp
++    - pyproj
++    - geos
++    - matplotlib
++    - scipy
++
++build:
++  vendor-sharedlib: true
++  script: |
++    export GEOS_CONFIG=${WASM_LIBRARY_DIR}/bin/geos-config
++    echo ${GEOS_CONFIG}
++    mkdir -p lib/cartopy/data/shapefiles/natural_earth/physical
++    wget https://naturalearth.s3.amazonaws.com/110m_physical/ne_110m_coastline.zip -O lib/cartopy/data/shapefiles/natural_earth/physical/ne_110m_coastline.zip
++    unzip lib/cartopy/data/shapefiles/natural_earth/physical/ne_110m_coastline.zip -d lib/cartopy/data/shapefiles/natural_earth/physical/
++    rm -f lib/cartopy/data/shapefiles/natural_earth/physical/ne_110m_coastline.zip
++    rm -f lib/cartopy/data/shapefiles/natural_earth/physical/ne_110m_coastline.README.html
++
++about:
++  home: http://scitools.org.uk/cartopy
++  PyPI: https://pypi.org/project/Cartopy/
++  summary: A library providing cartographic tools for python
++  license: LGPL-3.0-or-later
+diff --git a/packages/Cartopy/patches/0000-geos-config-pre-existing-data.patch b/packages/Cartopy/patches/0000-geos-config-pre-existing-data.patch
+new file mode 100644
+index 00000000..9dddd14c
+--- /dev/null
++++ b/packages/Cartopy/patches/0000-geos-config-pre-existing-data.patch
+@@ -0,0 +1,43 @@
++diff --git a/lib/cartopy/__init__.py b/lib/cartopy/__init__.py
++index d2bd7e8c..ef496f4a 100644
++--- a/lib/cartopy/__init__.py
+++++ b/lib/cartopy/__init__.py
++@@ -21,7 +21,7 @@ _data_dir = os.path.join(os.environ.get("XDG_DATA_HOME", _writable_dir),
++                          'cartopy')
++ _cache_dir = os.path.join(tempfile.gettempdir(), 'cartopy_cache_dir')
++ 
++-config = {'pre_existing_data_dir': os.environ.get('CARTOPY_DATA_DIR', ''),
+++config = {'pre_existing_data_dir': os.path.join(os.path.dirname(__file__), 'data'),
++           'data_dir': _data_dir,
++           'cache_dir': _cache_dir,
++           'repo_data_dir': os.path.join(os.path.dirname(__file__), 'data'),
++diff --git a/setup.py b/setup.py
++index 8e061479..0a2b4344 100644
++--- a/setup.py
+++++ b/setup.py
++@@ -81,11 +81,12 @@ def file_walk_relative(top, remove=''):
++ 
++ # GEOS
++ try:
++-    geos_version = subprocess.check_output(['geos-config', '--version'])
+++    geos_config = os.environ.get("GEOS_CONFIG", "/src/packages/.libs/bin/geos-config")
+++    geos_version = subprocess.check_output([geos_config, '--version'])
++     geos_version = tuple(int(v) for v in geos_version.split(b'.')
++                          if 'dev' not in str(v))
++-    geos_includes = subprocess.check_output(['geos-config', '--includes'])
++-    geos_clibs = subprocess.check_output(['geos-config', '--clibs'])
+++    geos_includes = subprocess.check_output([geos_config, '--includes'])
+++    geos_clibs = subprocess.check_output([geos_config, '--clibs'])
++ except (OSError, ValueError, subprocess.CalledProcessError):
++     warnings.warn(
++         'Unable to determine GEOS version. Ensure you have %s or later '
++@@ -236,6 +237,9 @@ setup(
++                   list(file_walk_relative('lib/cartopy/data/'
++                                           'shapefiles/gshhs',
++                                           remove='lib/cartopy/')) +
+++                  list(file_walk_relative('lib/cartopy/data/'
+++                                          'shapefiles/natural_earth',
+++                                          remove='lib/cartopy/')) +
++                   list(file_walk_relative('lib/cartopy/tests/lakes_shapefile',
++                                           remove='lib/cartopy/')) +
++                   ['io/srtm.npz']},
+diff --git a/packages/Cartopy/test_cartopy.py b/packages/Cartopy/test_cartopy.py
+new file mode 100644
+index 00000000..6dfc8934
+--- /dev/null
++++ b/packages/Cartopy/test_cartopy.py
+@@ -0,0 +1,25 @@
++import pathlib
++
++import pytest
++from pytest_pyodide import run_in_pyodide
++
++
++@pytest.mark.driver_timeout(60)
++@run_in_pyodide(packages=["cartopy"])
++def test_imports(selenium):
++    import cartopy
++    import cartopy.trace
++
++    assert False
++
++
++@pytest.mark.driver_timeout(60)
++@run_in_pyodide(packages=["cartopy", "matplotlib"])
++def test_matplotlib(selenium):
++    import cartopy.crs as ccrs
++    import matplotlib.pyplot as plt
++
++    ax = plt.axes(projection=ccrs.PlateCarree())
++    ax.coastlines()
++
++    plt.show()
+diff --git a/packages/libproj/meta.yaml b/packages/libproj/meta.yaml
+index 9deee8d6..9a9a7060 100644
+--- a/packages/libproj/meta.yaml
++++ b/packages/libproj/meta.yaml
+@@ -5,6 +5,8 @@ package:
+ source:
+   sha256: 76ed3d0c3a348a6693dfae535e5658bbfd47f71cb7ff7eb96d9f12f7e068b1cf
+   url: https://download.osgeo.org/proj/proj-8.2.1.tar.gz
++  patches:
++    - patches/0001-stod-empty-zero.patch
+ 
+ requirements:
+   host:
+diff --git a/packages/libproj/patches/0001-stod-empty-zero.patch b/packages/libproj/patches/0001-stod-empty-zero.patch
+new file mode 100644
+index 00000000..035525dc
+--- /dev/null
++++ b/packages/libproj/patches/0001-stod-empty-zero.patch
+@@ -0,0 +1,16 @@
++diff --git a/src/iso19111/internal.cpp b/src/iso19111/internal.cpp
++index 4810202d..f7c667bc 100644
++--- a/src/iso19111/internal.cpp
+++++ b/src/iso19111/internal.cpp
++@@ -242,6 +242,11 @@ bool ends_with(const std::string &str, const std::string &suffix) noexcept {
++ double c_locale_stod(const std::string &s) {
++ 
++     const auto s_size = s.size();
+++    // Propagate <cstdlib>'s strtod behaviour
+++    if (s_size == 0) {
+++        return 0.0;
+++    }
+++
++     // Fast path
++     if (s_size > 0 && s_size < 15) {
++         std::int64_t acc = 0;
+diff --git a/packages/pyshp/meta.yaml b/packages/pyshp/meta.yaml
+new file mode 100644
+index 00000000..355a6426
+--- /dev/null
++++ b/packages/pyshp/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: pyshp
++  version: 2.3.1
++  top-level:
++    - shapefile
++source:
++  url: https://files.pythonhosted.org/packages/98/2f/68116db5b36b895c0450e3072b8cb6c2fac0359279b182ea97014d3c8ac0/pyshp-2.3.1-py2.py3-none-any.whl
++  sha256: 67024c0ccdc352ba5db777c4e968483782dfa78f8e200672a90d2d30fd8b7b49
++about:
++  home: https://github.com/GeospatialPython/pyshp
++  PyPI: https://pypi.org/project/pyshp
++  summary: Pure Python read/write support for ESRI Shapefile format
++  license: MIT
