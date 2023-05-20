@@ -21,6 +21,10 @@ jobs:
       - name: Install the dependencies
         run: |
           python -m pip install -r requirements.txt
+      - name: Prepare Pyodide
+        run: |
+          git submodule init pyodide
+          git submodule update pyodide
       - name: Check the Pyodide version
         run: |
           echo "PYODIDE_SHA_SHORT=$(git submodule status pyodide | cut -c 2-8)" >> $GITHUB_ENV
@@ -34,8 +38,6 @@ jobs:
             pyodide-${{ env.PYODIDE_SHA_SHORT }}
       - name: Build Pyodide
         run: |
-          git submodule init pyodide
-          git submodule update pyodide
           cd pyodide
           git apply --whitespace=nowarn ../patches/pyodide.patch
           ./run_docker --non-interactive PYODIDE_PACKAGES="Cartopy" make
