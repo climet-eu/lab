@@ -732,10 +732,10 @@ index 00000000..89e698a6
 +        )
 diff --git a/packages/fcpy/fcpy/fcpy/datasets.py b/packages/fcpy/fcpy/fcpy/datasets.py
 new file mode 100644
-index 00000000..7a5b6505
+index 00000000..df3b0773
 --- /dev/null
 +++ b/packages/fcpy/fcpy/fcpy/datasets.py
-@@ -0,0 +1,420 @@
+@@ -0,0 +1,422 @@
 +# (C) Copyright 2022 ECMWF.
 +#
 +# This software is licensed under the terms of the Apache Licence Version 2.0
@@ -1152,7 +1152,9 @@ index 00000000..7a5b6505
 +    #     path = glob.glob(filepath)[0]
 +    #     ds.attrs["path"] = path
 +    #     return ds
-+    ds = xr.open_mfdataset(filepath, cache=False)
++    ds = xr.open_mfdataset(
++        filepath, cache=False, backend_kwargs=dict(indexpath=""),
++    )
 +    path = glob.glob(filepath)[0]
 +    ds.attrs["path"] = path
 +    return ds
