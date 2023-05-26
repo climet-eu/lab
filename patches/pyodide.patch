@@ -1,9 +1,9 @@
 diff --git a/packages/Cartopy/meta.yaml b/packages/Cartopy/meta.yaml
 new file mode 100644
-index 00000000..e9f45ec2
+index 00000000..866a41ba
 --- /dev/null
 +++ b/packages/Cartopy/meta.yaml
-@@ -0,0 +1,44 @@
+@@ -0,0 +1,39 @@
 +package:
 +  name: Cartopy
 +  version: 0.21.1
@@ -13,7 +13,7 @@ index 00000000..e9f45ec2
 +  url: https://files.pythonhosted.org/packages/e8/11/ed3e364b3910f0951821e6b5a03a03ce425464b72aa3da08d47b78ae17bd/Cartopy-0.21.1.tar.gz
 +  sha256: 89d5649712c8582231c6e11825a04c85f6f0cee94dbb89e4db23eabca1cc250a
 +  patches:
-+    - patches/0000-geos-config-pre-existing-data.patch
++    - patches/0001-setup-geos-config.patch
 +test:
 +  imports:
 +    - cartopy
@@ -37,38 +37,20 @@ index 00000000..e9f45ec2
 +  script: |
 +    export GEOS_CONFIG=${WASM_LIBRARY_DIR}/bin/geos-config
 +    echo ${GEOS_CONFIG}
-+    mkdir -p lib/cartopy/data/shapefiles/natural_earth/physical
-+    wget https://naturalearth.s3.amazonaws.com/110m_physical/ne_110m_coastline.zip -O lib/cartopy/data/shapefiles/natural_earth/physical/ne_110m_coastline.zip
-+    unzip lib/cartopy/data/shapefiles/natural_earth/physical/ne_110m_coastline.zip -d lib/cartopy/data/shapefiles/natural_earth/physical/
-+    rm -f lib/cartopy/data/shapefiles/natural_earth/physical/ne_110m_coastline.zip
-+    rm -f lib/cartopy/data/shapefiles/natural_earth/physical/ne_110m_coastline.README.html
 +
 +about:
 +  home: http://scitools.org.uk/cartopy
 +  PyPI: https://pypi.org/project/Cartopy/
 +  summary: A library providing cartographic tools for python
 +  license: LGPL-3.0-or-later
-diff --git a/packages/Cartopy/patches/0000-geos-config-pre-existing-data.patch b/packages/Cartopy/patches/0000-geos-config-pre-existing-data.patch
+diff --git a/packages/Cartopy/patches/0001-setup-geos-config.patch b/packages/Cartopy/patches/0001-setup-geos-config.patch
 new file mode 100644
-index 00000000..9dddd14c
+index 00000000..f5eb270c
 --- /dev/null
-+++ b/packages/Cartopy/patches/0000-geos-config-pre-existing-data.patch
-@@ -0,0 +1,43 @@
-+diff --git a/lib/cartopy/__init__.py b/lib/cartopy/__init__.py
-+index d2bd7e8c..ef496f4a 100644
-+--- a/lib/cartopy/__init__.py
-++++ b/lib/cartopy/__init__.py
-+@@ -21,7 +21,7 @@ _data_dir = os.path.join(os.environ.get("XDG_DATA_HOME", _writable_dir),
-+                          'cartopy')
-+ _cache_dir = os.path.join(tempfile.gettempdir(), 'cartopy_cache_dir')
-+ 
-+-config = {'pre_existing_data_dir': os.environ.get('CARTOPY_DATA_DIR', ''),
-++config = {'pre_existing_data_dir': os.path.join(os.path.dirname(__file__), 'data'),
-+           'data_dir': _data_dir,
-+           'cache_dir': _cache_dir,
-+           'repo_data_dir': os.path.join(os.path.dirname(__file__), 'data'),
++++ b/packages/Cartopy/patches/0001-setup-geos-config.patch
+@@ -0,0 +1,20 @@
 +diff --git a/setup.py b/setup.py
-+index 8e061479..0a2b4344 100644
++index 8e061479..c1b592ff 100644
 +--- a/setup.py
 ++++ b/setup.py
 +@@ -81,11 +81,12 @@ def file_walk_relative(top, remove=''):
@@ -87,16 +69,6 @@ index 00000000..9dddd14c
 + except (OSError, ValueError, subprocess.CalledProcessError):
 +     warnings.warn(
 +         'Unable to determine GEOS version. Ensure you have %s or later '
-+@@ -236,6 +237,9 @@ setup(
-+                   list(file_walk_relative('lib/cartopy/data/'
-+                                           'shapefiles/gshhs',
-+                                           remove='lib/cartopy/')) +
-++                  list(file_walk_relative('lib/cartopy/data/'
-++                                          'shapefiles/natural_earth',
-++                                          remove='lib/cartopy/')) +
-+                   list(file_walk_relative('lib/cartopy/tests/lakes_shapefile',
-+                                           remove='lib/cartopy/')) +
-+                   ['io/srtm.npz']},
 diff --git a/packages/Cartopy/test_cartopy.py b/packages/Cartopy/test_cartopy.py
 new file mode 100644
 index 00000000..6dfc8934
@@ -3019,6 +2991,25 @@ index 00000000..035525dc
 +     // Fast path
 +     if (s_size > 0 && s_size < 15) {
 +         std::int64_t acc = 0;
+diff --git a/packages/pyodide_http/meta.yaml b/packages/pyodide_http/meta.yaml
+new file mode 100644
+index 00000000..f0aadef5
+--- /dev/null
++++ b/packages/pyodide_http/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: pyodide_http
++  version: 0.2.1
++  top-level:
++    - pyodide_http
++source:
++  url: https://files.pythonhosted.org/packages/2d/14/d1bf3b7141ad5a42c26e4173a69e3e6529bd92b05bc587c570d28b6a3ce8/pyodide_http-0.2.1-py3-none-any.whl
++  sha256: 504f62904536a91049c12d0b9162ebaa187a84a3dd877e17c04fd9bf6ec3b68e
++about:
++  home: https://github.com/koenvo/pyodide-http
++  PyPI: https://pypi.org/project/pyodide_http
++  summary: Patch requests, urllib and urllib3 to make them work in Pyodide
++  license: MIT
 diff --git a/packages/pyshp/meta.yaml b/packages/pyshp/meta.yaml
 new file mode 100644
 index 00000000..355a6426

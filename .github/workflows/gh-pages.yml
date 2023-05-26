@@ -40,7 +40,7 @@ jobs:
         run: |
           cd pyodide
           git apply --whitespace=nowarn ../patches/pyodide.patch
-          ./run_docker --non-interactive PYODIDE_PACKAGES="fcpy" make
+          ./run_docker --non-interactive PYODIDE_PACKAGES="fcpy,pyodide_http" make
           git apply --whitespace=nowarn --reverse ../patches/pyodide.patch
           cd ..
           mkdir -p static
