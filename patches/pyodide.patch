@@ -245,6 +245,25 @@ index 00000000..671f423a
 +     install_requires=install_requires,
 +     tests_require=[
 +         "pytest",
+diff --git a/packages/fast-histogram/meta.yaml b/packages/fast-histogram/meta.yaml
+new file mode 100644
+index 00000000..9bb0d7fd
+--- /dev/null
++++ b/packages/fast-histogram/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: fast-histogram
++  version: "0.11"
++  top-level:
++    - fast_histogram
++source:
++  url: https://files.pythonhosted.org/packages/c2/35/36883176c938d8610271093e3b950048a928c200cd4a51b77b70cabd91c9/fast-histogram-0.11.tar.gz
++  sha256: 9acb6fa5b6efd928663008965da186962bdeae20e6d5bbb3b1195dfbd1d906f0
++about:
++  home: https://github.com/astrofrog/fast-histogram
++  PyPI: https://pypi.org/project/fast-histogram
++  summary: Fast simple 1D and 2D histograms
++  license: BSD
 diff --git a/packages/fcpy/fcpy/LICENSE.txt b/packages/fcpy/fcpy/LICENSE.txt
 new file mode 100644
 index 00000000..3ef8c129
@@ -454,10 +473,10 @@ index 00000000..3ef8c129
 +   limitations under the License.
 diff --git a/packages/fcpy/fcpy/fcpy/__init__.py b/packages/fcpy/fcpy/fcpy/__init__.py
 new file mode 100644
-index 00000000..f0bc7a0b
+index 00000000..a275ebba
 --- /dev/null
 +++ b/packages/fcpy/fcpy/fcpy/__init__.py
-@@ -0,0 +1,21 @@
+@@ -0,0 +1,15 @@
 +# (C) Copyright 2022 ECMWF.
 +#
 +# This software is licensed under the terms of the Apache Licence Version 2.0
@@ -467,12 +486,6 @@ index 00000000..f0bc7a0b
 +# nor does it submit to any jurisdiction.
 +#
 +
-+# Note: metview has to be imported first to avoid loading errors.
-+# try:
-+#     import metview
-+# except:
-+#     pass
-+
 +from .compressors import *  # noqa
 +from .datasets import *  # noqa
 +from .metrics import *  # noqa
@@ -481,7 +494,7 @@ index 00000000..f0bc7a0b
 +from .utils import *  # noqa
 diff --git a/packages/fcpy/fcpy/fcpy/compressors.py b/packages/fcpy/fcpy/fcpy/compressors.py
 new file mode 100644
-index 00000000..89e698a6
+index 00000000..597ae9f7
 --- /dev/null
 +++ b/packages/fcpy/fcpy/fcpy/compressors.py
 @@ -0,0 +1,217 @@
@@ -499,7 +512,7 @@ index 00000000..89e698a6
 +
 +import numpy as np
 +
-+# from .utils import compute_min_bits, get_bits_params
++from .utils import compute_min_bits, get_bits_params
 +
 +
 +class Compressor(metaclass=ABCMeta):
@@ -704,10 +717,10 @@ index 00000000..89e698a6
 +        )
 diff --git a/packages/fcpy/fcpy/fcpy/datasets.py b/packages/fcpy/fcpy/fcpy/datasets.py
 new file mode 100644
-index 00000000..df3b0773
+index 00000000..a8adb551
 --- /dev/null
 +++ b/packages/fcpy/fcpy/fcpy/datasets.py
-@@ -0,0 +1,422 @@
+@@ -0,0 +1,47 @@
 +# (C) Copyright 2022 ECMWF.
 +#
 +# This software is licensed under the terms of the Apache Licence Version 2.0
@@ -718,388 +731,16 @@ index 00000000..df3b0773
 +#
 +
 +import glob
++import warnings
 +
-+# import climetlab as cml
 +import xarray as xr
-+import cfgrib # TODO: remove
 +
-+# DATASET_ID = "climetlab-fields-compression"
-+
-+# PARAMETERS = {
-+#     "atmospheric-model": {
-+#         "ml": {
-+#             "anoffset": 9,
-+#             "class": "rd",
-+#             "date": "2020-07-21",
-+#             "expver": "hplp",
-+#             "levelist": [
-+#                 1,
-+#                 2,
-+#                 3,
-+#                 4,
-+#                 5,
-+#                 6,
-+#                 7,
-+#                 8,
-+#                 9,
-+#                 10,
-+#                 11,
-+#                 12,
-+#                 13,
-+#                 14,
-+#                 15,
-+#                 16,
-+#                 17,
-+#                 18,
-+#                 19,
-+#                 20,
-+#                 21,
-+#                 22,
-+#                 23,
-+#                 24,
-+#                 25,
-+#                 26,
-+#                 27,
-+#                 28,
-+#                 29,
-+#                 30,
-+#                 31,
-+#                 32,
-+#                 33,
-+#                 34,
-+#                 35,
-+#                 36,
-+#                 37,
-+#                 38,
-+#                 39,
-+#                 40,
-+#                 41,
-+#                 42,
-+#                 43,
-+#                 44,
-+#                 45,
-+#                 46,
-+#                 47,
-+#                 48,
-+#                 49,
-+#                 50,
-+#                 51,
-+#                 52,
-+#                 53,
-+#                 54,
-+#                 55,
-+#                 56,
-+#                 57,
-+#                 58,
-+#                 59,
-+#                 60,
-+#                 61,
-+#                 62,
-+#                 63,
-+#                 64,
-+#                 65,
-+#                 66,
-+#                 67,
-+#                 68,
-+#                 69,
-+#                 70,
-+#                 71,
-+#                 72,
-+#                 73,
-+#                 74,
-+#                 75,
-+#                 76,
-+#                 77,
-+#                 78,
-+#                 79,
-+#                 80,
-+#                 81,
-+#                 82,
-+#                 83,
-+#                 84,
-+#                 85,
-+#                 86,
-+#                 87,
-+#                 88,
-+#                 89,
-+#                 90,
-+#                 91,
-+#                 92,
-+#                 93,
-+#                 94,
-+#                 95,
-+#                 96,
-+#                 97,
-+#                 98,
-+#                 99,
-+#                 100,
-+#                 101,
-+#                 102,
-+#                 103,
-+#                 104,
-+#                 105,
-+#                 106,
-+#                 107,
-+#                 108,
-+#                 109,
-+#                 110,
-+#                 111,
-+#                 112,
-+#                 113,
-+#                 114,
-+#                 115,
-+#                 116,
-+#                 117,
-+#                 118,
-+#                 119,
-+#                 120,
-+#                 121,
-+#                 122,
-+#                 123,
-+#                 124,
-+#                 125,
-+#                 126,
-+#                 127,
-+#                 128,
-+#                 129,
-+#                 130,
-+#                 131,
-+#                 132,
-+#                 133,
-+#                 134,
-+#                 135,
-+#                 136,
-+#                 137,
-+#             ],
-+#             "levtype": "ml",
-+#             "param": [
-+#                 "cc",
-+#                 "ciwc",
-+#                 "clwc",
-+#                 "crwc",
-+#                 "cswc",
-+#                 "o3",
-+#                 "q",
-+#                 # unsupported:
-+#                 # "lnsp",
-+#                 # "d",
-+#                 # "t",
-+#                 # "vo",
-+#                 # "w",
-+#                 # "z",
-+#                 # "u",
-+#                 # "v"
-+#             ],
-+#             "step": [
-+#                 0,
-+#                 12,
-+#                 24,
-+#                 36,
-+#                 48,
-+#                 60,
-+#                 72,
-+#                 84,
-+#                 96,
-+#                 108,
-+#                 120,
-+#                 132,
-+#                 144,
-+#                 156,
-+#                 168,
-+#                 180,
-+#                 192,
-+#                 204,
-+#                 216,
-+#                 228,
-+#                 240,
-+#             ],
-+#             "stream": "lwda",
-+#             "time": "00:00:00",
-+#             "type": "fc",
-+#         },
-+#         "sfc": {
-+#             "anoffset": 9,
-+#             "class": "rd",
-+#             "date": "2020-07-21",
-+#             "expver": "hplp",
-+#             "levtype": "sfc",
-+#             "param": [
-+#                 "10fg",
-+#                 "10u",
-+#                 "10v",
-+#                 "2d",
-+#                 "2t",
-+#                 "asn",
-+#                 "bld",
-+#                 "blh",
-+#                 "cape",
-+#                 "chnk",
-+#                 "ci",
-+#                 "cin",
-+#                 "cp",
-+#                 "crr",
-+#                 "csfr",
-+#                 "dsrp",
-+#                 "e",
-+#                 "es",
-+#                 "ewss",
-+#                 "fal",
-+#                 "flsr",
-+#                 "fsr",
-+#                 "fzra",
-+#                 "gwd",
-+#                 "hcc",
-+#                 "i10fg",
-+#                 "ie",
-+#                 "iews",
-+#                 # Ambiguous : ilspf could be INSTANTANEOUS SURFACE SENSIBLE HEAT FLUX or INSTANTANEOUS 10 METRE WIND GUST
-+#                 # "ilspf",
-+#                 "inss",
-+#                 "ishf",
-+#                 "istl1",
-+#                 "istl2",
-+#                 "istl3",
-+#                 "istl4",
-+#                 "kx",
-+#                 "lcc",
-+#                 "lgws",
-+#                 "lsm",
-+#                 "lsp",
-+#                 "lspf",
-+#                 "lsrr",
-+#                 "lssfr",
-+#                 "mcc",
-+#                 "mgws",
-+#                 "mn2t",
-+#                 "msl",
-+#                 "mx2t",
-+#                 "nsss",
-+#                 "ocu",
-+#                 "ocv",
-+#                 "par",
-+#                 "pev",
-+#                 "ptype",
-+#                 "ro",
-+#                 "rsn",
-+#                 "sd",
-+#                 "sf",
-+#                 "skt",
-+#                 "slhf",
-+#                 "smlt",
-+#                 "src",
-+#                 "sro",
-+#                 "sshf",
-+#                 "ssr",
-+#                 "ssrc",
-+#                 "ssrd",
-+#                 "ssro",
-+#                 "sst",
-+#                 "stl1",
-+#                 "stl2",
-+#                 "stl3",
-+#                 "stl4",
-+#                 "str",
-+#                 "strc",
-+#                 "strd",
-+#                 "sund",
-+#                 "swvl1",
-+#                 "swvl2",
-+#                 "swvl3",
-+#                 "swvl4",
-+#                 "tcc",
-+#                 "tciw",
-+#                 "tclw",
-+#                 "tco3",
-+#                 "tcrw",
-+#                 "tcsw",
-+#                 "tcw",
-+#                 "tcwv",
-+#                 "tisr",
-+#                 "totalx",
-+#                 "tp",
-+#                 "tsn",
-+#                 "tsr",
-+#                 "tsrc",
-+#                 "ttr",
-+#                 "ttrc",
-+#                 "uvb",
-+#                 "vimd",
-+#                 # Ambiguous : vis could be VERTICAL INTEGRAL OF NORTHWARD OZONE FLUX or VERTICALLY INTEGRATED MOISTURE DIVERGENCE
-+#                 # "vis",
-+#                 "z",
-+#             ],
-+#             "step": [
-+#                 0,
-+#                 12,
-+#                 24,
-+#                 36,
-+#                 48,
-+#                 60,
-+#                 72,
-+#                 84,
-+#                 96,
-+#                 108,
-+#                 120,
-+#                 132,
-+#                 144,
-+#                 156,
-+#                 168,
-+#                 180,
-+#                 192,
-+#                 204,
-+#                 216,
-+#                 228,
-+#                 240,
-+#             ],
-+#             "stream": "lwda",
-+#             "time": "00:00:00",
-+#             "type": "fc",
-+#         },
-+#     },
-+# }
-+
-+# import climetlab_fields_compression.main
++from .utils import is_gridded
 +
 +
-+# def no_validation(data, model, levtype, levels, param, step):
-+#     pass
-+
-+
-+# climetlab_fields_compression.main.validate_mars_request = no_validation
-+
-+
-+# def flatten(lst):
-+#     return [item for sublist in lst for item in sublist]
-+
-+
-+# def fetch_mars_dataset(request: dict, skip_xarray=False) -> xr.Dataset:
-+#     """Load a dataset via MARS.
-+
-+#     Args:
-+#         request (dict): MARS request object.
-+
-+#     Returns:
-+#         xr.Dataset: The loaded dataset.
-+#     """
-+#     dataset = cml.load_source("mars", request)
-+#     if skip_xarray:
-+#         return dataset
-+#     errors = []
-+#     for d in dataset:
-+#         grid_type = d.metadata("gridType")
-+#         if grid_type != "reduced_gg":
-+#             var_name = d.field_metadata()["shortName"]
-+#             errors.append(f"Grid type not supported: {grid_type} for {var_name}")
-+#     if errors:
-+#         raise ValueError(". ".join(errors))
-+#     out = dataset.to_xarray()
-+#     # Store path for regridding, see utils.py.
-+#     out.attrs["path"] = dataset[0].path
-+#     return out
-+
-+
-+def open_dataset(filepath) -> xr.Dataset:
++def open_dataset(filepath, *args, **kwargs) -> xr.Dataset:
 +    """Open a dataset from one or more local files.
++    Additional arguments are passed into `xr.open_mfdataset`.
 +
 +    Args:
 +        filepath (str): .grib, may contain wildcards.
@@ -1107,72 +748,26 @@ index 00000000..df3b0773
 +    Returns:
 +        xr.Dataset: The loaded dataset.
 +    """
-+    # """Open a dataset from one or more local files.
 +
-+    # Args:
-+    #     filepath (str): Either .nc or .grib, may contain wildcards.
++    if "cache" not in kwargs:
++        kwargs["cache"] = False
++    if "backend_kwargs" not in kwargs:
++        kwargs["backend_kwargs"] = dict(indexpath="")
++    elif "indexpath" not in kwargs["backend_kwargs"]:
++        kwargs["backend_kwargs"]["indexpath"] = ""
 +
-+    # Returns:
-+    #     xr.Dataset: The loaded dataset.
-+    # """
-+    # if filepath.endswith(".nc"):
-+    #     return xr.open_mfdataset(filepath)
-+    # else:
-+    #     ds = cml.load_source("file", filepath).to_xarray(
-+    #         xarray_open_dataset_kwargs=dict(cache=False)
-+    #     )
-+    #     path = glob.glob(filepath)[0]
-+    #     ds.attrs["path"] = path
-+    #     return ds
-+    ds = xr.open_mfdataset(
-+        filepath, cache=False, backend_kwargs=dict(indexpath=""),
-+    )
++    ds = xr.open_mfdataset(filepath, *args, **kwargs)
++
++    if not is_gridded(ds):
++        warnings.warn(
++            "The loaded dataset is not gridded along the standard 'latitude' "
++            "and 'longitude' axes."
++        )
++
 +    path = glob.glob(filepath)[0]
 +    ds.attrs["path"] = path
++
 +    return ds
-diff --git a/packages/fcpy/fcpy/fcpy/field.py b/packages/fcpy/fcpy/fcpy/field.py
-new file mode 100644
-index 00000000..de0835c6
---- /dev/null
-+++ b/packages/fcpy/fcpy/fcpy/field.py
-@@ -0,0 +1,37 @@
-+# # (C) Copyright 2022 ECMWF.
-+# #
-+# # This software is licensed under the terms of the Apache Licence Version 2.0
-+# # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-+# # In applying this licence, ECMWF does not waive the privileges and immunities
-+# # granted to it by virtue of its status as an intergovernmental organisation
-+# # nor does it submit to any jurisdiction.
-+# #
-+
-+# import numpy as np
-+# import xarray as xr
-+
-+
-+# def compute_bitinformation_single(da: xr.DataArray) -> xr.DataArray:
-+#     from .julia import BitInformation
-+
-+#     vals = da.values.flatten()
-+#     bitinf = BitInformation.bitinformation(vals)
-+#     bitinf_da = xr.DataArray(data=bitinf, dims=["bit"], name="bitinf")
-+#     return bitinf_da
-+
-+
-+# def compute_required_bits_for_bitinf(
-+#     bitinf: xr.DataArray, information_content: float
-+# ) -> int:
-+#     bitinf = bitinf.values
-+#     if len(bitinf) == 64:
-+#         sign_exponent_bits = 12
-+#     elif len(bitinf) == 32:
-+#         sign_exponent_bits = 9
-+#     else:
-+#         raise NotImplementedError("unsupported dtype")
-+#     required_mantissa_bits = (
-+#         np.argmax(np.cumsum(bitinf) / np.sum(bitinf) >= information_content)
-+#         # - sign_exponent_bits
-+#     )
-+#     return required_mantissa_bits
 diff --git a/packages/fcpy/fcpy/fcpy/metrics.py b/packages/fcpy/fcpy/fcpy/metrics.py
 new file mode 100644
 index 00000000..04315885
@@ -1256,7 +851,7 @@ index 00000000..04315885
 +    return np.abs(x - y) / np.abs(np.max(x) - np.min(x))
 diff --git a/packages/fcpy/fcpy/fcpy/sigma.py b/packages/fcpy/fcpy/fcpy/sigma.py
 new file mode 100644
-index 00000000..4dacdf5c
+index 00000000..4c0c13c3
 --- /dev/null
 +++ b/packages/fcpy/fcpy/fcpy/sigma.py
 @@ -0,0 +1,244 @@
@@ -1278,238 +873,238 @@ index 00000000..4dacdf5c
 +from kneed import KneeLocator
 +from tqdm import tqdm
 +
-+# import fcpy
++import fcpy
 +
-+# from .suite import run_compressor_single
++from .suite import run_compressor_single
 +from .utils import compute_min_bits, compute_z_score, get_bits_params
 +
 +
-+# @np.errstate(invalid="ignore")
-+# def compute_sigmas(da: xr.DataArray, compressors: list) -> xr.DataArray:
-+#     """Computes a DataArray of sigmas based on a random uniform-distributed noise field.
++@np.errstate(invalid="ignore")
++def compute_sigmas(da: xr.DataArray, compressors: list) -> xr.DataArray:
++    """Computes a DataArray of sigmas based on a random uniform-distributed noise field.
 +
-+#     Args:
-+#         da (xr.DataArray): Reference data.
-+#         compressors (list): List of compressors.
++    Args:
++        da (xr.DataArray): Reference data.
++        compressors (list): List of compressors.
 +
-+#     Returns:
-+#         xr.DataArray: Sigma values.
-+#     """
++    Returns:
++        xr.DataArray: Sigma values.
++    """
 +
-+#     # https://stackoverflow.com/a/51052046/8893833
-+#     import numpy as np
-+#     from skimage.restoration import estimate_sigma
++    # https://stackoverflow.com/a/51052046/8893833
++    import numpy as np
++    from skimage.restoration import estimate_sigma
 +
-+#     # Compute a pseudo random as reference
-+#     arr_rand = np.random.uniform(0, 1, da.shape)
++    # Compute a pseudo random as reference
++    arr_rand = np.random.uniform(0, 1, da.shape)
 +
-+#     # Ensure that the number of bits is valid for Round
-+#     bits_params = get_bits_params(da)
-+#     if "Round" or "Log" in [c.name for c in compressors]:
-+#         # FIXME: We add one to the minimum??
-+#         bits_min = compute_min_bits(da, bits_params) + 1
-+#         bits_max = bits_params["width"]
-+#         bits = range(bits_min, bits_max + 1)
-+#     else:
-+#         bits = bits_params["width"]
++    # Ensure that the number of bits is valid for Round
++    bits_params = get_bits_params(da)
++    if "Round" or "Log" in [c.name for c in compressors]:
++        # FIXME: We add one to the minimum??
++        bits_min = compute_min_bits(da, bits_params) + 1
++        bits_max = bits_params["width"]
++        bits = range(bits_min, bits_max + 1)
++    else:
++        bits = bits_params["width"]
 +
-+#     da_sigmas = xr.DataArray(
-+#         np.nan,
-+#         name=da.name,
-+#         dims=["compressor", "bits"],
-+#         coords={
-+#             "compressor": [c.name for c in compressors],
-+#             "bits": bits,
-+#         },
-+#     )
++    da_sigmas = xr.DataArray(
++        np.nan,
++        name=da.name,
++        dims=["compressor", "bits"],
++        coords={
++            "compressor": [c.name for c in compressors],
++            "bits": bits,
++        },
++    )
 +
-+#     if (da.values.ravel() == da.values.ravel()[0]).all():
-+#         print("All values are the same, skipping sigma calculation")
-+#         return da_sigmas
++    if (da.values.ravel() == da.values.ravel()[0]).all():
++        print("All values are the same, skipping sigma calculation")
++        return da_sigmas
 +
-+#     for compressor in da_sigmas.compressor:
-+#         print(f"Compressor: {compressor.values}")
-+#         for bits in tqdm(da_sigmas.bits):
-+#             try:
-+#                 da_decompressed = run_compressor_single(
-+#                     da,
-+#                     eval(f"fcpy.{compressor.values}()"),
-+#                     int(bits.values),
-+#                 )
-+#             except:
-+#                 import traceback
++    for compressor in da_sigmas.compressor:
++        print(f"Compressor: {compressor.values}")
++        for bits in tqdm(da_sigmas.bits):
++            try:
++                da_decompressed = run_compressor_single(
++                    da,
++                    eval(f"fcpy.{compressor.values}()"),
++                    int(bits.values),
++                )
++            except:
++                import traceback
 +
-+#                 trace = traceback.format_exc()
-+#                 print(f"Failed: bits={bits} compressor={compressor.values}")
-+#                 print(trace)
-+#                 continue
-+#             da_diff = da_decompressed - da
-+#             # Standardize to same range as arr_rand
-+#             da_diff_normalised = compute_z_score(da_diff)
-+#             sigma_ratio = estimate_sigma(
-+#                 da_diff_normalised.squeeze().values
-+#             ) / estimate_sigma(arr_rand)
-+#             idx = {"compressor": compressor, "bits": bits}
-+#             da_sigmas.loc[idx] = sigma_ratio
-+#     return da_sigmas
-+
-+
-+# def compute_knees_field(
-+#     da: xr.DataArray,
-+#     da_sigmas: xr.DataArray,
-+#     plot=False,
-+#     interp_method="polynomial",
-+#     polynomial_degree=4,
-+# ) -> dict:
-+#     """Computes the point of maximum curvature.
-+
-+#     Args:
-+#         da (xr.DataArray): Reference DataArray.
-+#         da_sigmas (xr.DataArray): DataArray of Sigmas.
-+#         plot (bool, optional): Whether to plot. Defaults to False.
-+#         interp_method (str, optional): Method of interpolation to use by the knee finding algorithm. Defaults to "polynomial".
-+#         polynomial_degree (int, optional): Degree of polynomial to use by the knee finding algorithm. Defaults to 4.
-+
-+#     Returns:
-+#         dict: Dictionary of DataArrays of number of bits and sigmas.
-+#     """
-+#     if "lat" in da.coords:
-+#         spatial_coords = ["lat", "lon"]
-+#     elif "latitude" in da.coords:
-+#         spatial_coords = ["latitude", "longitude"]
-+#     da_bits_knee = xr.DataArray(
-+#         np.nan,
-+#         name="bits",
-+#         coords=da.squeeze().drop(spatial_coords).coords,
-+#     )
-+#     assert da_bits_knee.size == 1, da_bits_knee.size
-+
-+#     da_bits_knee = da_bits_knee.squeeze()
-+#     da_bits_knee = da_bits_knee.expand_dims(compressor=da_sigmas.compressor).copy()
-+#     da_sigmas_knee = xr.full_like(da_bits_knee, np.nan).rename("sigma")
-+
-+#     for compressor in da_bits_knee.compressor:
-+#         da_sigma = da_sigmas.sel(compressor=compressor).dropna(dim="bits")
-+#         if np.isnan(da_sigma.values).all():
-+#             continue
-+#         kl = KneeLocator(
-+#             da_sigma.bits,
-+#             da_sigma.values,
-+#             curve="concave",
-+#             direction="increasing",
-+#             online=True,
-+#             interp_method=interp_method,
-+#             polynomial_degree=polynomial_degree,
-+#         )
-+#         if kl.knee is None:
-+#             continue
-+#         idx = {"compressor": compressor}
-+#         da_bits_knee.loc[idx] = kl.knee
-+#         da_sigmas_knee.loc[idx] = da_sigma.sel(bits=kl.knee).values
-+
-+#         if plot:
-+#             kl.plot_knee(figsize=(5, 4.5))
-+#             xint = range(min(kl.x), math.ceil(max(kl.x)) + 1)
-+#             plt.xticks(xint)
-+#             plt.locator_params(nbins=12)
-+#             plt.xlabel("Number of bits")
-+#             plt.ylabel("Z test statistic score")
-+#             plt.title(
-+#                 f"Knee/Elbow for air specific humidity, \n"
-+#                 + f"{da_bits_knee.loc[idx].coords}"
-+#             )
-+#             plt.show()
-+
-+#     return dict(bits=da_bits_knee, sigmas=da_sigmas_knee)
++                trace = traceback.format_exc()
++                print(f"Failed: bits={bits} compressor={compressor.values}")
++                print(trace)
++                continue
++            da_diff = da_decompressed - da
++            # Standardize to same range as arr_rand
++            da_diff_normalised = compute_z_score(da_diff)
++            sigma_ratio = estimate_sigma(
++                da_diff_normalised.squeeze().values
++            ) / estimate_sigma(arr_rand)
++            idx = {"compressor": compressor, "bits": bits}
++            da_sigmas.loc[idx] = sigma_ratio
++    return da_sigmas
 +
 +
-+# def sigmas_iterate_da(da, compressors, plot=False) -> xr.Dataset:
-+#     """Computes sigmas for a given dataarray and compressors.
++def compute_knees_field(
++    da: xr.DataArray,
++    da_sigmas: xr.DataArray,
++    plot=False,
++    interp_method="polynomial",
++    polynomial_degree=4,
++) -> dict:
++    """Computes the point of maximum curvature.
 +
-+#     Args:
-+#         da (xr.DataArray): DataArray to compute sigmas for.
-+#         compressors (list): List of compressors to compute sigmas for.
++    Args:
++        da (xr.DataArray): Reference DataArray.
++        da_sigmas (xr.DataArray): DataArray of Sigmas.
++        plot (bool, optional): Whether to plot. Defaults to False.
++        interp_method (str, optional): Method of interpolation to use by the knee finding algorithm. Defaults to "polynomial".
++        polynomial_degree (int, optional): Degree of polynomial to use by the knee finding algorithm. Defaults to 4.
 +
-+#     Returns:
-+#         xr.Dataset: Dataset with sigmas computed.
-+#     """
++    Returns:
++        dict: Dictionary of DataArrays of number of bits and sigmas.
++    """
++    if "lat" in da.coords:
++        spatial_coords = ["lat", "lon"]
++    elif "latitude" in da.coords:
++        spatial_coords = ["latitude", "longitude"]
++    da_bits_knee = xr.DataArray(
++        np.nan,
++        name="bits",
++        coords=da.squeeze().drop(spatial_coords).coords,
++    )
++    assert da_bits_knee.size == 1, da_bits_knee.size
 +
-+#     # First we find out all other dimensions except for the latitude and longitude as defined for a field
-+#     other_dims = [
-+#         dim
-+#         for dim in da.dims
-+#         if da[dim].attrs.get("standard_name", dim)
-+#         not in ["latitude", "longitude", "values"]
-+#     ]
-+#     spatial_dims = {dim: 0 for dim in da.dims if dim not in other_dims}
++    da_bits_knee = da_bits_knee.squeeze()
++    da_bits_knee = da_bits_knee.expand_dims(compressor=da_sigmas.compressor).copy()
++    da_sigmas_knee = xr.full_like(da_bits_knee, np.nan).rename("sigma")
 +
-+#     # Then create a dictionary with dim keys and values
-+#     d_dims = {i: da[i].values for i in other_dims}
++    for compressor in da_bits_knee.compressor:
++        da_sigma = da_sigmas.sel(compressor=compressor).dropna(dim="bits")
++        if np.isnan(da_sigma.values).all():
++            continue
++        kl = KneeLocator(
++            da_sigma.bits,
++            da_sigma.values,
++            curve="concave",
++            direction="increasing",
++            online=True,
++            interp_method=interp_method,
++            polynomial_degree=polynomial_degree,
++        )
++        if kl.knee is None:
++            continue
++        idx = {"compressor": compressor}
++        da_bits_knee.loc[idx] = kl.knee
++        da_sigmas_knee.loc[idx] = da_sigma.sel(bits=kl.knee).values
 +
-+#     # Create a mesh with all the combinrations that we want to iterate through
-+#     mesh = [val for val in product(*d_dims.values())]
-+#     # Create a mapping dim keys and values so we can use in the selection
-+#     dims_mapping = []
-+#     for m in mesh:
-+#         d_tmp = {}
-+#         for i, dim in enumerate(other_dims):
-+#             d_tmp[dim] = m[i]
-+#         dims_mapping.append(d_tmp)
++        if plot:
++            kl.plot_knee(figsize=(5, 4.5))
++            xint = range(min(kl.x), math.ceil(max(kl.x)) + 1)
++            plt.xticks(xint)
++            plt.locator_params(nbins=12)
++            plt.xlabel("Number of bits")
++            plt.ylabel("Z test statistic score")
++            plt.title(
++                f"Knee/Elbow for air specific humidity, \n"
++                + f"{da_bits_knee.loc[idx].coords}"
++            )
++            plt.show()
 +
-+#     # Create dataarray
-+#     compressors_ = [c.name for c in compressors]
-+#     da_ = xr.full_like(
-+#         da.isel(**spatial_dims).drop(list(spatial_dims), errors="ignore"), np.nan
-+#     )
-+#     da_bits = da_.expand_dims(compressor=compressors_).copy().rename("bits")
-+#     da_sigma = xr.full_like(da_bits, np.nan).rename("sigma")
-+#     da_bitinf = xr.full_like(da_bits, np.nan).rename("bitinf")
-+
-+#     # Do not use metadata from reference da
-+#     da_bits.attrs = {}
-+#     da_sigma.attrs = {}
-+#     da_bitinf.attrs = {}
-+
-+#     for sel in dims_mapping:
-+#         da_reference = da.sel(sel)
-+#         da_sigmas = compute_sigmas(da_reference, compressors)
-+#         da_knees = compute_knees_field(da_reference, da_sigmas, plot=plot)
-+#         da_bits.loc[sel] = da_knees["bits"]
-+#         da_sigma.loc[sel] = da_knees["sigmas"]
-+#         da_bitinf.loc[sel] = fcpy.compute_required_bits_single_variable(
-+#             da_reference, fcpy.get_field_chunk_fn(da_reference), [0.99]
-+#         )[0][0]
-+#     return xr.merge([dict(bits=da_bits, sigmas=da_sigma, bitinf=da_bitinf)])
++    return dict(bits=da_bits_knee, sigmas=da_sigmas_knee)
 +
 +
-+# def sigmas_iterate_ds(ds: xr.Dataset, compressors: list, plot=False) -> dict:
-+#     """Computes sigmas for a given dataset and compressors.
++def sigmas_iterate_da(da, compressors, plot=False) -> xr.Dataset:
++    """Computes sigmas for a given dataarray and compressors.
 +
-+#     Args:
-+#         ds (xr.Dataset): Dataset to compute sigmas for.
-+#         compressors (list): List of compressors to compute sigmas for.
-+#         plot (bool, optional): Whether to generate a plot. Defaults to False.
++    Args:
++        da (xr.DataArray): DataArray to compute sigmas for.
++        compressors (list): List of compressors to compute sigmas for.
 +
-+#     Returns:
-+#         dict: dictionary of Datasets with sigmas computed.
-+#     """
++    Returns:
++        xr.Dataset: Dataset with sigmas computed.
++    """
 +
-+#     out = {}
-+#     for var_name in ds:
-+#         print(var_name)
-+#         da = ds[var_name]
-+#         ds_out = sigmas_iterate_da(da, compressors, plot=plot)
-+#         ds_out.attrs["var_name"] = var_name
-+#         ds_out.attrs["long_name"] = da.attrs["long_name"]
-+#         ds_out.attrs["units"] = da.attrs["units"]
-+#         out[var_name] = ds_out
-+#     return out
++    # First we find out all other dimensions except for the latitude and longitude as defined for a field
++    other_dims = [
++        dim
++        for dim in da.dims
++        if da[dim].attrs.get("standard_name", dim)
++        not in ["latitude", "longitude", "values"]
++    ]
++    spatial_dims = {dim: 0 for dim in da.dims if dim not in other_dims}
++
++    # Then create a dictionary with dim keys and values
++    d_dims = {i: da[i].values for i in other_dims}
++
++    # Create a mesh with all the combinrations that we want to iterate through
++    mesh = [val for val in product(*d_dims.values())]
++    # Create a mapping dim keys and values so we can use in the selection
++    dims_mapping = []
++    for m in mesh:
++        d_tmp = {}
++        for i, dim in enumerate(other_dims):
++            d_tmp[dim] = m[i]
++        dims_mapping.append(d_tmp)
++
++    # Create dataarray
++    compressors_ = [c.name for c in compressors]
++    da_ = xr.full_like(
++        da.isel(**spatial_dims).drop(list(spatial_dims), errors="ignore"), np.nan
++    )
++    da_bits = da_.expand_dims(compressor=compressors_).copy().rename("bits")
++    da_sigma = xr.full_like(da_bits, np.nan).rename("sigma")
++    da_bitinf = xr.full_like(da_bits, np.nan).rename("bitinf")
++
++    # Do not use metadata from reference da
++    da_bits.attrs = {}
++    da_sigma.attrs = {}
++    da_bitinf.attrs = {}
++
++    for sel in dims_mapping:
++        da_reference = da.sel(sel)
++        da_sigmas = compute_sigmas(da_reference, compressors)
++        da_knees = compute_knees_field(da_reference, da_sigmas, plot=plot)
++        da_bits.loc[sel] = da_knees["bits"]
++        da_sigma.loc[sel] = da_knees["sigmas"]
++        da_bitinf.loc[sel] = fcpy.compute_required_bits_single_variable(
++            da_reference, fcpy.get_field_chunk_fn(da_reference), [0.99]
++        )[0][0]
++    return xr.merge([dict(bits=da_bits, sigmas=da_sigma, bitinf=da_bitinf)])
++
++
++def sigmas_iterate_ds(ds: xr.Dataset, compressors: list, plot=False) -> dict:
++    """Computes sigmas for a given dataset and compressors.
++
++    Args:
++        ds (xr.Dataset): Dataset to compute sigmas for.
++        compressors (list): List of compressors to compute sigmas for.
++        plot (bool, optional): Whether to generate a plot. Defaults to False.
++
++    Returns:
++        dict: dictionary of Datasets with sigmas computed.
++    """
++
++    out = {}
++    for var_name in ds:
++        print(var_name)
++        da = ds[var_name]
++        ds_out = sigmas_iterate_da(da, compressors, plot=plot)
++        ds_out.attrs["var_name"] = var_name
++        ds_out.attrs["long_name"] = da.attrs["long_name"]
++        ds_out.attrs["units"] = da.attrs["units"]
++        out[var_name] = ds_out
++    return out
 diff --git a/packages/fcpy/fcpy/fcpy/suite.py b/packages/fcpy/fcpy/fcpy/suite.py
 new file mode 100644
-index 00000000..ffa10e95
+index 00000000..a525a3cb
 --- /dev/null
 +++ b/packages/fcpy/fcpy/fcpy/suite.py
-@@ -0,0 +1,1002 @@
+@@ -0,0 +1,926 @@
 +# (C) Copyright 2022 ECMWF.
 +#
 +# This software is licensed under the terms of the Apache Licence Version 2.0
@@ -1527,19 +1122,18 @@ index 00000000..ffa10e95
 +from typing import Callable, Dict, Optional, Tuple, Type, Union
 +
 +import cartopy.crs as ccrs
-+# import fast_histogram
-+# import ipywidgets as widgets
++import fast_histogram
++import ipywidgets as widgets
 +import matplotlib.pyplot as plt
 +import numpy as np
 +import scipy
 +import xarray as xr
-+# from ipywidgets import fixed, interact
++from ipywidgets import fixed, interact
 +from tqdm import tqdm
 +
 +from .compressors import Compressor
-+# from .field import compute_bitinformation_single, compute_required_bits_for_bitinf
 +from .metrics import METRICS, Metric
-+from .utils import STANDARD_NAME_LAT, STANDARD_NAME_LON, get_standard_name_dims #, regrid
++from .utils import STANDARD_NAME_LAT, STANDARD_NAME_LON, get_standard_name_dims, is_gridded
 +
 +
 +def run_compressor_single(
@@ -1551,44 +1145,6 @@ index 00000000..ffa10e95
 +    da2 = da.copy(data=decompressed)
 +    da2 = da2.expand_dims(compressor=[compressor.name], bits=[bits])
 +    return da2
-+
-+
-+# def compute_required_bits_single_variable(
-+#     da: xr.DataArray, field_fn: Callable, information_content: list[float]
-+# ) -> Tuple[list[int], list[int]]:
-+#     min_bits = np.full([len(information_content)], np.nan)
-+#     max_bits = np.full([len(information_content)], np.nan)
-+#     for field in field_fn(da):
-+#         bitinf = compute_bitinformation_single(field)
-+#         for i, ic in enumerate(information_content):
-+#             required_bits = compute_required_bits_for_bitinf(bitinf, ic)
-+#             min_bits[i] = np.nanmin([min_bits[i], required_bits])
-+#             max_bits[i] = np.nanmax([max_bits[i], required_bits])
-+#     return list(min_bits.astype(int)), list(max_bits.astype(int))
-+
-+
-+# def compute_required_bits(
-+#     ds: xr.Dataset, information_content: list[float]
-+# ) -> Tuple[dict, dict]:
-+#     out_min = {}
-+#     out_max = {}
-+#     for var_name in ds:
-+#         da = ds[var_name]
-+#         field_fn = get_field_chunk_fn(da)
-+#         out_min[var_name], out_max[var_name] = compute_required_bits_single_variable(
-+#             ds[var_name], field_fn, information_content
-+#         )
-+#     return out_min, out_max
-+
-+
-+# def compute_required_bit_space(da: xr.DataArray, field_fn: Callable) -> list:
-+#     _, bits_max = compute_required_bits_single_variable(da, field_fn, [0.99, 0.999])
-+#     # FIXME should depend on dtype
-+#     # FIXME sometimes bits is negative, that's why we clamp
-+#     min_required_bits = max(1, bits_max[0] - 1)
-+#     max_required_bits = min(32, max(1, bits_max[1]) + 1)  # - 9
-+#     bits = list(range(min_required_bits, max_required_bits + 1))
-+#     return bits
 +
 +
 +def get_chunk_fn(da: xr.DataArray, chunk_dims: list[str]) -> Callable:
@@ -1646,251 +1202,251 @@ index 00000000..ffa10e95
 +    return get_chunk_fn(da, chunk_dims)
 +
 +
-+# def compute_histograms_single_variable(
-+#     da: xr.DataArray,
-+#     baseline: Compressor,
-+#     compressors: list[Compressor],
-+#     metrics: list[Type[Metric]],
-+#     bits: list[int],
-+#     max_chunk_size_bytes: Optional[int] = None,
-+#     max_chunk_fn: Optional[Callable] = None,
-+# ) -> Dict[str, Tuple[xr.DataArray, xr.DataArray]]:
-+#     if baseline.bits is None:
-+#         raise RuntimeError("bits parameter missing in baseline")
++def compute_histograms_single_variable(
++    da: xr.DataArray,
++    baseline: Compressor,
++    compressors: list[Compressor],
++    metrics: list[Type[Metric]],
++    bits: list[int],
++    max_chunk_size_bytes: Optional[int] = None,
++    max_chunk_fn: Optional[Callable] = None,
++) -> Dict[str, Tuple[xr.DataArray, xr.DataArray]]:
++    if baseline.bits is None:
++        raise RuntimeError("bits parameter missing in baseline")
 +
-+#     # Error metrics can run over larger chunks as well,
-+#     # therefore those two functions are separate.
-+#     if max_chunk_fn is None:
-+#         max_chunk_fn, max_chunk_dims = get_max_chunk_fn(da, max_chunk_size_bytes)
-+#         if set(max_chunk_dims) != set(da.dims):
-+#             warnings.warn(f"{da.name}: chunk dims adjusted to {max_chunk_dims}")
-+#         other_dims = set(da.dims) - set(max_chunk_dims)
-+#         chunk_count = np.prod([da.sizes[dim] for dim in other_dims])
-+#     else:
-+#         # unknown
-+#         chunk_count = None
++    # Error metrics can run over larger chunks as well,
++    # therefore those two functions are separate.
++    if max_chunk_fn is None:
++        max_chunk_fn, max_chunk_dims = get_max_chunk_fn(da, max_chunk_size_bytes)
++        if set(max_chunk_dims) != set(da.dims):
++            warnings.warn(f"{da.name}: chunk dims adjusted to {max_chunk_dims}")
++        other_dims = set(da.dims) - set(max_chunk_dims)
++        chunk_count = np.prod([da.sizes[dim] for dim in other_dims])
++    else:
++        # unknown
++        chunk_count = None
 +
-+#     histogram_bins = 100
++    histogram_bins = 100
 +
-+#     src_histogram_freqs = xr.DataArray(
-+#         np.nan,
-+#         name=da.name,
-+#         attrs=da.attrs,
-+#         dims=["bin"],
-+#         coords={
-+#             "bin": np.arange(histogram_bins),
-+#         },
-+#     )
++    src_histogram_freqs = xr.DataArray(
++        np.nan,
++        name=da.name,
++        attrs=da.attrs,
++        dims=["bin"],
++        coords={
++            "bin": np.arange(histogram_bins),
++        },
++    )
 +
-+#     src_histogram_edges = xr.DataArray(
-+#         np.nan,
-+#         name=da.name,
-+#         attrs=da.attrs,
-+#         dims=["bin_edge"],
-+#         coords={
-+#             "bin_edge": np.arange(histogram_bins + 1),
-+#         },
-+#     )
++    src_histogram_edges = xr.DataArray(
++        np.nan,
++        name=da.name,
++        attrs=da.attrs,
++        dims=["bin_edge"],
++        coords={
++            "bin_edge": np.arange(histogram_bins + 1),
++        },
++    )
 +
-+#     baseline_histogram_freqs = src_histogram_freqs.copy()
-+#     baseline_histogram_edges = src_histogram_edges.copy()
++    baseline_histogram_freqs = src_histogram_freqs.copy()
++    baseline_histogram_edges = src_histogram_edges.copy()
 +
-+#     decompressed_histogram_freqs = xr.DataArray(
-+#         np.nan,
-+#         name=da.name,
-+#         attrs=da.attrs,
-+#         dims=["compressor", "bits", "bin"],
-+#         coords={
-+#             "compressor": [c.name for c in compressors],
-+#             "bits": bits,
-+#             "bin": np.arange(histogram_bins),
-+#         },
-+#     )
++    decompressed_histogram_freqs = xr.DataArray(
++        np.nan,
++        name=da.name,
++        attrs=da.attrs,
++        dims=["compressor", "bits", "bin"],
++        coords={
++            "compressor": [c.name for c in compressors],
++            "bits": bits,
++            "bin": np.arange(histogram_bins),
++        },
++    )
 +
-+#     decompressed_histogram_edges = xr.DataArray(
-+#         np.nan,
-+#         name=da.name,
-+#         attrs=da.attrs,
-+#         dims=["compressor", "bits", "bin_edge"],
-+#         coords={
-+#             "compressor": [c.name for c in compressors],
-+#             "bits": bits,
-+#             "bin_edge": np.arange(histogram_bins + 1),
-+#         },
-+#     )
++    decompressed_histogram_edges = xr.DataArray(
++        np.nan,
++        name=da.name,
++        attrs=da.attrs,
++        dims=["compressor", "bits", "bin_edge"],
++        coords={
++            "compressor": [c.name for c in compressors],
++            "bits": bits,
++            "bin_edge": np.arange(histogram_bins + 1),
++        },
++    )
 +
-+#     metric_histogram_freqs = xr.DataArray(
-+#         np.nan,
-+#         name=da.name,
-+#         attrs=da.attrs,
-+#         dims=["compressor", "bits", "metric", "bin"],
-+#         coords={
-+#             "compressor": [c.name for c in compressors],
-+#             "bits": bits,
-+#             "metric": [m.name for m in metrics],
-+#             "bin": np.arange(histogram_bins),
-+#         },
-+#     )
++    metric_histogram_freqs = xr.DataArray(
++        np.nan,
++        name=da.name,
++        attrs=da.attrs,
++        dims=["compressor", "bits", "metric", "bin"],
++        coords={
++            "compressor": [c.name for c in compressors],
++            "bits": bits,
++            "metric": [m.name for m in metrics],
++            "bin": np.arange(histogram_bins),
++        },
++    )
 +
-+#     metric_histogram_edges = xr.DataArray(
-+#         np.nan,
-+#         name=da.name,
-+#         attrs=da.attrs,
-+#         dims=["compressor", "bits", "metric", "bin_edge"],
-+#         coords={
-+#             "compressor": [c.name for c in compressors],
-+#             "bits": bits,
-+#             "metric": [m.name for m in metrics],
-+#             "bin_edge": np.arange(histogram_bins + 1),
-+#         },
-+#     )
++    metric_histogram_edges = xr.DataArray(
++        np.nan,
++        name=da.name,
++        attrs=da.attrs,
++        dims=["compressor", "bits", "metric", "bin_edge"],
++        coords={
++            "compressor": [c.name for c in compressors],
++            "bits": bits,
++            "metric": [m.name for m in metrics],
++            "bin_edge": np.arange(histogram_bins + 1),
++        },
++    )
 +
-+#     t0 = time()
-+#     for chunk in tqdm(max_chunk_fn(da), total=chunk_count):
-+#         update_histogram(
-+#             chunk.values,
-+#             src_histogram_freqs,
-+#             src_histogram_edges,
-+#             log_prefix=f"{da.name} [histogram for source]: ",
-+#         )
++    t0 = time()
++    for chunk in tqdm(max_chunk_fn(da), total=chunk_count):
++        update_histogram(
++            chunk.values,
++            src_histogram_freqs,
++            src_histogram_edges,
++            log_prefix=f"{da.name} [histogram for source]: ",
++        )
 +
-+#         da_baseline = run_compressor_single(chunk, baseline, baseline.bits)
-+#         da_baseline = da_baseline.squeeze(dim=["compressor", "bits"])
++        da_baseline = run_compressor_single(chunk, baseline, baseline.bits)
++        da_baseline = da_baseline.squeeze(dim=["compressor", "bits"])
 +
-+#         update_histogram(
-+#             da_baseline.values,
-+#             baseline_histogram_freqs,
-+#             baseline_histogram_edges,
-+#             log_prefix=f"{da.name} [histogram for baseline]: ",
-+#         )
++        update_histogram(
++            da_baseline.values,
++            baseline_histogram_freqs,
++            baseline_histogram_edges,
++            log_prefix=f"{da.name} [histogram for baseline]: ",
++        )
 +
-+#         for compressor in compressors:
-+#             for bits_ in bits:
-+#                 da_decompressed = run_compressor_single(chunk, compressor, bits_)
++        for compressor in compressors:
++            for bits_ in bits:
++                da_decompressed = run_compressor_single(chunk, compressor, bits_)
 +
-+#                 idx = dict(
-+#                     compressor=compressor.name,
-+#                     bits=bits_,
-+#                 )
++                idx = dict(
++                    compressor=compressor.name,
++                    bits=bits_,
++                )
 +
-+#                 freqs = decompressed_histogram_freqs.sel(idx)
-+#                 edges = decompressed_histogram_edges.sel(idx)
-+#                 update_histogram(
-+#                     da_decompressed.values,
-+#                     freqs,
-+#                     edges,
-+#                     log_prefix=f"{da.name} [histogram for decompressed: {compressor.name} @ {bits_} bits]: ",
-+#                 )
++                freqs = decompressed_histogram_freqs.sel(idx)
++                edges = decompressed_histogram_edges.sel(idx)
++                update_histogram(
++                    da_decompressed.values,
++                    freqs,
++                    edges,
++                    log_prefix=f"{da.name} [histogram for decompressed: {compressor.name} @ {bits_} bits]: ",
++                )
 +
-+#                 for metric in metrics:
-+#                     out = metric().compute(da_baseline.values, da_decompressed.values)
++                for metric in metrics:
++                    out = metric().compute(da_baseline.values, da_decompressed.values)
 +
-+#                     idx = dict(
-+#                         compressor=compressor.name,
-+#                         bits=bits_,
-+#                         metric=metric.name,
-+#                     )
++                    idx = dict(
++                        compressor=compressor.name,
++                        bits=bits_,
++                        metric=metric.name,
++                    )
 +
-+#                     freqs = metric_histogram_freqs.sel(idx)
-+#                     edges = metric_histogram_edges.sel(idx)
-+#                     update_histogram(
-+#                         out,
-+#                         freqs,
-+#                         edges,
-+#                         log_prefix=f"{da.name} [histogram for metric: {metric.name} for {compressor.name} @ {bits_} bits]: ",
-+#                     )
++                    freqs = metric_histogram_freqs.sel(idx)
++                    edges = metric_histogram_edges.sel(idx)
++                    update_histogram(
++                        out,
++                        freqs,
++                        edges,
++                        log_prefix=f"{da.name} [histogram for metric: {metric.name} for {compressor.name} @ {bits_} bits]: ",
++                    )
 +
-+#     print(f"{time()-t0} s")
++    print(f"{time()-t0} s")
 +
-+#     return {
-+#         "source": (src_histogram_freqs, src_histogram_edges),
-+#         "baseline": (baseline_histogram_freqs, baseline_histogram_edges),
-+#         "decompressed": (decompressed_histogram_freqs, decompressed_histogram_edges),
-+#         "metric": (metric_histogram_freqs, metric_histogram_edges),
-+#     }
-+
-+
-+# def update_histogram(
-+#     data: np.ndarray, freqs: np.ndarray, edges: np.ndarray, log_prefix=""
-+# ):
-+#     data = data.ravel()
-+
-+#     # mask infinity with nan to avoid min/max picking it up below
-+#     data = data[np.isfinite(data)]
-+#     if data.size == 0:
-+#         print(f"{log_prefix}ignoring, data is all-nan/inf")
-+#         return
-+
-+#     bins = len(edges) - 1
-+#     is_first = np.isnan(edges[0].item())
-+#     if is_first:
-+#         hist_min, hist_max = (np.min(data), np.max(data))
-+
-+#         if hist_min == hist_max:
-+#             old_hist_min = hist_min
-+#             eps = np.finfo(data.dtype).eps
-+#             hist_min = hist_min - eps * bins
-+#             hist_max = hist_max + eps * bins
-+#             print(
-+#                 f"{log_prefix}"
-+#                 f"metric values min/max are identical ({old_hist_min}), "
-+#                 f"using [{hist_min}, {hist_max}] as histogram range"
-+#             )
-+#         edges[:] = np.linspace(hist_min, hist_max, bins + 1)
-+#         hist_range = edges[0], edges[-1]
-+#         freqs[:] = fast_histogram.histogram1d(data, bins=bins, range=hist_range)
-+#     else:
-+#         hist_min, hist_max = edges[0].item(), edges[-1].item()
-+
-+#         # check if min/max of all following chunks is roughly
-+#         # the same as the initial min/max, else print a warning
-+#         current_min, current_max = (np.min(data), np.max(data))
-+#         eps_factor = 0.01
-+#         eps = np.finfo(data.dtype).eps
-+#         eps_min = max(eps, abs(eps_factor * hist_min))
-+#         eps_max = max(eps, abs(eps_factor * hist_max))
-+#         if current_min < hist_min - eps_min or current_max > hist_max + eps_max:
-+#             print(
-+#                 f"{log_prefix}"
-+#                 f"min/max of chunk is outside range by >{eps_factor*100}%, histogram may be off "
-+#                 f"(initial: [{hist_min}, {hist_max}], current: [{current_min}, {current_max}])"
-+#             )
-+
-+#         if hist_min != hist_max:
-+#             hist_range = (hist_min, hist_max)
-+#             freqs += fast_histogram.histogram1d(data, bins=bins, range=hist_range)
++    return {
++        "source": (src_histogram_freqs, src_histogram_edges),
++        "baseline": (baseline_histogram_freqs, baseline_histogram_edges),
++        "decompressed": (decompressed_histogram_freqs, decompressed_histogram_edges),
++        "metric": (metric_histogram_freqs, metric_histogram_edges),
++    }
 +
 +
-+# def compute_histograms(
-+#     ds: xr.Dataset,
-+#     baseline: Compressor,
-+#     compressors: list[Compressor],
-+#     metrics: list[Type[Metric]],
-+#     bits: dict[str, list[int]] = None,
-+#     max_chunk_size_bytes: Optional[int] = None,
-+# ) -> Dict[str, Tuple[xr.Dataset, xr.Dataset]]:
-+#     histogram_frequencies = defaultdict(list)
-+#     histogram_edges = defaultdict(list)
-+#     for var_name in ds:
-+#         da = ds[var_name]
-+#         histograms = compute_histograms_single_variable(
-+#             da,
-+#             baseline,
-+#             compressors,
-+#             metrics,
-+#             bits=bits[var_name],
-+#             max_chunk_size_bytes=max_chunk_size_bytes,
-+#         )
-+#         for hist_type, (freqs, edges) in histograms.items():
-+#             histogram_frequencies[hist_type].append(freqs)
-+#             histogram_edges[hist_type].append(edges)
-+#     out = {}
-+#     for hist_type in histogram_frequencies.keys():
-+#         out[hist_type] = (
-+#             xr.merge(histogram_frequencies[hist_type], combine_attrs="drop"),
-+#             xr.merge(histogram_edges[hist_type], combine_attrs="drop"),
-+#         )
-+#     return out
++def update_histogram(
++    data: np.ndarray, freqs: np.ndarray, edges: np.ndarray, log_prefix=""
++):
++    data = data.ravel()
++
++    # mask infinity with nan to avoid min/max picking it up below
++    data = data[np.isfinite(data)]
++    if data.size == 0:
++        print(f"{log_prefix}ignoring, data is all-nan/inf")
++        return
++
++    bins = len(edges) - 1
++    is_first = np.isnan(edges[0].item())
++    if is_first:
++        hist_min, hist_max = (np.min(data), np.max(data))
++
++        if hist_min == hist_max:
++            old_hist_min = hist_min
++            eps = np.finfo(data.dtype).eps
++            hist_min = hist_min - eps * bins
++            hist_max = hist_max + eps * bins
++            print(
++                f"{log_prefix}"
++                f"metric values min/max are identical ({old_hist_min}), "
++                f"using [{hist_min}, {hist_max}] as histogram range"
++            )
++        edges[:] = np.linspace(hist_min, hist_max, bins + 1)
++        hist_range = edges[0], edges[-1]
++        freqs[:] = fast_histogram.histogram1d(data, bins=bins, range=hist_range)
++    else:
++        hist_min, hist_max = edges[0].item(), edges[-1].item()
++
++        # check if min/max of all following chunks is roughly
++        # the same as the initial min/max, else print a warning
++        current_min, current_max = (np.min(data), np.max(data))
++        eps_factor = 0.01
++        eps = np.finfo(data.dtype).eps
++        eps_min = max(eps, abs(eps_factor * hist_min))
++        eps_max = max(eps, abs(eps_factor * hist_max))
++        if current_min < hist_min - eps_min or current_max > hist_max + eps_max:
++            print(
++                f"{log_prefix}"
++                f"min/max of chunk is outside range by >{eps_factor*100}%, histogram may be off "
++                f"(initial: [{hist_min}, {hist_max}], current: [{current_min}, {current_max}])"
++            )
++
++        if hist_min != hist_max:
++            hist_range = (hist_min, hist_max)
++            freqs += fast_histogram.histogram1d(data, bins=bins, range=hist_range)
++
++
++def compute_histograms(
++    ds: xr.Dataset,
++    baseline: Compressor,
++    compressors: list[Compressor],
++    metrics: list[Type[Metric]],
++    bits: dict[str, list[int]] = None,
++    max_chunk_size_bytes: Optional[int] = None,
++) -> Dict[str, Tuple[xr.Dataset, xr.Dataset]]:
++    histogram_frequencies = defaultdict(list)
++    histogram_edges = defaultdict(list)
++    for var_name in ds:
++        da = ds[var_name]
++        histograms = compute_histograms_single_variable(
++            da,
++            baseline,
++            compressors,
++            metrics,
++            bits=bits[var_name],
++            max_chunk_size_bytes=max_chunk_size_bytes,
++        )
++        for hist_type, (freqs, edges) in histograms.items():
++            histogram_frequencies[hist_type].append(freqs)
++            histogram_edges[hist_type].append(edges)
++    out = {}
++    for hist_type in histogram_frequencies.keys():
++        out[hist_type] = (
++            xr.merge(histogram_frequencies[hist_type], combine_attrs="drop"),
++            xr.merge(histogram_edges[hist_type], combine_attrs="drop"),
++        )
++    return out
 +
 +
 +def compute_stats(
@@ -2093,253 +1649,233 @@ index 00000000..ffa10e95
 +    return out
 +
 +
-+# class Suite:
-+#     """Create a suite.
++class Suite:
++    """Create a suite.
 +
-+#     Args:
-+#         ds (xr.Dataset): The dataset to use.
-+#         baseline (Compressor): The compressor to use for the baseline. Must include bits in the constructor.
-+#         compressors (list[Compressor]): The list of compressors to use.
-+#         metrics (list[Type[Metric]]): The list of metrics to compute.
-+#         custom_metrics (list[Callable], optional): Custom metrics as user functions.
-+#             Each function is called as fn(chunks, baseline, compressors, bits) and
-+#             must return an xarray DataArray.
-+#         bits (list[int], optional): List of bits values to iterate over. Defaults to Klöwer et al. (2021)'s bit-information metric.
-+#         max_chunk_size_bytes (int, optional): Maximum size in bytes that a chunk may have. Defaults to 4 GiB.
-+#         skip_histograms (bool, optional): If True, compute metrics directly instead of using histograms.
-+#     """
++    Args:
++        ds (xr.Dataset): The dataset to use.
++        baseline (Compressor): The compressor to use for the baseline. Must include bits in the constructor.
++        compressors (list[Compressor]): The list of compressors to use.
++        metrics (list[Type[Metric]]): The list of metrics to compute.
++        custom_metrics (list[Callable], optional): Custom metrics as user functions.
++            Each function is called as fn(chunks, baseline, compressors, bits) and
++            must return an xarray DataArray.
++        bits (list[int], optional): List of bits values to iterate over. Defaults to Klöwer et al. (2021)'s bit-information metric.
++        max_chunk_size_bytes (int, optional): Maximum size in bytes that a chunk may have. Defaults to 4 GiB.
++        skip_histograms (bool, optional): If True, compute metrics directly instead of using histograms.
++    """
 +
-+#     def __init__(
-+#         self,
-+#         ds: xr.Dataset,
-+#         baseline: Compressor,
-+#         compressors: list[Compressor],
-+#         metrics: list[Type[Metric]],
-+#         custom_metrics: Optional[list[Callable]] = None,
-+#         bits: Optional[Union[dict, list[int]]] = None,
-+#         max_chunk_size_bytes: Optional[int] = None,
-+#         skip_histograms=False,
-+#     ):
-+#         if bits is None:
-+#             bits_per_var = {}
-+#             for var_name in ds:
-+#                 # Bitinformation always needs to run over fields.
-+#                 field_chunk_fn = get_field_chunk_fn(ds[var_name])
-+#                 bits_ = compute_required_bit_space(ds[var_name], field_chunk_fn)
-+#                 bits_per_var[var_name] = bits_
-+#                 print(f"{var_name}: bits not given, computed as {bits_}")
-+#         elif isinstance(bits, list):
-+#             bits_per_var = {var_name: bits for var_name in ds}
-+#         elif isinstance(bits, dict):
-+#             bits_per_var = bits
-+#         else:
-+#             raise ValueError("bits must be a list or dict")
++    def __init__(
++        self,
++        ds: xr.Dataset,
++        baseline: Compressor,
++        compressors: list[Compressor],
++        metrics: list[Type[Metric]],
++        custom_metrics: Optional[list[Callable]] = None,
++        bits: Optional[Union[dict, list[int]]] = None,
++        max_chunk_size_bytes: Optional[int] = None,
++        skip_histograms=False,
++    ):
++        if bits is None:
++            raise NotImplementedError("Computing the required bits is not yet supported, please provide `bits` explicitly")
++        elif isinstance(bits, list):
++            bits_per_var = {var_name: bits for var_name in ds}
++        elif isinstance(bits, dict):
++            bits_per_var = bits
++        else:
++            raise ValueError("bits must be a list or dict")
 +
-+#         self.ds = ds
-+#         self.baseline = baseline
-+#         self.metrics = metrics
-+#         self.bits = bits_per_var
-+#         if skip_histograms:
-+#             self.histograms = None
-+#             self.stats = compute_stats_direct(
-+#                 ds,
-+#                 baseline,
-+#                 compressors,
-+#                 metrics,
-+#                 bits=bits_per_var,
-+#             )
-+#         else:
-+#             self.stats = None
-+#             self.histograms = compute_histograms(
-+#                 ds,
-+#                 baseline,
-+#                 compressors,
-+#                 metrics,
-+#                 bits=bits_per_var,
-+#                 max_chunk_size_bytes=max_chunk_size_bytes,
-+#             )
-+#         self.bits_min, self.bits_max = compute_required_bits(ds, [0.99, 0.999])
++        self.ds = ds
++        self.baseline = baseline
++        self.metrics = metrics
++        self.bits = bits_per_var
++        if skip_histograms:
++            self.histograms = None
++            self.stats = compute_stats_direct(
++                ds,
++                baseline,
++                compressors,
++                metrics,
++                bits=bits_per_var,
++            )
++        else:
++            self.stats = None
++            self.histograms = compute_histograms(
++                ds,
++                baseline,
++                compressors,
++                metrics,
++                bits=bits_per_var,
++                max_chunk_size_bytes=max_chunk_size_bytes,
++            )
 +
-+#         if custom_metrics is None:
-+#             self.custom_metrics = []
-+#         else:
-+#             self.custom_metrics = compute_custom_metrics(
-+#                 ds,
-+#                 baseline,
-+#                 compressors,
-+#                 custom_metrics,
-+#                 bits=bits_per_var,
-+#                 max_chunk_size_bytes=max_chunk_size_bytes,
-+#             )
++        if custom_metrics is None:
++            self.custom_metrics = []
++        else:
++            self.custom_metrics = compute_custom_metrics(
++                ds,
++                baseline,
++                compressors,
++                custom_metrics,
++                bits=bits_per_var,
++                max_chunk_size_bytes=max_chunk_size_bytes,
++            )
 +
-+#     def snr(self, reference: str = "baseline"):
-+#         # TODO doesn't work without histograms yet
-+#         assert reference in ["source", "baseline"]
-+#         freqs_reference, edges_reference = self.histograms[reference]
-+#         freqs_decompressed, edges_decompressed = self.histograms["decompressed"]
++    def snr(self, reference: str = "baseline"):
++        # TODO doesn't work without histograms yet
++        assert reference in ["source", "baseline"]
++        freqs_reference, edges_reference = self.histograms[reference]
++        freqs_decompressed, edges_decompressed = self.histograms["decompressed"]
 +
-+#         stats = compute_decompressed_stats(
-+#             freqs_reference, edges_reference, freqs_decompressed, edges_decompressed
-+#         )
-+#         return stats.sel(reduction="snr")
++        stats = compute_decompressed_stats(
++            freqs_reference, edges_reference, freqs_decompressed, edges_decompressed
++        )
++        return stats.sel(reduction="snr")
 +
-+#     def compute_metric_stats(
-+#         self,
-+#         var_names: Optional[list[str]] = None,
-+#         metrics: Optional[list[str]] = None,
-+#         compressors: Optional[list[str]] = None,
-+#         bits: Optional[list[int]] = None,
-+#     ):
-+#         if self.histograms:
-+#             freqs, edges = self.histograms["metric"]
++    def compute_metric_stats(
++        self,
++        var_names: Optional[list[str]] = None,
++        metrics: Optional[list[str]] = None,
++        compressors: Optional[list[str]] = None,
++        bits: Optional[list[int]] = None,
++    ):
++        if self.histograms:
++            freqs, edges = self.histograms["metric"]
 +
-+#             stats = compute_stats(
-+#                 freqs,
-+#                 edges,
-+#                 var_names=var_names,
-+#                 metrics=metrics,
-+#                 compressors=compressors,
-+#                 bits=bits,
-+#             )
-+#         else:
-+#             stats = self.stats
-+#             if var_names is not None:
-+#                 stats = stats[var_names]
-+#             if metrics is not None:
-+#                 stats = stats.sel(metric=metrics)
-+#             if compressors is not None:
-+#                 stats = stats.sel(compressor=compressors)
-+#             if bits is not None:
-+#                 stats = stats.sel(bits=bits)
++            stats = compute_stats(
++                freqs,
++                edges,
++                var_names=var_names,
++                metrics=metrics,
++                compressors=compressors,
++                bits=bits,
++            )
++        else:
++            stats = self.stats
++            if var_names is not None:
++                stats = stats[var_names]
++            if metrics is not None:
++                stats = stats.sel(metric=metrics)
++            if compressors is not None:
++                stats = stats.sel(compressor=compressors)
++            if bits is not None:
++                stats = stats.sel(bits=bits)
 +
-+#         return stats
++        return stats
 +
-+#     def lineplot(
-+#         self,
-+#         metric: Type[Metric],
-+#         reduction: str,
-+#         var_names: Optional[list[str]] = None,
-+#     ):
-+#         if var_names is None:
-+#             var_names = list(self.ds)
-+#         else:
-+#             var_names = list(var_names)
-+#         if len(var_names) == 0:
-+#             return
++    def lineplot(
++        self,
++        metric: Type[Metric],
++        reduction: str,
++        var_names: Optional[list[str]] = None,
++    ):
++        if var_names is None:
++            var_names = list(self.ds)
++        else:
++            var_names = list(var_names)
++        if len(var_names) == 0:
++            return
 +
-+#         stats = self.compute_metric_stats(
-+#             var_names=var_names,
-+#             metrics=[metric.name],
-+#         )
++        stats = self.compute_metric_stats(
++            var_names=var_names,
++            metrics=[metric.name],
++        )
 +
-+#         # TODO: add choose colorscheme
-+#         from cycler import cycler
++        # TODO: add choose colorscheme
++        from cycler import cycler
 +
-+#         colorlist = ["#648FFF", "#785EF0", "#DC267F", "k"]
-+#         custom_cycler = cycler(color=colorlist)
++        colorlist = ["#648FFF", "#785EF0", "#DC267F", "k"]
++        custom_cycler = cycler(color=colorlist)
 +
-+#         for var_name in var_names:
-+#             fig, ax = plt.subplots()
-+#             ax.set_prop_cycle(custom_cycler)
-+#             vals = stats[var_name].sel(metric=metric.name, reduction=reduction)
-+#             vals.plot.line(x="bits", hue="compressor", ax=ax)
-+#             new_list = range(
-+#                 int(np.floor(vals.bits.min())), int(np.ceil(vals.bits.max())) + 1
-+#             )
-+#             ax.set_xticks(new_list)
-+#             ax.set_xlabel("Number of bits")
-+#             # TODO: fix units
-+#             ax.set_ylabel(
-+#                 f"{self.ds[var_name].long_name} {metric.name} in {self.ds[var_name].units}"
-+#             )
++        for var_name in var_names:
++            fig, ax = plt.subplots()
++            ax.set_prop_cycle(custom_cycler)
++            vals = stats[var_name].sel(metric=metric.name, reduction=reduction)
++            vals.plot.line(x="bits", hue="compressor", ax=ax)
++            new_list = range(
++                int(np.floor(vals.bits.min())), int(np.ceil(vals.bits.max())) + 1
++            )
++            ax.set_xticks(new_list)
++            ax.set_xlabel("Number of bits")
++            # TODO: fix units
++            ax.set_ylabel(
++                f"{self.ds[var_name].long_name} {metric.name} in {self.ds[var_name].units}"
++            )
 +
-+#             text_offset = 0.05
-+#             ax.axvline(x=16, color="k", linewidth=2)
-+#             ax.text(16 + text_offset, vals.min(), "Current @ 16 bits", rotation=90)
-+#             bits_99 = self.bits_max[var_name][0]
-+#             bits_100 = self.bits_max[var_name][1]
-+#             ax.axvline(x=bits_99, color="k", linewidth=2)
-+#             ax.text(
-+#                 bits_99 + text_offset, vals.min(), "BitInformation @ 99 %", rotation=90
-+#             )
-+#             ax.axvline(x=bits_100, color="k", linewidth=2)
-+#             ax.text(
-+#                 bits_100 + text_offset,
-+#                 vals.min(),
-+#                 "BitInformation @ 100 %",
-+#                 rotation=90,
-+#             )
++            text_offset = 0.05
++            ax.axvline(x=16, color="k", linewidth=2)
++            ax.text(16 + text_offset, vals.min(), "Current @ 16 bits", rotation=90)
 +
-+#             fig.show()
++            fig.show()
 +
-+#     def histplot(
-+#         self,
-+#         metric: Type[Metric],
-+#         compressor: Compressor,
-+#         bits: int,
-+#         var_names: Optional[list[str]] = None,
-+#     ):
-+#         freqs, edges = self.histograms["metric"]
-+#         freqs_sel = freqs.sel(metric=metric.name, compressor=compressor, bits=bits)
-+#         bins_sel = edges.sel(metric=metric.name, compressor=compressor, bits=bits)
++    def histplot(
++        self,
++        metric: Type[Metric],
++        compressor: Compressor,
++        bits: int,
++        var_names: Optional[list[str]] = None,
++    ):
++        freqs, edges = self.histograms["metric"]
++        freqs_sel = freqs.sel(metric=metric.name, compressor=compressor, bits=bits)
++        bins_sel = edges.sel(metric=metric.name, compressor=compressor, bits=bits)
 +
-+#         if var_names is None:
-+#             var_names = list(self.ds)
-+#         if len(var_names) == 0:
-+#             return
-+#         for var_name in var_names:
-+#             _, ax = plt.subplots()
-+#             plt.stairs(freqs_sel[var_name].values, bins_sel[var_name].values, fill=True)
-+#             # TODO: fix units
-+#             ax.set_xlabel(
-+#                 f"{self.ds[var_name].long_name} {metric.name} in {self.ds[var_name].units}"
-+#             )
-+#             ax.set_ylabel("Frequency")
-+#             ax.set_title(f"Compressor: {compressor}, Bits: {bits}")
-+#             plt.show()
++        if var_names is None:
++            var_names = list(self.ds)
++        if len(var_names) == 0:
++            return
++        for var_name in var_names:
++            _, ax = plt.subplots()
++            plt.stairs(freqs_sel[var_name].values, bins_sel[var_name].values, fill=True)
++            # TODO: fix units
++            ax.set_xlabel(
++                f"{self.ds[var_name].long_name} {metric.name} in {self.ds[var_name].units}"
++            )
++            ax.set_ylabel("Frequency")
++            ax.set_title(f"Compressor: {compressor}, Bits: {bits}")
++            plt.show()
 +
-+#     def boxplot(
-+#         self,
-+#         metric: Type[Metric],
-+#         compressor: str,
-+#         bits: int,
-+#         var_names: Optional[list[str]] = None,
-+#     ):
-+#         stats = self.compute_metric_stats(
-+#             compressors=[compressor],
-+#             metrics=[metric.name],
-+#             bits=[bits],
-+#         )
++    def boxplot(
++        self,
++        metric: Type[Metric],
++        compressor: str,
++        bits: int,
++        var_names: Optional[list[str]] = None,
++    ):
++        stats = self.compute_metric_stats(
++            compressors=[compressor],
++            metrics=[metric.name],
++            bits=[bits],
++        )
 +
-+#         if var_names is None:
-+#             var_names = list(self.ds)
-+#         if len(var_names) == 0:
-+#             return
-+#         for var_name in var_names:
-+#             s = stats[var_name].squeeze()
-+#             bxpstats = dict(
-+#                 med=s.sel(reduction="median").item(),
-+#                 q1=s.sel(reduction="q1").item(),
-+#                 q3=s.sel(reduction="q3").item(),
-+#                 whislo=s.sel(reduction="min").item(),
-+#                 whishi=s.sel(reduction="max").item(),
-+#                 label=f"{self.ds[var_name].long_name}",
-+#             )
++        if var_names is None:
++            var_names = list(self.ds)
++        if len(var_names) == 0:
++            return
++        for var_name in var_names:
++            s = stats[var_name].squeeze()
++            bxpstats = dict(
++                med=s.sel(reduction="median").item(),
++                q1=s.sel(reduction="q1").item(),
++                q3=s.sel(reduction="q3").item(),
++                whislo=s.sel(reduction="min").item(),
++                whishi=s.sel(reduction="max").item(),
++                label=f"{self.ds[var_name].long_name}",
++            )
 +
-+#             _, ax = plt.subplots()
-+#             ax.bxp([bxpstats], showfliers=False)
-+#             # TODO: fix units
-+#             ax.set_ylabel(f"{metric.name.capitalize()} in {self.ds[var_name].units}")
-+#             ax.set_title(f"Compressor: {compressor}, Bits: {bits}")
++            _, ax = plt.subplots()
++            ax.bxp([bxpstats], showfliers=False)
++            # TODO: fix units
++            ax.set_ylabel(f"{metric.name.capitalize()} in {self.ds[var_name].units}")
++            ax.set_title(f"Compressor: {compressor}, Bits: {bits}")
 +
-+#     def nblineplot(self):
-+#         metric = [(m.name, m) for m in self.metrics]
-+#         reduction = ["max", "min", "mean", "std"]
-+#         var_names_all = list(self.ds.keys())
-+#         var_names = widgets.SelectMultiple(
-+#             options=var_names_all, value=[var_names_all[0]], description="Variables"
-+#         )
-+#         interact(self.lineplot, metric=metric, reduction=reduction, var_names=var_names)
++    def nblineplot(self):
++        metric = [(m.name, m) for m in self.metrics]
++        reduction = ["max", "min", "mean", "std"]
++        var_names_all = list(self.ds.keys())
++        var_names = widgets.SelectMultiple(
++            options=var_names_all, value=[var_names_all[0]], description="Variables"
++        )
++        interact(self.lineplot, metric=metric, reduction=reduction, var_names=var_names)
 +
 +
 +def plot_spatial_single(da, ds, var_name, metric):
@@ -2362,162 +1898,145 @@ index 00000000..ffa10e95
 +    plt.show()
 +
 +
-+# def spatialplot(
-+#     ds: xr.Dataset,
-+#     baseline: Compressor,
-+#     var_name: str,
-+#     compressor: Compressor,
-+#     metric: Type[Metric],
-+#     latitude: float,
-+#     longitude: float,
-+#     third_dim: Optional[str] = None,
-+#     **sel: dict,
-+# ):
-+#     standard_names = get_standard_name_dims(ds)
-+#     is_gridded = (
-+#         STANDARD_NAME_LAT in standard_names and STANDARD_NAME_LON in standard_names
-+#     )
++def spatialplot(
++    ds: xr.Dataset,
++    baseline: Compressor,
++    var_name: str,
++    compressor: Compressor,
++    metric: Type[Metric],
++    latitude: float,
++    longitude: float,
++    third_dim: Optional[str] = None,
++    **sel: dict,
++):
++    standard_names = get_standard_name_dims(ds)
++    is_ds_gridded = is_gridded(ds)
 +
-+#     plot_sel = {}
-+#     if third_dim and third_dim in sel:
-+#         plot_sel[third_dim] = sel.pop(third_dim)
++    plot_sel = {}
++    if third_dim and third_dim in sel:
++        plot_sel[third_dim] = sel.pop(third_dim)
 +
-+#     da_sel = ds[var_name].sel(sel)
++    da_sel = ds[var_name].sel(sel)
 +
-+#     assert baseline.bits is not None
-+#     assert compressor.bits is not None
-+#     da_baseline = run_compressor_single(da_sel, baseline, baseline.bits)
-+#     da_baseline = da_baseline.squeeze(dim=["compressor", "bits"])
-+#     da_decompressed = run_compressor_single(da_sel, compressor, compressor.bits)
++    assert baseline.bits is not None
++    assert compressor.bits is not None
++    da_baseline = run_compressor_single(da_sel, baseline, baseline.bits)
++    da_baseline = da_baseline.squeeze(dim=["compressor", "bits"])
++    da_decompressed = run_compressor_single(da_sel, compressor, compressor.bits)
 +
-+#     da = metric().compute(da_baseline, da_decompressed)
-+#     da.attrs = {
-+#         "long_name": da_sel.attrs["long_name"],
-+#         "units": da_sel.attrs["units"],
-+#     }
++    da = metric().compute(da_baseline, da_decompressed)
++    da.attrs = {
++        "long_name": da_sel.attrs["long_name"],
++        "units": da_sel.attrs["units"],
++    }
 +
-+#     if third_dim not in da.dims:
-+#         third_dim = None
++    if third_dim not in da.dims:
++        third_dim = None
 +
-+#     das = [da, da_baseline, da_decompressed]
-+#     das_regridded = []
-+#     for da_ in das:
-+#         if is_gridded:
-+#             das_regridded.append(da_)
-+#         else:
-+#             out = []
-+#             path_to_template = ds.attrs.get("path")
-+#             if path_to_template is None:
-+#                 raise RuntimeError(
-+#                     "Cannot regrid, 'path' attribute missing in xarray Dataset"
-+#                 )
-+#             if third_dim:
-+#                 for third_dim_val in list(da_[third_dim].values):
-+#                     regridded = regrid(
-+#                         source=da_.sel({third_dim: third_dim_val}),
-+#                         path_to_template=path_to_template,
-+#                     )
-+#                     regridded = regridded.assign_coords({third_dim: [third_dim_val]})
-+#                     out.append(regridded)
-+#             else:
-+#                 regridded = regrid(source=da_, path_to_template=path_to_template)
-+#                 out.append(regridded)
-+#             regridded = xr.merge(out)[var_name]
-+#             das_regridded.append(regridded)
-+#             standard_names = get_standard_name_dims(regridded)
++    das = [da, da_baseline, da_decompressed]
++    das_regridded = []
++    for da_ in das:
++        if is_ds_gridded:
++            das_regridded.append(da_)
++        else:
++            raise NotImplementedError(
++                "The loaded dataset is not gridded along the standard "
++                "'latitude' and 'longitude' axes and regridding for "
++                "plotting the dataset is not yet supported."
++            )
 +
-+#     da, da_baseline, da_decompressed = das_regridded
++    da, da_baseline, da_decompressed = das_regridded
 +
-+#     plot_spatial_single(
-+#         da_baseline.sel({third_dim: plot_sel[third_dim]}),
-+#         ds,
-+#         var_name,
-+#         metric="Baseline",
-+#     )
-+#     plot_spatial_single(
-+#         da_decompressed.sel({third_dim: plot_sel[third_dim]}),
-+#         ds,
-+#         var_name,
-+#         metric="Decompressed",
-+#     )
-+#     plot_spatial_single(
-+#         da.sel({third_dim: plot_sel[third_dim]}),
-+#         ds,
-+#         var_name,
-+#         metric=metric.name,
-+#     )
++    plot_spatial_single(
++        da_baseline.sel({third_dim: plot_sel[third_dim]}),
++        ds,
++        var_name,
++        metric="Baseline",
++    )
++    plot_spatial_single(
++        da_decompressed.sel({third_dim: plot_sel[third_dim]}),
++        ds,
++        var_name,
++        metric="Decompressed",
++    )
++    plot_spatial_single(
++        da.sel({third_dim: plot_sel[third_dim]}),
++        ds,
++        var_name,
++        metric=metric.name,
++    )
 +
-+#     if third_dim:
-+#         fig, ax = plt.subplots(
-+#             nrows=1, ncols=3, figsize=(25, 5), width_ratios=[2, 2, 1]
-+#         )
-+#         # First column: lat/third dim slice
-+#         im = da.sel({standard_names["longitude"]: longitude}, method="nearest").plot(
-+#             ax=ax[0], add_colorbar=False
-+#         )
-+#         plt.colorbar(im, ax=ax[0]).set_label(
-+#             label=f"{ds[var_name].long_name} {metric.name} in {ds[var_name].units}"
-+#         )
-+#         # Second column: lon/third dim slice
-+#         im = da.sel({standard_names["latitude"]: latitude}, method="nearest").plot(
-+#             ax=ax[1], add_colorbar=False
-+#         )
-+#         plt.colorbar(im, ax=ax[1]).set_label(
-+#             label=f"{ds[var_name].long_name} {metric.name} in {ds[var_name].units}"
-+#         )
-+#         # Third column: third dim profile
-+#         im = da.sel(
-+#             {
-+#                 standard_names["longitude"]: longitude,
-+#                 standard_names["latitude"]: latitude,
-+#             },
-+#             method="nearest",
-+#         ).plot(y=third_dim, ax=ax[2])
-+#         ax[2].set_xlabel(
-+#             f"{ds[var_name].long_name} {metric.name} in {ds[var_name].units}"
-+#         )
-+#         fig.tight_layout()
-+#     plt.show()
++    if third_dim:
++        fig, ax = plt.subplots(
++            nrows=1, ncols=3, figsize=(25, 5), width_ratios=[2, 2, 1]
++        )
++        # First column: lat/third dim slice
++        im = da.sel({standard_names["longitude"]: longitude}, method="nearest").plot(
++            ax=ax[0], add_colorbar=False
++        )
++        plt.colorbar(im, ax=ax[0]).set_label(
++            label=f"{ds[var_name].long_name} {metric.name} in {ds[var_name].units}"
++        )
++        # Second column: lon/third dim slice
++        im = da.sel({standard_names["latitude"]: latitude}, method="nearest").plot(
++            ax=ax[1], add_colorbar=False
++        )
++        plt.colorbar(im, ax=ax[1]).set_label(
++            label=f"{ds[var_name].long_name} {metric.name} in {ds[var_name].units}"
++        )
++        # Third column: third dim profile
++        im = da.sel(
++            {
++                standard_names["longitude"]: longitude,
++                standard_names["latitude"]: latitude,
++            },
++            method="nearest",
++        ).plot(y=third_dim, ax=ax[2])
++        ax[2].set_xlabel(
++            f"{ds[var_name].long_name} {metric.name} in {ds[var_name].units}"
++        )
++        fig.tight_layout()
++    plt.show()
 +
 +
-+# def nbspatialplot(
-+#     ds: xr.Dataset, baseline: Compressor, compressor: Compressor, third_dim=None
-+# ):
-+#     var_name = list(ds)
-+#     metric = [(m.name, m) for m in METRICS]
++def nbspatialplot(
++    ds: xr.Dataset, baseline: Compressor, compressor: Compressor, third_dim=None
++):
++    var_name = list(ds)
++    metric = [(m.name, m) for m in METRICS]
 +
-+#     standard_names = get_standard_name_dims(ds)
-+#     dims_to_exclude = set(["values"])
++    standard_names = get_standard_name_dims(ds)
++    dims_to_exclude = set(["values"])
 +
-+#     for name in [STANDARD_NAME_LAT, STANDARD_NAME_LON]:
-+#         if name in standard_names:
-+#             dims_to_exclude.add(standard_names[name])
++    for name in [STANDARD_NAME_LAT, STANDARD_NAME_LON]:
++        if name in standard_names:
++            dims_to_exclude.add(standard_names[name])
 +
-+#     dims = set(ds.dims) - dims_to_exclude
-+#     sel = {dim: ds[dim].values for dim in dims if ds.dims[dim] > 1}
-+#     if third_dim:
-+#         sel[third_dim] = widgets.SelectionSlider(options=ds[third_dim].values)
-+#     latitude = widgets.IntSlider(min=-90, max=90, step=1, value=0)
-+#     longitude = widgets.IntSlider(min=-180, max=180, step=1, value=0)
++    dims = set(ds.dims) - dims_to_exclude
++    sel = {dim: ds[dim].values for dim in dims if ds.dims[dim] > 1}
++    if third_dim:
++        sel[third_dim] = widgets.SelectionSlider(options=ds[third_dim].values)
++    latitude = widgets.IntSlider(min=-90, max=90, step=1, value=0)
++    longitude = widgets.IntSlider(min=-180, max=180, step=1, value=0)
 +
-+#     interact(
-+#         spatialplot,
-+#         ds=fixed(ds),
-+#         baseline=fixed(baseline),
-+#         compressor=fixed(compressor),
-+#         metric=metric,
-+#         var_name=var_name,
-+#         latitude=latitude,
-+#         longitude=longitude,
-+#         third_dim=fixed(third_dim),
-+#         **sel,
-+#     )
++    interact(
++        spatialplot,
++        ds=fixed(ds),
++        baseline=fixed(baseline),
++        compressor=fixed(compressor),
++        metric=metric,
++        var_name=var_name,
++        latitude=latitude,
++        longitude=longitude,
++        third_dim=fixed(third_dim),
++        **sel,
++    )
 diff --git a/packages/fcpy/fcpy/fcpy/utils.py b/packages/fcpy/fcpy/fcpy/utils.py
 new file mode 100644
-index 00000000..72b29dc8
+index 00000000..8ff23f59
 --- /dev/null
 +++ b/packages/fcpy/fcpy/fcpy/utils.py
-@@ -0,0 +1,162 @@
+@@ -0,0 +1,105 @@
 +# (C) Copyright 2022 ECMWF.
 +#
 +# This software is licensed under the terms of the Apache Licence Version 2.0
@@ -2530,82 +2049,8 @@ index 00000000..72b29dc8
 +import tempfile
 +from typing import Optional
 +
-+# import climetlab as cml
-+import eccodes as ecc
 +import numpy as np
 +import xarray as xr
-+
-+
-+# def regrid(
-+#     source: xr.DataArray,
-+#     path_to_template: str,
-+#     dx: float = 1,
-+#     dy: float = 1,
-+#     new_labels: Optional[dict] = None,
-+# ) -> xr.DataArray:
-+#     """Regrid a Gaussian grid field into a regular latitude longitude grid.
-+
-+#     Args:
-+#         source (xr.DataArray): field in Gaussian grid
-+#         path_to_template (str): path to GRIB in Gaussian grid
-+#         dx (int, optional): longitude grid resolution in arc-degree. Defaults to 1.
-+#         dy (int, optional): latitude grid resolution in arc-degree. Defaults to 1.
-+#         new_labels (Optional[dict], optional): Name of regridded xr.DataArray. Defaults to None.
-+
-+#     Returns:
-+#         xr.DataArray: Regular latitude longitude grid
-+#     """
-+
-+#     try:
-+#         import metview as mv
-+#     except:
-+#         raise ImportError("Metview could not be imported.")
-+
-+#     assert isinstance(source, xr.DataArray), "source must be of type xarray.DataArray"
-+
-+#     with open(path_to_template, "rb") as file_template:
-+#         with tempfile.NamedTemporaryFile("wb") as file_filled:
-+#             # Read the first message in the file
-+#             msgid = ecc.codes_grib_new_from_file(file_template)
-+
-+#             # Get data/metadata
-+#             paramId = ecc.codes_get(msgid, "paramId")
-+
-+#             # Set data/metadata
-+#             # TODO: set missing value
-+#             # MISSING_VALUE = 9998
-+#             # ecc.codes_set(msgid, 'missingValue', MISSING_VALUE)
-+
-+#             # overwrite the paramId with an arbitrary experimental paramId
-+#             # to avoid issues with interpolation in case of special paramId
-+#             ecc.codes_set(msgid, "paramId", 80)
-+
-+#             ecc.codes_set_values(msgid, source.values.flatten())
-+
-+#             ecc.codes_write(msgid, file_filled)
-+
-+#             ecc.codes_release(msgid)
-+
-+#             # Regrid data
-+#             target_grid = {"grid": [dx, dy], "interpolation": "nearest_neighbour"}
-+
-+#             data = mv.read(file_filled.name)
-+#             with tempfile.TemporaryDirectory() as tmpdirname:
-+#                 path_to_regridded = f"{tmpdirname}/file_regridded.grib"
-+
-+#                 _ = mv.regrid(target_grid, data=data, target=path_to_regridded)
-+
-+#                 ds_regridded = cml.load_source("file", path_to_regridded).to_xarray()
-+#                 assert len(list(ds_regridded)) == 1
-+#                 da_regridded = ds_regridded[list(ds_regridded)[0]]
-+
-+#         da_regridded.attrs = {
-+#             "long_name": source.attrs["long_name"],
-+#             "units": source.attrs["units"],
-+#         }
-+#         da_regridded.name = source.name
-+
-+#     return da_regridded
 +
 +
 +STANDARD_NAME_LAT = "latitude"
@@ -2626,6 +2071,23 @@ index 00000000..72b29dc8
 +        for c in [ds[dim] for dim in ds.dims]
 +        if "standard_name" in c.attrs
 +    }
++
++
++def is_gridded(ds: xr.Dataset) -> bool:
++    """Return if the dataset is gridded along the standard latitude and
++    longitude axes.
++
++    Args:
++        ds (xr.Dataset): _description_
++
++    Returns:
++        bool: _description_
++    """
++    standard_names = get_standard_name_dims(ds)
++
++    return (
++        STANDARD_NAME_LAT in standard_names and STANDARD_NAME_LON in standard_names
++    )
 +
 +
 +def compute_z_score(da: xr.DataArray) -> xr.DataArray:
@@ -2682,10 +2144,10 @@ index 00000000..72b29dc8
 +    return used_sign_and_exponent_bits
 diff --git a/packages/fcpy/fcpy/pyproject.toml b/packages/fcpy/fcpy/pyproject.toml
 new file mode 100644
-index 00000000..4766a0cd
+index 00000000..7d5f4d3b
 --- /dev/null
 +++ b/packages/fcpy/fcpy/pyproject.toml
-@@ -0,0 +1,36 @@
+@@ -0,0 +1,42 @@
 +[project]
 +name = "fcpy"
 +version = "0.2.0"
@@ -2702,14 +2164,20 @@ index 00000000..4766a0cd
 +    "Programming Language :: Python :: 3",
 +]
 +dependencies = [
-+    "numpy",
-+    "scipy",
-+    "xarray",
-+    "dask",
-+    "matplotlib",
 +    "cartopy",
-+    "scikit-learn",
++    "cfgrib",
++    "cycler",
++    "dask",
++    "fast-histogram",
++    "ipywidgets",
++    "kneed",
++    "matplotlib",
++    "numpy",
 +    "scikit-image",
++    "scikit-learn",
++    "scipy",
++    "tqdm",
++    "xarray",
 +]
 +
 +[project.urls]
@@ -2724,10 +2192,10 @@ index 00000000..4766a0cd
 +build-backend = "setuptools.build_meta"
 diff --git a/packages/fcpy/meta.yaml b/packages/fcpy/meta.yaml
 new file mode 100644
-index 00000000..a5f37379
+index 00000000..1dd8008d
 --- /dev/null
 +++ b/packages/fcpy/meta.yaml
-@@ -0,0 +1,28 @@
+@@ -0,0 +1,30 @@
 +package:
 +  name: fcpy
 +  version: 0.21.1
@@ -2740,9 +2208,11 @@ index 00000000..a5f37379
 +    - fcpy
 +requirements:
 +  run:
-+    - cfgrib
 +    - Cartopy
++    - cfgrib
 +    - dask
++    - fast-histogram
++    # - ipywidgets: must be loaded with micropip
 +    - kneed
 +    - matplotlib
 +    - numpy
@@ -2758,7 +2228,7 @@ index 00000000..a5f37379
 +  license: Apache-2.0
 diff --git a/packages/findlibs/meta.yaml b/packages/findlibs/meta.yaml
 new file mode 100644
-index 00000000..0d499a42
+index 00000000..b4213bfc
 --- /dev/null
 +++ b/packages/findlibs/meta.yaml
 @@ -0,0 +1,13 @@
@@ -2766,7 +2236,7 @@ index 00000000..0d499a42
 +  name: findlibs
 +  version: 0.0.5
 +  top-level:
-+    - PUT_TOP_LEVEL_IMPORT_NAMES_HERE
++    - findlibs
 +source:
 +  url: https://files.pythonhosted.org/packages/ae/be/6c72ef9d990cd25fe3dd97ebe9d77a859f7d27b7273e62ad750846d207ee/findlibs-0.0.5.tar.gz
 +  sha256: 7a801571e999d0ee83f9b92cbb598c21f861ee26ca9dba74cea8958ba4335e7e
