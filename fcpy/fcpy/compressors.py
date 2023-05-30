@@ -214,7 +214,7 @@ class Round(Compressor):
         )  # add ulp/2 with tie to even
         ui_arr &= keep_mask  # set trailing bits to zero
 
-        return arr
+        return arr, {}
 
     def do_decompress(
         self, compressed_data: np.ndarray, params: dict
