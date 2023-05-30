@@ -39,9 +39,11 @@ jobs:
       - name: Build Pyodide
         run: |
           cd pyodide
+          cp -r ../fcpy packages/fcpy/
           git apply --whitespace=nowarn ../patches/pyodide.patch
           ./run_docker --non-interactive PYODIDE_PACKAGES="fcpy,pyodide_http" make
           git apply --whitespace=nowarn --reverse ../patches/pyodide.patch
+          rm -rf packages/fcpy/fcpy
           cd ..
           mkdir -p static
           cp -r pyodide/dist static/pyodide

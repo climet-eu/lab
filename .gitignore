@@ -2,3 +2,5 @@
 /dist
 /static/pyodide
 /.jupyterlite.doit.db
+
+__pycache__/
