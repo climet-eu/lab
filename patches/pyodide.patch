@@ -266,10 +266,10 @@ index 00000000..9bb0d7fd
 +  license: BSD
 diff --git a/packages/fcpy/meta.yaml b/packages/fcpy/meta.yaml
 new file mode 100644
-index 00000000..1dd8008d
+index 00000000..16383bb7
 --- /dev/null
 +++ b/packages/fcpy/meta.yaml
-@@ -0,0 +1,30 @@
+@@ -0,0 +1,31 @@
 +package:
 +  name: fcpy
 +  version: 0.21.1
@@ -286,9 +286,10 @@ index 00000000..1dd8008d
 +    - cfgrib
 +    - dask
 +    - fast-histogram
-+    # - ipywidgets: must be loaded with micropip
++    - ipywidgets
 +    - kneed
 +    - matplotlib
++    - netcdf4
 +    - numpy
 +    - scikit-image
 +    - scikit-learn
@@ -341,6 +342,73 @@ index 00000000..081bb2cf
 +  PyPI: https://pypi.org/project/importlib_metadata
 +  summary: Read metadata from Python packages
 +  license: "Apache Software License"
+diff --git a/packages/ipyfilite/meta.yaml b/packages/ipyfilite/meta.yaml
+new file mode 100644
+index 00000000..35f60486
+--- /dev/null
++++ b/packages/ipyfilite/meta.yaml
+@@ -0,0 +1,19 @@
++package:
++  name: ipyfilite
++  version: 0.1.4
++  top-level:
++    - ipyfilite
++source:
++  url: https://files.pythonhosted.org/packages/e8/21/ffa423d2939f4f6497c8a2278a3ce4cceeafec84454668e3c83413bde962/ipyfilite-0.1.4-py3-none-any.whl
++  sha256: bfe4cbfbb86e573e7f926d246ef5d22e12b35c155fe7b4562427b8d45fef6f40
++requirements:
++  run:
++    - ipywidgets
++about:
++  home: https://github.com/juntyr/ipyfilite
++  PyPI: https://pypi.org/project/ipyfilite
++  summary:
++    File upload widget specifically for Pyodide kernels running in JupyterLite.
++    Uploaded files are not loaded into memory but mounted as read-only files in a
++    new WORKERFS.
++  license: BSD 3-Clause License
+diff --git a/packages/ipywidgets/meta.yaml b/packages/ipywidgets/meta.yaml
+new file mode 100644
+index 00000000..f4e47d07
+--- /dev/null
++++ b/packages/ipywidgets/meta.yaml
+@@ -0,0 +1,17 @@
++package:
++  name: ipywidgets
++  version: 8.0.6
++  top-level:
++    - ipywidgets
++source:
++  url: https://files.pythonhosted.org/packages/50/7d/2c8b7bba2b1c2b5d1299f22fa7853f09b573c84e63b62870c13a6ec11990/ipywidgets-8.0.6-py3-none-any.whl
++  sha256: a60bf8d2528997e05ac83fd19ea2fbe65f2e79fbe1b2b35779bdfc46c2941dcc
++requirements:
++  run:
++    - widgetsnbextension
++    - jupyterlab_widgets
++about:
++  home: http://jupyter.org
++  PyPI: https://pypi.org/project/ipywidgets
++  summary: Jupyter interactive widgets
++  license: BSD 3-Clause License
+diff --git a/packages/jupyterlab_widgets/meta.yaml b/packages/jupyterlab_widgets/meta.yaml
+new file mode 100644
+index 00000000..f8920c6c
+--- /dev/null
++++ b/packages/jupyterlab_widgets/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: jupyterlab_widgets
++  version: 3.0.7
++  top-level:
++    - jupyterlab_widgets
++source:
++  url: https://files.pythonhosted.org/packages/46/98/e7ce879b7b5d4871b80e291be967d22e5e66fa43474c476a95fe6231f50d/jupyterlab_widgets-3.0.7-py3-none-any.whl
++  sha256: c73f8370338ec19f1bec47254752d6505b03601cbd5a67e6a0b184532f73a459
++about:
++  home: https://github.com/jupyter-widgets/ipywidgets
++  PyPI: https://pypi.org/project/jupyterlab_widgets
++  summary: Jupyter interactive widgets for JupyterLab
++  license: BSD-3-Clause
 diff --git a/packages/kneed/meta.yaml b/packages/kneed/meta.yaml
 new file mode 100644
 index 00000000..6935a293
@@ -500,6 +568,245 @@ index 00000000..3d270618
 + 
 + static int number_of_bits(size_t x, long* result)
 + {
+diff --git a/packages/libnetcdf/meta.yaml b/packages/libnetcdf/meta.yaml
+new file mode 100644
+index 00000000..2ea001c0
+--- /dev/null
++++ b/packages/libnetcdf/meta.yaml
+@@ -0,0 +1,41 @@
++package:
++  name: libnetcdf
++  version: 4.9.2
++
++source:
++  sha256: bc104d101278c68b303359b3dc4192f81592ae8640f1aee486921138f7f88cb7
++  url: https://github.com/Unidata/netcdf-c/archive/refs/tags/v4.9.2.tar.gz
++  patches:
++    - patches/0001-disable-hdf5-configure-tests.patch
++
++requirements:
++  host:
++    - libhdf5
++    - zlib
++    - libxml
++
++build:
++  type: shared_library
++  script: |
++    export PATH=${WASM_LIBRARY_DIR}/bin:${PATH}
++
++    # dap + byterange: no libcurl
++
++    emconfigure ./configure \
++      --prefix=${WASM_LIBRARY_DIR} \
++      --disable-doxygen \
++      --enable-netcdf-4 \
++      --disable-dap \
++      --disable-byterange \
++      --disable-dap-remote-tests \
++      --disable-examples \
++      --disable-utilities \
++      --disable-testsets \
++      CFLAGS="-fPIC -I${WASM_LIBRARY_DIR}/include" \
++      CXXFLAGS="-fPIC -I${WASM_LIBRARY_DIR}/include" \
++      LDFLAGS="-L${WASM_LIBRARY_DIR}/lib";
++
++    emmake make -j ${PYODIDE_JOBS:-3};
++    emmake make -j ${PYODIDE_JOBS:-3} install;
++
++    cp -P ${WASM_LIBRARY_DIR}/lib/libnetcdf* ${DISTDIR}
+diff --git a/packages/libnetcdf/patches/0001-disable-hdf5-configure-tests.patch b/packages/libnetcdf/patches/0001-disable-hdf5-configure-tests.patch
+new file mode 100644
+index 00000000..feb2dd98
+--- /dev/null
++++ b/packages/libnetcdf/patches/0001-disable-hdf5-configure-tests.patch
+@@ -0,0 +1,186 @@
++diff --git a/configure b/configure
++index d44122aa..130e5cb3 100755
++--- a/configure
+++++ b/configure
++@@ -25216,25 +25216,26 @@ return H5Fflush ();
++   return 0;
++ }
++ _ACEOF
++-for ac_lib in '' hdf5 hdf5.dll
++-do
++-  if test -z "$ac_lib"; then
++-    ac_res="none required"
++-  else
++-    ac_res=-l$ac_lib
++-    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
++-  fi
++-  if ac_fn_c_try_link "$LINENO"
++-then :
++-  ac_cv_search_H5Fflush=$ac_res
++-fi
++-rm -f core conftest.err conftest.$ac_objext conftest.beam \
++-    conftest$ac_exeext
++-  if test ${ac_cv_search_H5Fflush+y}
++-then :
++-  break
++-fi
++-done
+++# for ac_lib in '' hdf5 hdf5.dll
+++# do
+++#   if test -z "$ac_lib"; then
+++#     ac_res="none required"
+++#   else
+++#     ac_res=-l$ac_lib
+++#     LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+++#   fi
+++#   if ac_fn_c_try_link "$LINENO"
+++# then :
+++#   ac_cv_search_H5Fflush=$ac_res
+++# fi
+++# rm -f core conftest.err conftest.$ac_objext conftest.beam \
+++#     conftest$ac_exeext
+++#   if test ${ac_cv_search_H5Fflush+y}
+++# then :
+++#   break
+++# fi
+++# done
+++ac_cv_search_H5Fflush=hdf5
++ if test ${ac_cv_search_H5Fflush+y}
++ then :
++ 
++@@ -25277,25 +25278,26 @@ return H5DSis_scale ();
++   return 0;
++ }
++ _ACEOF
++-for ac_lib in '' hdf5_hl hdf5_hl.dll
++-do
++-  if test -z "$ac_lib"; then
++-    ac_res="none required"
++-  else
++-    ac_res=-l$ac_lib
++-    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
++-  fi
++-  if ac_fn_c_try_link "$LINENO"
++-then :
++-  ac_cv_search_H5DSis_scale=$ac_res
++-fi
++-rm -f core conftest.err conftest.$ac_objext conftest.beam \
++-    conftest$ac_exeext
++-  if test ${ac_cv_search_H5DSis_scale+y}
++-then :
++-  break
++-fi
++-done
+++# for ac_lib in '' hdf5_hl hdf5_hl.dll
+++# do
+++#   if test -z "$ac_lib"; then
+++#     ac_res="none required"
+++#   else
+++#     ac_res=-l$ac_lib
+++#     LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+++#   fi
+++#   if ac_fn_c_try_link "$LINENO"
+++# then :
+++#   ac_cv_search_H5DSis_scale=$ac_res
+++# fi
+++# rm -f core conftest.err conftest.$ac_objext conftest.beam \
+++#     conftest$ac_exeext
+++#   if test ${ac_cv_search_H5DSis_scale+y}
+++# then :
+++#   break
+++# fi
+++# done
+++ac_cv_search_H5DSis_scale=hdf5_hl
++ if test ${ac_cv_search_H5DSis_scale+y}
++ then :
++ 
++@@ -25427,25 +25429,25 @@ return H5Dread_chunk ();
++   return 0;
++ }
++ _ACEOF
++-for ac_lib in '' hdf5_hldll hdf5_hl
++-do
++-  if test -z "$ac_lib"; then
++-    ac_res="none required"
++-  else
++-    ac_res=-l$ac_lib
++-    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
++-  fi
++-  if ac_fn_c_try_link "$LINENO"
++-then :
++-  ac_cv_search_H5Dread_chunk=$ac_res
++-fi
++-rm -f core conftest.err conftest.$ac_objext conftest.beam \
++-    conftest$ac_exeext
++-  if test ${ac_cv_search_H5Dread_chunk+y}
++-then :
++-  break
++-fi
++-done
+++# for ac_lib in '' hdf5_hldll hdf5_hl
+++# do
+++#   if test -z "$ac_lib"; then
+++#     ac_res="none required"
+++#   else
+++#     ac_res=-l$ac_lib
+++#     LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+++#   fi
+++#   if ac_fn_c_try_link "$LINENO"
+++# then :
+++#   ac_cv_search_H5Dread_chunk=$ac_res
+++# fi
+++# rm -f core conftest.err conftest.$ac_objext conftest.beam \
+++#     conftest$ac_exeext
+++#   if test ${ac_cv_search_H5Dread_chunk+y}
+++# then :
+++#   break
+++# fi
+++# done
++ if test ${ac_cv_search_H5Dread_chunk+y}
++ then :
++ 
++@@ -25490,25 +25492,25 @@ return H5Pset_fapl_ros3 ();
++   return 0;
++ }
++ _ACEOF
++-for ac_lib in '' hdf5_hldll hdf5_hl
++-do
++-  if test -z "$ac_lib"; then
++-    ac_res="none required"
++-  else
++-    ac_res=-l$ac_lib
++-    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
++-  fi
++-  if ac_fn_c_try_link "$LINENO"
++-then :
++-  ac_cv_search_H5Pset_fapl_ros3=$ac_res
++-fi
++-rm -f core conftest.err conftest.$ac_objext conftest.beam \
++-    conftest$ac_exeext
++-  if test ${ac_cv_search_H5Pset_fapl_ros3+y}
++-then :
++-  break
++-fi
++-done
+++# for ac_lib in '' hdf5_hldll hdf5_hl
+++# do
+++#   if test -z "$ac_lib"; then
+++#     ac_res="none required"
+++#   else
+++#     ac_res=-l$ac_lib
+++#     LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+++#   fi
+++#   if ac_fn_c_try_link "$LINENO"
+++# then :
+++#   ac_cv_search_H5Pset_fapl_ros3=$ac_res
+++# fi
+++# rm -f core conftest.err conftest.$ac_objext conftest.beam \
+++#     conftest$ac_exeext
+++#   if test ${ac_cv_search_H5Pset_fapl_ros3+y}
+++# then :
+++#   break
+++# fi
+++# done
++ if test ${ac_cv_search_H5Pset_fapl_ros3+y}
++ then :
++ 
 diff --git a/packages/libproj/meta.yaml b/packages/libproj/meta.yaml
 index 9deee8d6..9a9a7060 100644
 --- a/packages/libproj/meta.yaml
@@ -535,6 +842,43 @@ index 00000000..035525dc
 +     // Fast path
 +     if (s_size > 0 && s_size < 15) {
 +         std::int64_t acc = 0;
+diff --git a/packages/netcdf4/meta.yaml b/packages/netcdf4/meta.yaml
+new file mode 100644
+index 00000000..e10596cc
+--- /dev/null
++++ b/packages/netcdf4/meta.yaml
+@@ -0,0 +1,31 @@
++package:
++  name: netcdf4
++  version: 1.6.3
++  top-level:
++    - netCDF4
++source:
++  url: https://files.pythonhosted.org/packages/8b/92/ff3b18a2f5fe03ffc2807c2ac8b55bee2c8ee730d1100b79bc8a7ab96134/netCDF4-1.6.3.tar.gz
++  sha256: 8c98a3a8cda06920ee8bd24a71226ddf0328c22bd838b0afca9cb45fb4580d99
++requirements:
++  host:
++    - libhdf5
++    - libnetcdf
++  run:
++    - numpy
++    - packaging
++    - h5py
++    - cftime
++test:
++  imports:
++    - netCDF4
++build:
++  vendor-sharedlib: true
++  script: |
++    export PATH=${WASM_LIBRARY_DIR}/bin:${PATH}
++    export HDF5_DIR=${WASM_LIBRARY_DIR}
++    echo ${HDF5_DIR}
++about:
++  home: "https://github.com/Unidata/netcdf4-python"
++  PyPI: https://pypi.org/project/netcdf4
++  summary: Provides an object-oriented python interface to the netCDF version 4 library
++  license: MIT
 diff --git a/packages/pyodide_http/meta.yaml b/packages/pyodide_http/meta.yaml
 new file mode 100644
 index 00000000..f0aadef5
@@ -573,6 +917,31 @@ index 00000000..355a6426
 +  PyPI: https://pypi.org/project/pyshp
 +  summary: Pure Python read/write support for ESRI Shapefile format
 +  license: MIT
+diff --git a/packages/widgetsnbextension/meta.yaml b/packages/widgetsnbextension/meta.yaml
+new file mode 100644
+index 00000000..3ec19003
+--- /dev/null
++++ b/packages/widgetsnbextension/meta.yaml
+@@ -0,0 +1,19 @@
++package:
++  name: widgetsnbextension
++  version: 4.0.7
++  top-level:
++    - widgetsnbextension
++source:
++  url: https://github.com/jupyterlite/pyodide-kernel/archive/refs/tags/v0.0.8.tar.gz
++  sha256: 3f64751d61c9f954415c87a72e44e7eb22511a8a0a8448d1011eb46fe5f9a495
++build:
++  script: |
++    cd ..
++    mv widgetsnbextension-4.0.7/packages/pyodide-kernel/py/widgetsnbextension4/widgetsnbextension .
++    rm -rf widgetsnbextension-4.0.7
++    mv widgetsnbextension widgetsnbextension-4.0.7
++about:
++  home: http://jupyter.org
++  PyPI: https://pypi.org/project/widgetsnbextension
++  summary: Jupyter interactive widgets for Jupyter Notebook
++  license: BSD 3-Clause License
 diff --git a/packages/xarray/meta.yaml b/packages/xarray/meta.yaml
 index e3c6c337..5338926f 100644
 --- a/packages/xarray/meta.yaml
