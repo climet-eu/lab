@@ -9,6 +9,7 @@
 
 import glob
 import warnings
+from pathlib import Path
 
 import xarray as xr
 
@@ -20,7 +21,7 @@ def open_dataset(filepath, *args, **kwargs) -> xr.Dataset:
     Additional arguments are passed into `xr.open_mfdataset`.
 
     Args:
-        filepath (str): .grib, may contain wildcards.
+        filepath (str): .grib or .nc, may contain wildcards.
 
     Returns:
         xr.Dataset: The loaded dataset.
@@ -28,10 +29,12 @@ def open_dataset(filepath, *args, **kwargs) -> xr.Dataset:
 
     if "cache" not in kwargs:
         kwargs["cache"] = False
-    if "backend_kwargs" not in kwargs:
-        kwargs["backend_kwargs"] = dict(indexpath="")
-    elif "indexpath" not in kwargs["backend_kwargs"]:
-        kwargs["backend_kwargs"]["indexpath"] = ""
+
+    if Path(filepath).suffix == ".grib":
+        if "backend_kwargs" not in kwargs:
+            kwargs["backend_kwargs"] = dict(indexpath="")
+        elif "indexpath" not in kwargs["backend_kwargs"]:
+            kwargs["backend_kwargs"]["indexpath"] = ""
 
     ds = xr.open_mfdataset(filepath, *args, **kwargs)
 
