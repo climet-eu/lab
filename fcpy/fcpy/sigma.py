@@ -16,7 +16,7 @@ import xarray as xr
 from kneed import KneeLocator
 from tqdm import tqdm
 
-import fcpy
+import fcpy  # noqa: F401
 
 from .suite import run_compressor_single
 from .utils import compute_min_bits, compute_z_score, get_bits_params
@@ -72,7 +72,7 @@ def compute_sigmas(da: xr.DataArray, compressors: list) -> xr.DataArray:
             try:
                 da_decompressed = run_compressor_single(
                     da,
-                    getattr(fcpy.compressors, compressor.values)(),
+                    eval(compressor.values),
                     int(bits.values),
                 )
             except Exception:

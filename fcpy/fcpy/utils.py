@@ -53,6 +53,7 @@ def compute_z_score(da: xr.DataArray) -> xr.DataArray:
     return (da - da.min()) / (da.max() - da.min())
 
 
+# TODO: remove
 def get_bits_params(da: xr.DataArray) -> dict:
     if da.dtype == np.float32:
         dtype_int = np.uint32
@@ -71,6 +72,7 @@ def get_bits_params(da: xr.DataArray) -> dict:
     )
 
 
+# TODO: remove
 def to_bits(da, bits_params):
     value_range = np.linspace(da.min(), da.max(), 10000).astype(da.dtype)
     l = []  # TODO: what does this do?
@@ -94,6 +96,7 @@ def to_bits(da, bits_params):
     return np.array(l2)
 
 
+# TODO: rewrite
 def compute_min_bits(da, bits_params):
     bits_arr = to_bits(da, bits_params)
     used_sign_and_exponent_bits = 0

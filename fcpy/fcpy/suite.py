@@ -38,11 +38,12 @@ def run_compressor_single(
     da: xr.DataArray, compressor: Compressor, bits: int
 ) -> xr.DataArray:
     # output: dims=[compressor, bits, existing dims...]
-    compressed, params = compressor.compress(da.values, bits)
-    decompressed = compressor.decompress(compressed, params)
-    da2 = da.copy(data=decompressed)
-    da2 = da2.expand_dims(compressor=[compressor.name], bits=[bits])
-    return da2
+    compressed_da, params = compressor.compress(da, bits)
+    decompressed_da = compressor.decompress(compressed_da, params)
+    decompressed_da = decompressed_da.expand_dims(
+        compressor=[compressor.name], bits=[bits]
+    )
+    return decompressed_da
 
 
 def get_chunk_fn(da: xr.DataArray, chunk_dims: list[str]) -> Callable:
