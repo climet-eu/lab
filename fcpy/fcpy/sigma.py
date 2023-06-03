@@ -72,7 +72,7 @@ def compute_sigmas(da: xr.DataArray, compressors: list) -> xr.DataArray:
             try:
                 da_decompressed = run_compressor_single(
                     da,
-                    eval(f"fcpy.{compressor.values}()"),
+                    getattr(fcpy.compressors, compressor.values)(),
                     int(bits.values),
                 )
             except Exception:
@@ -208,12 +208,10 @@ def sigmas_iterate_da(da, compressors, plot=False) -> xr.Dataset:
     )
     da_bits = da_.expand_dims(compressor=compressors_).copy().rename("bits")
     da_sigma = xr.full_like(da_bits, np.nan).rename("sigma")
-    da_bitinf = xr.full_like(da_bits, np.nan).rename("bitinf")
 
     # Do not use metadata from reference da
     da_bits.attrs = {}
     da_sigma.attrs = {}
-    da_bitinf.attrs = {}
 
     for sel in dims_mapping:
         da_reference = da.sel(sel)
@@ -221,10 +219,7 @@ def sigmas_iterate_da(da, compressors, plot=False) -> xr.Dataset:
         da_knees = compute_knees_field(da_reference, da_sigmas, plot=plot)
         da_bits.loc[sel] = da_knees["bits"]
         da_sigma.loc[sel] = da_knees["sigmas"]
-        da_bitinf.loc[sel] = fcpy.compute_required_bits_single_variable(
-            da_reference, fcpy.get_field_chunk_fn(da_reference), [0.99]
-        )[0][0]
-    return xr.merge([dict(bits=da_bits, sigmas=da_sigma, bitinf=da_bitinf)])
+    return xr.merge([dict(bits=da_bits, sigmas=da_sigma)])
 
 
 def sigmas_iterate_ds(ds: xr.Dataset, compressors: list, plot=False) -> dict:

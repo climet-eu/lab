@@ -7,6 +7,7 @@
 # nor does it submit to any jurisdiction.
 #
 
+import warnings
 from abc import ABCMeta, abstractmethod
 from typing import Optional, Tuple
 
@@ -199,10 +200,16 @@ class Round(Compressor):
         )
 
         # integer used for bitshift
-        shift = significand_bits - mantissa_bits  # normal case
-        shift -= (
-            mantissa_bits == significand_bits
-        )  # to avoid round away from 0
+        shift = significand_bits - mantissa_bits
+
+        if shift < 0:
+            warnings.warn(
+                "The rounding compression is a no-op since the dataset dtype"
+                f" {arr.dtype} does not support more than"
+                f" {significand_bits} mantissa bits."
+            )
+
+            return arr, {}
 
         # mask to zero trailing mantissa bits
         keep_mask = (sint(~significand_mask) >> mantissa_bits).astype(uint)
