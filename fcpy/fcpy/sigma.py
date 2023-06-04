@@ -16,10 +16,8 @@ import xarray as xr
 from kneed import KneeLocator
 from tqdm import tqdm
 
-import fcpy  # noqa: F401
-
 from .suite import run_compressor_single
-from .utils import compute_min_bits, compute_z_score, get_bits_params
+from .utils import compute_z_score
 
 
 @np.errstate(invalid="ignore")
@@ -42,15 +40,8 @@ def compute_sigmas(da: xr.DataArray, compressors: list) -> xr.DataArray:
     # Compute a pseudo random as reference
     arr_rand = np.random.uniform(0, 1, da.shape)
 
-    # Ensure that the number of bits is valid for Round
-    bits_params = get_bits_params(da)
-    if "Round" or "Log" in [c.name for c in compressors]:
-        # FIXME: We add one to the minimum??
-        bits_min = compute_min_bits(da, bits_params) + 1
-        bits_max = bits_params["width"]
-        bits = range(bits_min, bits_max + 1)
-    else:
-        bits = bits_params["width"]
+    # Full range of possible bit widths
+    bits = range(1, np.empty(0, dtype=da.dtype).itemsize * 8)
 
     da_sigmas = xr.DataArray(
         np.nan,

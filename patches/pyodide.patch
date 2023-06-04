@@ -266,10 +266,10 @@ index 00000000..9bb0d7fd
 +  license: BSD
 diff --git a/packages/fcpy/meta.yaml b/packages/fcpy/meta.yaml
 new file mode 100644
-index 00000000..16383bb7
+index 00000000..9b6bdd7a
 --- /dev/null
 +++ b/packages/fcpy/meta.yaml
-@@ -0,0 +1,31 @@
+@@ -0,0 +1,34 @@
 +package:
 +  name: fcpy
 +  version: 0.21.1
@@ -288,14 +288,17 @@ index 00000000..16383bb7
 +    - fast-histogram
 +    - ipywidgets
 +    - kneed
++    - lzma
 +    - matplotlib
 +    - netcdf4
++    - numcodecs
 +    - numpy
 +    - scikit-image
 +    - scikit-learn
 +    - scipy
 +    - tqdm
 +    - xarray
++    - zarr
 +
 +about:
 +  home: https://github.com/ecmwf-lab/field-compression
