@@ -15,23 +15,13 @@ classifiers = [
 ]
 dependencies = [
     "cartopy",
-    "cfgrib",
     "cycler",
     "dask",
-    "fast-histogram",
-    "ipywidgets",
-    "kneed",
-    "lzma",
     "matplotlib",
-    "netcdf4",
     "numcodecs",
     "numpy",
     "scikit-image",
-    "scikit-learn",
-    "scipy",
-    "tqdm",
     "xarray",
-    "zarr",
 ]
 
 [project.optional-dependencies]

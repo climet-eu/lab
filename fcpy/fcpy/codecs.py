@@ -20,7 +20,6 @@ from numcodes.compat import (
 class Identity(Codec):
     """Identity filter which passes through the input on encoding
     and deecoding.
-
     """
 
     codec_id = "identity"
@@ -35,10 +34,51 @@ class Identity(Codec):
 register_codec(Identity)
 
 
+class Reinterpret(Codec):
+    """Filter to reinterpret data between different types.
+
+    Args:
+        encode_dtype (dtype): Data type to use for encoded data.
+        decode_dtype (dtype): Data type to use for decoded data.
+    """
+
+    codec_id = "reinterpret"
+
+    def __init__(self, encode_dtype, decode_dtype):
+        self.encode_dtype = np.dtype(encode_dtype)
+        self.decode_dtype = np.dtype(decode_dtype)
+
+    def encode(self, buf):
+        arr = ensure_ndarray_like(buf).view(self.decode_dtype)
+
+        return arr.view(self.encode_dtype)
+
+    def decode(self, buf, out=None):
+        enc = ensure_ndarray_like(buf).view(self.encode_dtype)
+        dec = enc.view(self.decode_dtype)
+
+        return ndarray_copy(dec, out)
+
+    def get_config(self):
+        return {
+            "id": self.codec_id,
+            "encode_dtype": self.encode_dtype.str,
+            "decode_dtype": self.decode_dtype.str,
+        }
+
+    def __repr__(self):
+        return (
+            f"{type(self).__name__}(encode_dtype={repr(self.encode_dtype.str)},"
+            f" decode_dtype={repr(self.decode_dtype.str)})"
+        )
+
+
+register_codec(Reinterpret)
+
+
 class Log(Codec):
     """Log filter which calculates c = log(1+x) on encoding and
     d = exp(c)-1 on decoding.
-
     """
 
     codec_id = "log"

@@ -245,34 +245,15 @@ index 00000000..671f423a
 +     install_requires=install_requires,
 +     tests_require=[
 +         "pytest",
-diff --git a/packages/fast-histogram/meta.yaml b/packages/fast-histogram/meta.yaml
-new file mode 100644
-index 00000000..9bb0d7fd
---- /dev/null
-+++ b/packages/fast-histogram/meta.yaml
-@@ -0,0 +1,13 @@
-+package:
-+  name: fast-histogram
-+  version: "0.11"
-+  top-level:
-+    - fast_histogram
-+source:
-+  url: https://files.pythonhosted.org/packages/c2/35/36883176c938d8610271093e3b950048a928c200cd4a51b77b70cabd91c9/fast-histogram-0.11.tar.gz
-+  sha256: 9acb6fa5b6efd928663008965da186962bdeae20e6d5bbb3b1195dfbd1d906f0
-+about:
-+  home: https://github.com/astrofrog/fast-histogram
-+  PyPI: https://pypi.org/project/fast-histogram
-+  summary: Fast simple 1D and 2D histograms
-+  license: BSD
 diff --git a/packages/fcpy/meta.yaml b/packages/fcpy/meta.yaml
 new file mode 100644
-index 00000000..9b6bdd7a
+index 00000000..aab0c8c5
 --- /dev/null
 +++ b/packages/fcpy/meta.yaml
-@@ -0,0 +1,34 @@
+@@ -0,0 +1,29 @@
 +package:
 +  name: fcpy
-+  version: 0.21.1
++  version: 0.2.0
 +  top-level:
 +    - fcpy
 +source:
@@ -283,22 +264,17 @@ index 00000000..9b6bdd7a
 +requirements:
 +  run:
 +    - Cartopy
-+    - cfgrib
++    - cfgrib  # only for pre-loading
++    - cycler
 +    - dask
-+    - fast-histogram
-+    - ipywidgets
-+    - kneed
-+    - lzma
++    - lzma  # only for pre-loading
 +    - matplotlib
-+    - netcdf4
++    - netcdf4  # only for pre-loading
 +    - numcodecs
 +    - numpy
 +    - scikit-image
-+    - scikit-learn
-+    - scipy
-+    - tqdm
 +    - xarray
-+    - zarr
++    - zarr  # only for pre-loading
 +
 +about:
 +  home: https://github.com/ecmwf-lab/field-compression
@@ -411,29 +387,6 @@ index 00000000..f8920c6c
 +  home: https://github.com/jupyter-widgets/ipywidgets
 +  PyPI: https://pypi.org/project/jupyterlab_widgets
 +  summary: Jupyter interactive widgets for JupyterLab
-+  license: BSD-3-Clause
-diff --git a/packages/kneed/meta.yaml b/packages/kneed/meta.yaml
-new file mode 100644
-index 00000000..6935a293
---- /dev/null
-+++ b/packages/kneed/meta.yaml
-@@ -0,0 +1,17 @@
-+package:
-+  name: kneed
-+  version: 0.8.3
-+  top-level:
-+    - kneed
-+source:
-+  url: https://files.pythonhosted.org/packages/22/55/f42149c6d3ff9eed1808a1741b0e814202d12af1ddb87765f879c3b32703/kneed-0.8.3-py3-none-any.whl
-+  sha256: 8d31366cbd5af929057d4c8701f0eae96460cb995dfc6306ae3183051086a82a
-+requirements:
-+  run:
-+    - numpy
-+    - scipy
-+about:
-+  home: https://github.com/arvkevi/kneed
-+  PyPI: https://pypi.org/project/kneed
-+  summary: Knee-point detection in Python
 +  license: BSD-3-Clause
 diff --git a/packages/libeccodes/meta.yaml b/packages/libeccodes/meta.yaml
 new file mode 100644
@@ -957,6 +910,46 @@ index e3c6c337..5338926f 100644
  about:
    home: https://github.com/pydata/xarray
    PyPI: https://pypi.org/project/xarray
+diff --git a/packages/zfpy/meta.yaml b/packages/zfpy/meta.yaml
+new file mode 100644
+index 00000000..f2d68564
+--- /dev/null
++++ b/packages/zfpy/meta.yaml
+@@ -0,0 +1,34 @@
++package:
++  name: zfpy
++  version: 1.0.0
++  top-level:
++    - zfpy
++source:
++  url: https://github.com/LLNL/zfp/archive/refs/tags/1.0.0.tar.gz
++  sha256: fe13b03141ee9b571692aed42ff76cf37c9dcda40f9a43a808870dca3558a57c
++requirements:
++  host:
++    - numpy
++  run:
++    - numpy
++
++build:
++  vendor-sharedlib: true
++  script: |
++    mkdir -p build
++
++    cd build && \
++      emcmake cmake ../ \
++        -DCMAKE_INSTALL_PREFIX=$WASM_LIBRARY_DIR \
++        -DCMAKE_BUILD_TYPE=Release \
++        -DZFP_WITH_OPENMP=OFF \
++        -DBUILD_ZFPY=ON \
++        -DBUILD_UTILITIES=OFF;
++    
++    emmake make -j ${PYODIDE_JOBS:-3} install;
++
++about:
++  home: https://zfp.llnl.gov/
++  PyPI: https://pypi.org/project/zfpy/
++  summary: Compressed numerical arrays that support high-speed random access
++  license: BSD-3-Clause
 diff --git a/packages/zipp/meta.yaml b/packages/zipp/meta.yaml
 new file mode 100644
 index 00000000..0aa4ec79
