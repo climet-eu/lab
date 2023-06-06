@@ -835,25 +835,6 @@ index 00000000..e10596cc
 +  PyPI: https://pypi.org/project/netcdf4
 +  summary: Provides an object-oriented python interface to the netCDF version 4 library
 +  license: MIT
-diff --git a/packages/pyodide_http/meta.yaml b/packages/pyodide_http/meta.yaml
-new file mode 100644
-index 00000000..f0aadef5
---- /dev/null
-+++ b/packages/pyodide_http/meta.yaml
-@@ -0,0 +1,13 @@
-+package:
-+  name: pyodide_http
-+  version: 0.2.1
-+  top-level:
-+    - pyodide_http
-+source:
-+  url: https://files.pythonhosted.org/packages/2d/14/d1bf3b7141ad5a42c26e4173a69e3e6529bd92b05bc587c570d28b6a3ce8/pyodide_http-0.2.1-py3-none-any.whl
-+  sha256: 504f62904536a91049c12d0b9162ebaa187a84a3dd877e17c04fd9bf6ec3b68e
-+about:
-+  home: https://github.com/koenvo/pyodide-http
-+  PyPI: https://pypi.org/project/pyodide_http
-+  summary: Patch requests, urllib and urllib3 to make them work in Pyodide
-+  license: MIT
 diff --git a/packages/pyshp/meta.yaml b/packages/pyshp/meta.yaml
 new file mode 100644
 index 00000000..355a6426
