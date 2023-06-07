@@ -323,18 +323,18 @@ index 00000000..081bb2cf
 +  license: "Apache Software License"
 diff --git a/packages/ipyfilite/meta.yaml b/packages/ipyfilite/meta.yaml
 new file mode 100644
-index 00000000..35f60486
+index 00000000..d6a68810
 --- /dev/null
 +++ b/packages/ipyfilite/meta.yaml
 @@ -0,0 +1,19 @@
 +package:
 +  name: ipyfilite
-+  version: 0.1.4
++  version: 0.1.7
 +  top-level:
 +    - ipyfilite
 +source:
-+  url: https://files.pythonhosted.org/packages/e8/21/ffa423d2939f4f6497c8a2278a3ce4cceeafec84454668e3c83413bde962/ipyfilite-0.1.4-py3-none-any.whl
-+  sha256: bfe4cbfbb86e573e7f926d246ef5d22e12b35c155fe7b4562427b8d45fef6f40
++  url: https://files.pythonhosted.org/packages/ed/af/e6aaa701e7586297c748f657b7a55f1685732207bbe0125bb288ee6854b7/ipyfilite-0.1.7-py3-none-any.whl
++  sha256: 3faa5bc7109b94f77cd5edbb20b27b6d3ebfb9faca1113ba45336a6c568fc300
 +requirements:
 +  run:
 +    - ipywidgets

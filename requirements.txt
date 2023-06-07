@@ -21,4 +21,4 @@ ipyevents>=2.0.1
 ipympl>=0.9.3
 
 # Python: ipyfilite library for file upload in JupyterLite Pyodide notebooks
-ipyfilite>=0.1.4
+ipyfilite>=0.1.7
