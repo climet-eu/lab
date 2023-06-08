@@ -247,10 +247,10 @@ index 00000000..671f423a
 +         "pytest",
 diff --git a/packages/fcpy/meta.yaml b/packages/fcpy/meta.yaml
 new file mode 100644
-index 00000000..aab0c8c5
+index 00000000..daf96a0f
 --- /dev/null
 +++ b/packages/fcpy/meta.yaml
-@@ -0,0 +1,29 @@
+@@ -0,0 +1,30 @@
 +package:
 +  name: fcpy
 +  version: 0.2.0
@@ -275,6 +275,7 @@ index 00000000..aab0c8c5
 +    - scikit-image
 +    - xarray
 +    - zarr  # only for pre-loading
++    - zfpy  # only for pre-loading
 +
 +about:
 +  home: https://github.com/ecmwf-lab/field-compression
@@ -893,10 +894,10 @@ index e3c6c337..5338926f 100644
    PyPI: https://pypi.org/project/xarray
 diff --git a/packages/zfpy/meta.yaml b/packages/zfpy/meta.yaml
 new file mode 100644
-index 00000000..f2d68564
+index 00000000..9d376bdf
 --- /dev/null
 +++ b/packages/zfpy/meta.yaml
-@@ -0,0 +1,34 @@
+@@ -0,0 +1,37 @@
 +package:
 +  name: zfpy
 +  version: 1.0.0
@@ -905,6 +906,8 @@ index 00000000..f2d68564
 +source:
 +  url: https://github.com/LLNL/zfp/archive/refs/tags/1.0.0.tar.gz
 +  sha256: fe13b03141ee9b571692aed42ff76cf37c9dcda40f9a43a808870dca3558a57c
++  patches:
++    - patches/0001-setup-with-cython.patch
 +requirements:
 +  host:
 +    - numpy
@@ -920,17 +923,48 @@ index 00000000..f2d68564
 +      emcmake cmake ../ \
 +        -DCMAKE_INSTALL_PREFIX=$WASM_LIBRARY_DIR \
 +        -DCMAKE_BUILD_TYPE=Release \
++        -DBUILD_TESTING=OFF \
 +        -DZFP_WITH_OPENMP=OFF \
-+        -DBUILD_ZFPY=ON \
 +        -DBUILD_UTILITIES=OFF;
 +    
-+    emmake make -j ${PYODIDE_JOBS:-3} install;
++    emmake make -j ${PYODIDE_JOBS:-3};
++    emmake make install;
 +
 +about:
 +  home: https://zfp.llnl.gov/
 +  PyPI: https://pypi.org/project/zfpy/
 +  summary: Compressed numerical arrays that support high-speed random access
 +  license: BSD-3-Clause
+diff --git a/packages/zfpy/patches/0001-setup-with-cython.patch b/packages/zfpy/patches/0001-setup-with-cython.patch
+new file mode 100644
+index 00000000..7c834c35
+--- /dev/null
++++ b/packages/zfpy/patches/0001-setup-with-cython.patch
+@@ -0,0 +1,24 @@
++diff --git a/setup.py b/setup.py
++index 9e4c391..7f53777 100644
++--- a/setup.py
+++++ b/setup.py
++@@ -1,3 +1,4 @@
+++import os
++ from setuptools import setup, Extension
++ import numpy as np
++ 
++@@ -9,7 +10,11 @@ setup(
++     url="https://zfp.llnl.gov",
++     description="zfp compression in Python",
++     long_description="zfp is a compressed format for representing multidimensional floating-point and integer arrays. zfp provides compressed-array classes that support high throughput read and write random access to individual array elements. zfp also supports serial and parallel compression of whole arrays using both lossless and lossy compression with error tolerances. zfp is primarily written in C and C++ but also includes Python and Fortran bindings.",
++-    ext_modules=[Extension("zfpy", ["build/python/zfpy.c"],
++-                           include_dirs=["include", np.get_include()],
++-                           libraries=["zfp"], library_dirs=["build/lib64", "build/lib/Release"])]
+++    ext_modules=[Extension(
+++        "zfpy", ["python/zfpy.pxd", "python/zfpy.pyx"],
+++        include_dirs=["include", np.get_include()],
+++        libraries=["zfp"],
+++        library_dirs=[os.environ["WASM_LIBRARY_DIR"] + "/lib"],
+++    )],
+++    setup_requires=["cython>=0.17", "numpy"],
++ )
 diff --git a/packages/zipp/meta.yaml b/packages/zipp/meta.yaml
 new file mode 100644
 index 00000000..0aa4ec79
