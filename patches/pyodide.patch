@@ -102,18 +102,20 @@ index 00000000..6dfc8934
 +    plt.show()
 diff --git a/packages/cfgrib/meta.yaml b/packages/cfgrib/meta.yaml
 new file mode 100644
-index 00000000..735c4ef0
+index 00000000..8fd06581
 --- /dev/null
 +++ b/packages/cfgrib/meta.yaml
-@@ -0,0 +1,22 @@
+@@ -0,0 +1,24 @@
 +package:
 +  name: cfgrib
 +  version: 0.9.10.4
 +  top-level:
 +    - cfgrib
 +source:
-+  url: https://files.pythonhosted.org/packages/0d/61/2b152f062ffa494ce57ee5befe025955f4bb245f4ceeb78f1a682be65438/cfgrib-0.9.10.4-py3-none-any.whl
-+  sha256: 563416811cd53a861acf47998ef21769accba641b1715d2af4d7e165c4868beb
++  url: https://files.pythonhosted.org/packages/69/b4/5389e5b3240d24aa1210ba698b3c5c8c800e1a83842af9b1effa52b4a389/cfgrib-0.9.10.4.tar.gz
++  sha256: b490078192aa13ec89c77296110355521442325866b16a996f4b3cf421542909
++  patches:
++    - patches/0001-dataset-inferred-dtype.patch
 +requirements:
 +  run:
 +    - attrs
@@ -128,6 +130,62 @@ index 00000000..735c4ef0
 +    Python interface to map GRIB files to the NetCDF Common Data Model following
 +    the CF Convention using ecCodes.
 +  license: Apache License Version 2.0
+diff --git a/packages/cfgrib/patches/0001-dataset-inferred-dtype.patch b/packages/cfgrib/patches/0001-dataset-inferred-dtype.patch
+new file mode 100644
+index 00000000..2104d93a
+--- /dev/null
++++ b/packages/cfgrib/patches/0001-dataset-inferred-dtype.patch
+@@ -0,0 +1,50 @@
++diff --git a/cfgrib/dataset.py b/cfgrib/dataset.py
++index e4f91ec..f81afb7 100644
++--- a/cfgrib/dataset.py
+++++ b/cfgrib/dataset.py
++@@ -330,11 +330,11 @@ class OnDiskArray:
++     ] = attr.attrib(repr=False)
++     missing_value: float
++     geo_ndim: int = attr.attrib(default=1, repr=False)
++-    dtype = np.dtype("float32")
+++    dtype: np.dtype = attr.attrib(default=np.dtype("float32"), repr=False)
++ 
++     def build_array(self) -> np.ndarray:
++         """Helper method used to test __getitem__"""
++-        array = np.full(self.shape, fill_value=np.nan, dtype="float32")
+++        array = np.full(self.shape, fill_value=np.nan, dtype=self.dtype)
++         for header_indexes, message_ids in self.field_id_index.items():
++             # NOTE: fill a single field as found in the message
++             message = self.index.get_field(message_ids[0])  # type: ignore
++@@ -348,7 +348,7 @@ class OnDiskArray:
++         header_item_list = expand_item(item[: -self.geo_ndim], self.shape)
++         header_item = [{ix: i for i, ix in enumerate(it)} for it in header_item_list]
++         array_field_shape = tuple(len(i) for i in header_item_list) + self.shape[-self.geo_ndim :]
++-        array_field = np.full(array_field_shape, fill_value=np.nan, dtype="float32")
+++        array_field = np.full(array_field_shape, fill_value=np.nan, dtype=self.dtype)
++         for header_indexes, message_ids in self.field_id_index.items():
++             try:
++                 array_field_indexes = [it[ix] for it, ix in zip(header_item, header_indexes)]
++@@ -566,12 +566,22 @@ def build_variable_components(
++                     extra_coords_data[coord_name][header_value] = coord_value
++         offsets[tuple(header_indexes)] = message_ids
++     missing_value = data_var_attrs.get("missingValue", messages.MISSING_VAUE_INDICATOR)
+++    if len(offsets) > 0:
+++        # Infer the dtype from the first data message
+++        header_indexes, message_ids = next(iter(offsets.items()))
+++        message = index.get_field(message_ids[0])
+++        values = get_values_in_order(message, np.empty(shape)[header_indexes].shape)
+++        dtype = values.dtype
+++    else:
+++        # Fall back to a reasonable default dtype
+++        dtype = np.dtype("float32")
++     on_disk_array = OnDiskArray(
++         index=index,
++         shape=shape,
++         field_id_index=offsets,
++         missing_value=missing_value,
++         geo_ndim=len(geo_dims),
+++        dtype=dtype,
++     )
++ 
++     if "time" in coord_vars and "step" in coord_vars:
 diff --git a/packages/dask/meta.yaml b/packages/dask/meta.yaml
 new file mode 100644
 index 00000000..72e2ee63

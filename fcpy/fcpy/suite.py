@@ -58,7 +58,7 @@ def compress_decompress_dataarray_single_chunk(
         shape, dtype = silhouettes.pop()
         out = np.empty(shape=shape, dtype=dtype)
 
-        decoded = d.decode(decoded, out)
+        decoded = d.decode(decoded, out).reshape(shape)
 
     return da.copy(deep=False, data=decoded).chunk([-1] * len(da.shape))
 
@@ -85,6 +85,7 @@ def compress_decompress_dataarray_chunked(
     # Encoding and decoding must be run together as xr.map_blocks is still *very* brittle
     return xr.map_blocks(
         compress_decompress_dataarray_single_chunk,
+        da,
         kwargs=dict(compressor=compressor),
     )
 

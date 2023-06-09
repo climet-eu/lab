@@ -9,12 +9,12 @@
 
 import numpy as np
 from numcodecs.abc import Codec
-from numcodecs.registry import register_codec
-from numcodes.compat import (
+from numcodecs.compat import (
     ensure_contiguous_ndarray_like,
     ensure_ndarray_like,
     ndarray_copy,
 )
+from numcodecs.registry import register_codec
 
 
 class Identity(Codec):
@@ -152,29 +152,25 @@ register_codec(Standardize)
 
 class LinearQuantize(Codec):
     """Lossy filter to reduce the precision of floating point data. The data
-    is quantized to unsigned integers of the best-fitting type. The range of
-    the input data is stored in-band.
+    is quantized to unsigned integers of the best-fitting type. The range and
+    shape of the input data is stored in-band.
 
     Args:
         bits (int): Desired precision (number of binary digits).
         dtype (dtype): Data type to use for decoded data.
-        shape (Tuple[int, ...]): Shape of the provided data.
     """
 
     codec_id = "linear-quantize"
 
-    def __init__(self, bits, dtype, shape):
+    def __init__(self, bits, dtype):
         self.bits = bits
         if self.bits <= 0 or self.bits > 64:
             raise ValueError("bits must be in range [1; 64]")
         self.dtype = np.dtype(dtype)
         if self.dtype.kind != "f":
             raise ValueError("only floating point data types are supported")
-        self.shape = shape
 
     def encode(self, buf):
-        assert ensure_ndarray_like(buf).shape == self.shape
-
         arr = ensure_contiguous_ndarray_like(buf).view(self.dtype)
 
         if self.bits <= 8:
@@ -196,11 +192,17 @@ class LinearQuantize(Codec):
         dsize = arr.itemsize
         isize = arr_enc.itemsize
         hsize = (dsize + isize - 1) // isize
+        ssize = 8 // isize
 
-        enc = np.empty(arr_enc.size + hsize * 2, dtype=itype)
-        enc[:hsize].view(self.dtype)[0] = minimum
-        enc[hsize : hsize * 2].view(self.dtype)[0] = maximum
-        ndarray_copy(arr_enc, enc[hsize * 2 :])
+        enc = np.empty(
+            arr_enc.size + hsize * 2 + 1 + ssize * len(arr.shape), dtype=itype
+        )
+        enc[: hsize * 2].view(self.dtype)[:] = minimum, maximum
+        enc[hsize * 2] = len(arr.shape)
+        enc[hsize * 2 + 1 : hsize * 2 + 1 + ssize * len(arr.shape)].view(
+            np.uint64
+        )[:] = arr.shape
+        ndarray_copy(arr_enc, enc[hsize * 2 + 1 + ssize * len(arr.shape) :])
 
         return enc
 
@@ -219,17 +221,21 @@ class LinearQuantize(Codec):
         dsize = np.empty(0, dtype=self.dtype).itemsize
         isize = enc.itemsize
         hsize = (dsize + isize - 1) // isize
+        ssize = 8 // isize
 
-        minimum = enc[:hsize].view(self.dtype)[0]
-        maximum = enc[hsize : hsize * 2].view(self.dtype)[0]
+        minimum, maximum = enc[: hsize * 2].view(self.dtype)[:]
+        shape_len = enc[hsize * 2]
+        shape = enc[hsize * 2 + 1 : hsize * 2 + 1 + ssize * shape_len].view(
+            np.uint64
+        )[:]
 
         dec = (
-            enc[hsize * 2 :].astype(self.dtype)
+            enc[hsize * 2 + 1 + ssize * shape_len :].astype(self.dtype)
             / ((2**self.bits) - 1)
             * (maximum - minimum)
         ) + minimum
 
-        return ndarray_copy(dec.reshape(self.shape), out)
+        return ndarray_copy(dec.reshape(shape), out)
 
     def get_config(self):
         # override to handle encoding dtypes
@@ -237,13 +243,12 @@ class LinearQuantize(Codec):
             id=self.codec_id,
             bits=self.bits,
             dtype=self.dtype.str,
-            shape=self.shape,
         )
 
     def __repr__(self):
         return (
             f"{type(self).__name__}(bits={self.bits},"
-            f" dtype={repr(self.dtype.str)}, shape={self.shape})"
+            f" dtype={repr(self.dtype.str)})"
         )
 
 
