@@ -102,18 +102,20 @@ index 00000000..6dfc8934
 +    plt.show()
 diff --git a/packages/cfgrib/meta.yaml b/packages/cfgrib/meta.yaml
 new file mode 100644
-index 00000000..735c4ef0
+index 00000000..8fd06581
 --- /dev/null
 +++ b/packages/cfgrib/meta.yaml
-@@ -0,0 +1,22 @@
+@@ -0,0 +1,24 @@
 +package:
 +  name: cfgrib
 +  version: 0.9.10.4
 +  top-level:
 +    - cfgrib
 +source:
-+  url: https://files.pythonhosted.org/packages/0d/61/2b152f062ffa494ce57ee5befe025955f4bb245f4ceeb78f1a682be65438/cfgrib-0.9.10.4-py3-none-any.whl
-+  sha256: 563416811cd53a861acf47998ef21769accba641b1715d2af4d7e165c4868beb
++  url: https://files.pythonhosted.org/packages/69/b4/5389e5b3240d24aa1210ba698b3c5c8c800e1a83842af9b1effa52b4a389/cfgrib-0.9.10.4.tar.gz
++  sha256: b490078192aa13ec89c77296110355521442325866b16a996f4b3cf421542909
++  patches:
++    - patches/0001-dataset-inferred-dtype.patch
 +requirements:
 +  run:
 +    - attrs
@@ -128,6 +130,62 @@ index 00000000..735c4ef0
 +    Python interface to map GRIB files to the NetCDF Common Data Model following
 +    the CF Convention using ecCodes.
 +  license: Apache License Version 2.0
+diff --git a/packages/cfgrib/patches/0001-dataset-inferred-dtype.patch b/packages/cfgrib/patches/0001-dataset-inferred-dtype.patch
+new file mode 100644
+index 00000000..2104d93a
+--- /dev/null
++++ b/packages/cfgrib/patches/0001-dataset-inferred-dtype.patch
+@@ -0,0 +1,50 @@
++diff --git a/cfgrib/dataset.py b/cfgrib/dataset.py
++index e4f91ec..f81afb7 100644
++--- a/cfgrib/dataset.py
+++++ b/cfgrib/dataset.py
++@@ -330,11 +330,11 @@ class OnDiskArray:
++     ] = attr.attrib(repr=False)
++     missing_value: float
++     geo_ndim: int = attr.attrib(default=1, repr=False)
++-    dtype = np.dtype("float32")
+++    dtype: np.dtype = attr.attrib(default=np.dtype("float32"), repr=False)
++ 
++     def build_array(self) -> np.ndarray:
++         """Helper method used to test __getitem__"""
++-        array = np.full(self.shape, fill_value=np.nan, dtype="float32")
+++        array = np.full(self.shape, fill_value=np.nan, dtype=self.dtype)
++         for header_indexes, message_ids in self.field_id_index.items():
++             # NOTE: fill a single field as found in the message
++             message = self.index.get_field(message_ids[0])  # type: ignore
++@@ -348,7 +348,7 @@ class OnDiskArray:
++         header_item_list = expand_item(item[: -self.geo_ndim], self.shape)
++         header_item = [{ix: i for i, ix in enumerate(it)} for it in header_item_list]
++         array_field_shape = tuple(len(i) for i in header_item_list) + self.shape[-self.geo_ndim :]
++-        array_field = np.full(array_field_shape, fill_value=np.nan, dtype="float32")
+++        array_field = np.full(array_field_shape, fill_value=np.nan, dtype=self.dtype)
++         for header_indexes, message_ids in self.field_id_index.items():
++             try:
++                 array_field_indexes = [it[ix] for it, ix in zip(header_item, header_indexes)]
++@@ -566,12 +566,22 @@ def build_variable_components(
++                     extra_coords_data[coord_name][header_value] = coord_value
++         offsets[tuple(header_indexes)] = message_ids
++     missing_value = data_var_attrs.get("missingValue", messages.MISSING_VAUE_INDICATOR)
+++    if len(offsets) > 0:
+++        # Infer the dtype from the first data message
+++        header_indexes, message_ids = next(iter(offsets.items()))
+++        message = index.get_field(message_ids[0])
+++        values = get_values_in_order(message, np.empty(shape)[header_indexes].shape)
+++        dtype = values.dtype
+++    else:
+++        # Fall back to a reasonable default dtype
+++        dtype = np.dtype("float32")
++     on_disk_array = OnDiskArray(
++         index=index,
++         shape=shape,
++         field_id_index=offsets,
++         missing_value=missing_value,
++         geo_ndim=len(geo_dims),
+++        dtype=dtype,
++     )
++ 
++     if "time" in coord_vars and "step" in coord_vars:
 diff --git a/packages/dask/meta.yaml b/packages/dask/meta.yaml
 new file mode 100644
 index 00000000..72e2ee63
@@ -245,34 +303,15 @@ index 00000000..671f423a
 +     install_requires=install_requires,
 +     tests_require=[
 +         "pytest",
-diff --git a/packages/fast-histogram/meta.yaml b/packages/fast-histogram/meta.yaml
-new file mode 100644
-index 00000000..9bb0d7fd
---- /dev/null
-+++ b/packages/fast-histogram/meta.yaml
-@@ -0,0 +1,13 @@
-+package:
-+  name: fast-histogram
-+  version: "0.11"
-+  top-level:
-+    - fast_histogram
-+source:
-+  url: https://files.pythonhosted.org/packages/c2/35/36883176c938d8610271093e3b950048a928c200cd4a51b77b70cabd91c9/fast-histogram-0.11.tar.gz
-+  sha256: 9acb6fa5b6efd928663008965da186962bdeae20e6d5bbb3b1195dfbd1d906f0
-+about:
-+  home: https://github.com/astrofrog/fast-histogram
-+  PyPI: https://pypi.org/project/fast-histogram
-+  summary: Fast simple 1D and 2D histograms
-+  license: BSD
 diff --git a/packages/fcpy/meta.yaml b/packages/fcpy/meta.yaml
 new file mode 100644
-index 00000000..16383bb7
+index 00000000..daf96a0f
 --- /dev/null
 +++ b/packages/fcpy/meta.yaml
-@@ -0,0 +1,31 @@
+@@ -0,0 +1,30 @@
 +package:
 +  name: fcpy
-+  version: 0.21.1
++  version: 0.2.0
 +  top-level:
 +    - fcpy
 +source:
@@ -283,19 +322,18 @@ index 00000000..16383bb7
 +requirements:
 +  run:
 +    - Cartopy
-+    - cfgrib
++    - cfgrib  # only for pre-loading
++    - cycler
 +    - dask
-+    - fast-histogram
-+    - ipywidgets
-+    - kneed
++    - lzma  # only for pre-loading
 +    - matplotlib
-+    - netcdf4
++    - netcdf4  # only for pre-loading
++    - numcodecs
 +    - numpy
 +    - scikit-image
-+    - scikit-learn
-+    - scipy
-+    - tqdm
 +    - xarray
++    - zarr  # only for pre-loading
++    - zfpy  # only for pre-loading
 +
 +about:
 +  home: https://github.com/ecmwf-lab/field-compression
@@ -344,18 +382,18 @@ index 00000000..081bb2cf
 +  license: "Apache Software License"
 diff --git a/packages/ipyfilite/meta.yaml b/packages/ipyfilite/meta.yaml
 new file mode 100644
-index 00000000..35f60486
+index 00000000..d6a68810
 --- /dev/null
 +++ b/packages/ipyfilite/meta.yaml
 @@ -0,0 +1,19 @@
 +package:
 +  name: ipyfilite
-+  version: 0.1.4
++  version: 0.1.7
 +  top-level:
 +    - ipyfilite
 +source:
-+  url: https://files.pythonhosted.org/packages/e8/21/ffa423d2939f4f6497c8a2278a3ce4cceeafec84454668e3c83413bde962/ipyfilite-0.1.4-py3-none-any.whl
-+  sha256: bfe4cbfbb86e573e7f926d246ef5d22e12b35c155fe7b4562427b8d45fef6f40
++  url: https://files.pythonhosted.org/packages/ed/af/e6aaa701e7586297c748f657b7a55f1685732207bbe0125bb288ee6854b7/ipyfilite-0.1.7-py3-none-any.whl
++  sha256: 3faa5bc7109b94f77cd5edbb20b27b6d3ebfb9faca1113ba45336a6c568fc300
 +requirements:
 +  run:
 +    - ipywidgets
@@ -408,29 +446,6 @@ index 00000000..f8920c6c
 +  home: https://github.com/jupyter-widgets/ipywidgets
 +  PyPI: https://pypi.org/project/jupyterlab_widgets
 +  summary: Jupyter interactive widgets for JupyterLab
-+  license: BSD-3-Clause
-diff --git a/packages/kneed/meta.yaml b/packages/kneed/meta.yaml
-new file mode 100644
-index 00000000..6935a293
---- /dev/null
-+++ b/packages/kneed/meta.yaml
-@@ -0,0 +1,17 @@
-+package:
-+  name: kneed
-+  version: 0.8.3
-+  top-level:
-+    - kneed
-+source:
-+  url: https://files.pythonhosted.org/packages/22/55/f42149c6d3ff9eed1808a1741b0e814202d12af1ddb87765f879c3b32703/kneed-0.8.3-py3-none-any.whl
-+  sha256: 8d31366cbd5af929057d4c8701f0eae96460cb995dfc6306ae3183051086a82a
-+requirements:
-+  run:
-+    - numpy
-+    - scipy
-+about:
-+  home: https://github.com/arvkevi/kneed
-+  PyPI: https://pypi.org/project/kneed
-+  summary: Knee-point detection in Python
 +  license: BSD-3-Clause
 diff --git a/packages/libeccodes/meta.yaml b/packages/libeccodes/meta.yaml
 new file mode 100644
@@ -879,25 +894,6 @@ index 00000000..e10596cc
 +  PyPI: https://pypi.org/project/netcdf4
 +  summary: Provides an object-oriented python interface to the netCDF version 4 library
 +  license: MIT
-diff --git a/packages/pyodide_http/meta.yaml b/packages/pyodide_http/meta.yaml
-new file mode 100644
-index 00000000..f0aadef5
---- /dev/null
-+++ b/packages/pyodide_http/meta.yaml
-@@ -0,0 +1,13 @@
-+package:
-+  name: pyodide_http
-+  version: 0.2.1
-+  top-level:
-+    - pyodide_http
-+source:
-+  url: https://files.pythonhosted.org/packages/2d/14/d1bf3b7141ad5a42c26e4173a69e3e6529bd92b05bc587c570d28b6a3ce8/pyodide_http-0.2.1-py3-none-any.whl
-+  sha256: 504f62904536a91049c12d0b9162ebaa187a84a3dd877e17c04fd9bf6ec3b68e
-+about:
-+  home: https://github.com/koenvo/pyodide-http
-+  PyPI: https://pypi.org/project/pyodide_http
-+  summary: Patch requests, urllib and urllib3 to make them work in Pyodide
-+  license: MIT
 diff --git a/packages/pyshp/meta.yaml b/packages/pyshp/meta.yaml
 new file mode 100644
 index 00000000..355a6426
@@ -954,6 +950,79 @@ index e3c6c337..5338926f 100644
  about:
    home: https://github.com/pydata/xarray
    PyPI: https://pypi.org/project/xarray
+diff --git a/packages/zfpy/meta.yaml b/packages/zfpy/meta.yaml
+new file mode 100644
+index 00000000..9d376bdf
+--- /dev/null
++++ b/packages/zfpy/meta.yaml
+@@ -0,0 +1,37 @@
++package:
++  name: zfpy
++  version: 1.0.0
++  top-level:
++    - zfpy
++source:
++  url: https://github.com/LLNL/zfp/archive/refs/tags/1.0.0.tar.gz
++  sha256: fe13b03141ee9b571692aed42ff76cf37c9dcda40f9a43a808870dca3558a57c
++  patches:
++    - patches/0001-setup-with-cython.patch
++requirements:
++  host:
++    - numpy
++  run:
++    - numpy
++
++build:
++  vendor-sharedlib: true
++  script: |
++    mkdir -p build
++
++    cd build && \
++      emcmake cmake ../ \
++        -DCMAKE_INSTALL_PREFIX=$WASM_LIBRARY_DIR \
++        -DCMAKE_BUILD_TYPE=Release \
++        -DBUILD_TESTING=OFF \
++        -DZFP_WITH_OPENMP=OFF \
++        -DBUILD_UTILITIES=OFF;
++    
++    emmake make -j ${PYODIDE_JOBS:-3};
++    emmake make install;
++
++about:
++  home: https://zfp.llnl.gov/
++  PyPI: https://pypi.org/project/zfpy/
++  summary: Compressed numerical arrays that support high-speed random access
++  license: BSD-3-Clause
+diff --git a/packages/zfpy/patches/0001-setup-with-cython.patch b/packages/zfpy/patches/0001-setup-with-cython.patch
+new file mode 100644
+index 00000000..7c834c35
+--- /dev/null
++++ b/packages/zfpy/patches/0001-setup-with-cython.patch
+@@ -0,0 +1,24 @@
++diff --git a/setup.py b/setup.py
++index 9e4c391..7f53777 100644
++--- a/setup.py
+++++ b/setup.py
++@@ -1,3 +1,4 @@
+++import os
++ from setuptools import setup, Extension
++ import numpy as np
++ 
++@@ -9,7 +10,11 @@ setup(
++     url="https://zfp.llnl.gov",
++     description="zfp compression in Python",
++     long_description="zfp is a compressed format for representing multidimensional floating-point and integer arrays. zfp provides compressed-array classes that support high throughput read and write random access to individual array elements. zfp also supports serial and parallel compression of whole arrays using both lossless and lossy compression with error tolerances. zfp is primarily written in C and C++ but also includes Python and Fortran bindings.",
++-    ext_modules=[Extension("zfpy", ["build/python/zfpy.c"],
++-                           include_dirs=["include", np.get_include()],
++-                           libraries=["zfp"], library_dirs=["build/lib64", "build/lib/Release"])]
+++    ext_modules=[Extension(
+++        "zfpy", ["python/zfpy.pxd", "python/zfpy.pyx"],
+++        include_dirs=["include", np.get_include()],
+++        libraries=["zfp"],
+++        library_dirs=[os.environ["WASM_LIBRARY_DIR"] + "/lib"],
+++    )],
+++    setup_requires=["cython>=0.17", "numpy"],
++ )
 diff --git a/packages/zipp/meta.yaml b/packages/zipp/meta.yaml
 new file mode 100644
 index 00000000..0aa4ec79

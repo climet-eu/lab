@@ -7,8 +7,7 @@
 # nor does it submit to any jurisdiction.
 #
 
-from .compressors import *  # noqa
-from .datasets import *  # noqa
+from . import codecs as _  # noqa
 from .metrics import *  # noqa
 from .sigma import *  # noqa
 from .suite import *  # noqa

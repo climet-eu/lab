@@ -9,7 +9,8 @@
 
 from abc import ABCMeta, abstractmethod
 
-import numpy as np
+import dask
+import xarray as xr
 
 
 class Metric(metaclass=ABCMeta):
@@ -20,15 +21,15 @@ class Metric(metaclass=ABCMeta):
     """
 
     @abstractmethod
-    def compute(self, x: np.ndarray, y: np.ndarray) -> np.ndarray:
+    def compute(self, x: xr.DataArray, y: xr.DataArray) -> xr.DataArray:
         """Compute the metric with the given reference and computed data.
 
         Args:
-            x (np.ndarray): Reference data.
-            y (np.ndarray): Computed data.
+            x (xr.DataArray): Reference data.
+            y (xr.DataArray): Computed data.
 
         Returns:
-            np.ndarray: The values computed by the metric.
+            xr.DataArray: The values computed by the metric.
         """
         raise NotImplementedError
 
@@ -60,16 +61,15 @@ class AbsoluteError(Metric):
         return absolute_error(x, y)
 
 
-METRICS = [Difference, RelativeError, AbsoluteError]
-
-
-def difference(x: np.ndarray, y: np.ndarray) -> np.ndarray:
+def difference(x: xr.DataArray, y: xr.DataArray) -> xr.DataArray:
     return x - y
 
 
-def absolute_error(x: np.ndarray, y: np.ndarray) -> np.ndarray:
-    return np.abs(x - y)
+def absolute_error(x: xr.DataArray, y: xr.DataArray) -> xr.DataArray:
+    return xr.apply_ufunc(dask.array.abs, x - y, dask="allowed")
 
 
-def relative_error(x: np.ndarray, y: np.ndarray) -> np.ndarray:
-    return np.abs(x - y) / np.abs(np.max(x) - np.min(x))
+def relative_error(x: xr.DataArray, y: xr.DataArray) -> xr.DataArray:
+    return absolute_error(x, y) / xr.apply_ufunc(
+        dask.array.abs, x.max() - x.min(), dask="allowed"
+    )
