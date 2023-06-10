@@ -15,13 +15,20 @@ classifiers = [
 ]
 dependencies = [
     "cartopy",
+    "cfgrib",  # only for pre-loading
     "cycler",
     "dask",
+    "ipyfilite",
+    "lzma",  # only for pre-loading
     "matplotlib",
+    "netcdf4",  # only for pre-loading
     "numcodecs",
     "numpy",
+    "pyodide-http",
     "scikit-image",
     "xarray",
+    "zarr",  # only for pre-loading
+    "zfpy",  # only for pre-loading
 ]
 
 [project.optional-dependencies]

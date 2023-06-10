@@ -125,8 +125,12 @@ class Standardize(Codec):
         if arr.dtype.kind != "f":
             raise ValueError("only floating point data types are supported")
 
-        mean = np.mean(arr)
-        stdv = np.std(arr)
+        if arr.size > 0:
+            mean = np.mean(arr)
+            stdv = np.std(arr)
+        else:
+            mean = 0.0
+            stdv = 1.0
 
         enc = np.empty(arr.size + 2, dtype=arr.dtype)
         enc[0] = 1.0 / mean
@@ -182,8 +186,12 @@ class LinearQuantize(Codec):
         elif self.bits <= 64:
             itype = np.uint64
 
-        minimum = np.amin(arr)
-        maximum = np.amax(arr)
+        if arr.size > 0:
+            minimum = np.amin(arr)
+            maximum = np.amax(arr)
+        else:
+            minimum = 0.0
+            maximum = 1.0
 
         arr_enc = np.around(
             (arr - minimum) / (maximum - minimum) * ((2**self.bits) - 1)

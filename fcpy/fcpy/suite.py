@@ -42,6 +42,10 @@ def compress_decompress_dataarray_single_chunk(
     Returns:
         xr.DataArray: the reconstructed data array
     """
+    if da.size == 0:
+        # Compressing and decompressing preserves the input shape
+        return da.copy(deep=False).chunk([-1] * len(da.shape))
+
     compressors = compressor if isinstance(compressor, list) else [compressor]
 
     encoded = np.ascontiguousarray(da.values)
@@ -164,6 +168,9 @@ def summarise_dataarray(
 
 def plot_spatial_dataarray(
     da: xr.DataArray,
+    subplot_kw: dict = {"projection": ccrs.EqualEarth()},
+    transform: ccrs.Projection = ccrs.PlateCarree(),
+    imshow_kw: dict = dict(),
 ) -> Tuple[Figure, Axes]:
     if not is_gridded(da):
         raise NotImplementedError(
@@ -172,9 +179,12 @@ def plot_spatial_dataarray(
             "plotting the dataset is not yet supported."
         )
 
-    fig, ax = plt.subplots(1, 1, subplot_kw={"projection": ccrs.EqualEarth()})
+    fig, ax = plt.subplots(1, 1, subplot_kw=subplot_kw)
     im = da.squeeze().plot.imshow(
-        ax=ax, transform=ccrs.PlateCarree(), levels=10, add_colorbar=False
+        ax=ax,
+        transform=transform,
+        add_colorbar=False,
+        **imshow_kw,
     )
     ax.coastlines()
 
@@ -185,6 +195,10 @@ def plot_spatial_dataarray(
     cax = fig.add_axes(
         [cbar_rect_left, cbar_rect_bottom, cbar_rect_width, cbar_rect_height]
     )
-    plt.colorbar(im, cax=cax, label=f"{da.long_name} in {da.units}")
+
+    label = getattr(da, "long_name", None) or da.name
+    if getattr(da, "units", None):
+        label = f"{label} [{da.units}]"
+    plt.colorbar(im, cax=cax, label=label)
 
     return fig, ax

@@ -7,7 +7,12 @@
 # nor does it submit to any jurisdiction.
 #
 
+import pyodide_http
+
+pyodide_http.patch_all()
+
 from . import codecs as _  # noqa
+from .dataset import *  # noqa
 from .metrics import *  # noqa
 from .sigma import *  # noqa
 from .suite import *  # noqa

@@ -305,10 +305,10 @@ index 00000000..671f423a
 +         "pytest",
 diff --git a/packages/fcpy/meta.yaml b/packages/fcpy/meta.yaml
 new file mode 100644
-index 00000000..daf96a0f
+index 00000000..7cb4f0f2
 --- /dev/null
 +++ b/packages/fcpy/meta.yaml
-@@ -0,0 +1,30 @@
+@@ -0,0 +1,32 @@
 +package:
 +  name: fcpy
 +  version: 0.2.0
@@ -325,11 +325,13 @@ index 00000000..daf96a0f
 +    - cfgrib  # only for pre-loading
 +    - cycler
 +    - dask
++    - ipyfilite
 +    - lzma  # only for pre-loading
 +    - matplotlib
 +    - netcdf4  # only for pre-loading
 +    - numcodecs
 +    - numpy
++    - pyodide-http
 +    - scikit-image
 +    - xarray
 +    - zarr  # only for pre-loading
