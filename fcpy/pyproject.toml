@@ -24,6 +24,7 @@ dependencies = [
     "netcdf4",  # only for pre-loading
     "numcodecs",
     "numpy",
+    "pandas",
     "pyodide-http",
     "scikit-image",
     "xarray",

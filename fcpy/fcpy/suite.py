@@ -7,21 +7,28 @@
 # nor does it submit to any jurisdiction.
 #
 
+from collections import defaultdict
+from contextlib import contextmanager
+from time import perf_counter
 from typing import Tuple, Union
 
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import xarray as xr
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from numcodecs.abc import Codec
+from numcodecs.compat import ensure_contiguous_ndarray_like
 
 from .utils import is_gridded
 
 
 def compress_decompress_dataarray_single_chunk(
-    da: xr.DataArray, compressor: Union[Codec, list[Codec]]
+    da: xr.DataArray,
+    compressor: Union[Codec, list[Codec]],
+    experiment: str = "<global>",
 ) -> xr.DataArray:
     """Perform compression and decompression on the provided data array
     to examine the effect of compression.
@@ -38,6 +45,8 @@ def compress_decompress_dataarray_single_chunk(
             Note that compression is applied from left to right, i.e. the
             rightmost codec will be applied last. Decompression is applied
             in reverse.
+        experiment (str): name of the compression experiment under which the
+            compression statistics are collected.
 
     Returns:
         xr.DataArray: the reconstructed data array
@@ -48,21 +57,47 @@ def compress_decompress_dataarray_single_chunk(
 
     compressors = compressor if isinstance(compressor, list) else [compressor]
 
+    raw_bytes = [0 for c in compressors]
+    enc_bytes = [0 for c in compressors]
+    enc_time = [0.0 for c in compressors]
+    dec_time = [0.0 for c in compressors]
+
     encoded = np.ascontiguousarray(da.values)
 
     silhouettes = []
 
-    for c in compressors:
+    for i, c in enumerate(compressors):
         silhouettes.append((encoded.shape, encoded.dtype))
-        encoded = c.encode(encoded)
+
+        raw_bytes[i] += encoded.nbytes
+        start = perf_counter()
+
+        encoded = ensure_contiguous_ndarray_like(c.encode(encoded))
+
+        end = perf_counter()
+        enc_bytes[i] += encoded.nbytes
+        enc_time[i] += end - start
 
     decoded = encoded
 
-    for d in compressors[::-1]:
+    for i, d in list(enumerate(compressors))[::-1]:
         shape, dtype = silhouettes.pop()
         out = np.empty(shape=shape, dtype=dtype)
 
+        start = perf_counter()
+
         decoded = d.decode(decoded, out).reshape(shape)
+
+        end = perf_counter()
+        dec_time[i] += end - start
+
+    scope = next(iter(getattr(measure_compression_stats, "_scopes", [])), None)
+    if scope is not None:
+        for i, c in enumerate(compressors):
+            scope["raw_bytes"][(experiment, str(c))] += raw_bytes[i]
+            scope["enc_bytes"][(experiment, str(c))] += enc_bytes[i]
+            scope["enc_time"][(experiment, str(c))] += enc_time[i]
+            scope["dec_time"][(experiment, str(c))] += dec_time[i]
 
     return da.copy(deep=False, data=decoded).chunk([-1] * len(da.shape))
 
@@ -70,6 +105,7 @@ def compress_decompress_dataarray_single_chunk(
 def compress_decompress_dataarray_chunked(
     da: xr.DataArray,
     compressor: Union[Codec, list[Codec]],
+    experiment: str = "<global>",
 ) -> xr.DataArray:
     """Perform compression and decompression on the provided data array
     to examine the effect of compression.
@@ -81,6 +117,8 @@ def compress_decompress_dataarray_chunked(
             Note that compression is applied from left to right, i.e. the
             rightmost codec will be applied last. Decompression is applied
             in reverse.
+        experiment (str): name of the compression experiment under which the
+            compression statistics are collected.
 
     Returns:
         xr.DataArray: the reconstructed data array
@@ -90,7 +128,7 @@ def compress_decompress_dataarray_chunked(
     return xr.map_blocks(
         compress_decompress_dataarray_single_chunk,
         da,
-        kwargs=dict(compressor=compressor),
+        kwargs=dict(compressor=compressor, experiment=experiment),
     )
 
 
@@ -99,6 +137,7 @@ def compress_decompress_dataset(
     compressor: Union[
         Codec, list[Codec], dict[str, Union[Codec, list[Codec]]]
     ],
+    experiment: Union[str, dict[str, str]] = "<global-{}>",
 ) -> xr.Dataset:
     """Perform compression and decompression on the provided dataset
     to examine the effect of compression.
@@ -113,6 +152,10 @@ def compress_decompress_dataset(
             Note that compression is applied from left to right, i.e. the
             rightmost codec will be applied last. Decompression is applied
             in reverse.
+        experiment (Union[str, dict[str, str]]): either the name of the
+            compression experiment that specialised for all variables, or a
+            mapping from variable names to experiment names under which the
+            compression statistics are collected.
 
     Returns:
         xr.Dataset: the reconstructed dataset
@@ -123,9 +166,16 @@ def compress_decompress_dataset(
         if isinstance(compressor, dict)
         else {var: compressor for var in ds}
     )
+    experiments = (
+        experiment
+        if isinstance(experiment, dict)
+        else {var: experiment.format(var) for var in ds}
+    )
 
     data = {
-        var: compress_decompress_dataarray_chunked(ds[var], compressor)
+        var: compress_decompress_dataarray_chunked(
+            ds[var], compressor=compressor, experiment=experiments[var]
+        )
         for var, compressor in compressors.items()
     }
 
@@ -202,3 +252,50 @@ def plot_spatial_dataarray(
     plt.colorbar(im, cax=cax, label=label)
 
     return fig, ax
+
+
+@contextmanager
+def measure_compression_stats(display=True):
+    stats = pd.DataFrame(
+        {
+            "Experiment": [],
+            "Codec": [],
+            "compression ratio [raw B / enc B]": [],
+            "encode throughput [raw GB/s]": [],
+            "decode throughput [enc GB/s]": [],
+        }
+    ).set_index(["Experiment", "Codec"])
+
+    if getattr(measure_compression_stats, "_scopes", None) is None:
+        measure_compression_stats._scopes = []
+
+    measure_compression_stats._scopes.append(
+        {
+            "raw_bytes": defaultdict(int),
+            "enc_bytes": defaultdict(int),
+            "enc_time": defaultdict(float),
+            "dec_time": defaultdict(float),
+        }
+    )
+
+    try:
+        yield stats
+    finally:
+        scope = measure_compression_stats._scopes.pop()
+
+        keys = set(scope["raw_bytes"].keys())
+        keys.intersection_update(scope["enc_bytes"].keys())
+        keys.intersection_update(scope["enc_time"].keys())
+        keys.intersection_update(scope["dec_time"].keys())
+
+        for experiment, codec in sorted(keys):
+            raw_bytes = scope["raw_bytes"][(experiment, codec)]
+            enc_bytes = scope["enc_bytes"][(experiment, codec)]
+            enc_time = scope["enc_time"][(experiment, codec)]
+            dec_time = scope["dec_time"][(experiment, codec)]
+
+            stats.loc[(experiment, codec), :] = [
+                raw_bytes / enc_bytes,
+                raw_bytes / enc_time / 1e9 if enc_time > 0.0 else float("inf"),
+                enc_bytes / dec_time / 1e9 if dec_time > 0.0 else float("inf"),
+            ]
