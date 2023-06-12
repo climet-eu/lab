@@ -26,6 +26,7 @@ dependencies = [
     "numpy",
     "pandas",
     "pyodide-http",
+    "pysz",
     "scikit-image",
     "xarray",
     "zarr",  # only for pre-loading

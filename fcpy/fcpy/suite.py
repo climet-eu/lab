@@ -262,7 +262,7 @@ def measure_compression_stats(display=True):
             "Codec": [],
             "compression ratio [raw B / enc B]": [],
             "encode throughput [raw GB/s]": [],
-            "decode throughput [enc GB/s]": [],
+            "decode throughput [dec GB/s]": [],
         }
     ).set_index(["Experiment", "Codec"])
 
@@ -297,5 +297,5 @@ def measure_compression_stats(display=True):
             stats.loc[(experiment, codec), :] = [
                 raw_bytes / enc_bytes,
                 raw_bytes / enc_time / 1e9 if enc_time > 0.0 else float("inf"),
-                enc_bytes / dec_time / 1e9 if dec_time > 0.0 else float("inf"),
+                raw_bytes / dec_time / 1e9 if dec_time > 0.0 else float("inf"),
             ]

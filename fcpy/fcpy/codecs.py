@@ -8,6 +8,7 @@
 #
 
 import numpy as np
+import pysz
 from numcodecs.abc import Codec
 from numcodecs.compat import (
     ensure_contiguous_ndarray_like,
@@ -261,3 +262,83 @@ class LinearQuantize(Codec):
 
 
 register_codec(LinearQuantize)
+
+
+class SZ3(Codec):
+    """Codec providing compression using SZ3 via the Python standard
+    library. The shape of the input data is stored in-band.
+
+    Args:
+        dtype (dtype): Data type to use for decoded data.
+        eb_mode (int, optional): One of the SZ3 error bound modes,
+            e.g. `pysz.mode_abs`.
+        eb_abs (double, optional):  absolute error bound.
+        eb_rel (double, optional): relative error bound.
+        eb_pwr (double, optional): pwr error bound.
+    """
+
+    codec_id = "sz3"
+
+    _sz = pysz.SZ()
+
+    def __init__(
+        self,
+        dtype,
+        eb_mode=pysz.mode_abs,
+        eb_abs=0.0,
+        eb_rel=0.0,
+        eb_pwr=0.0,
+    ):
+        self.dtype = np.dtype(dtype)
+        if self.dtype.kind != "f":
+            raise ValueError("only floating point data types are supported")
+        self.eb_mode = eb_mode
+        self.eb_abs = eb_abs
+        self.eb_rel = eb_rel
+        self.eb_pwr = eb_pwr
+
+    def encode(self, buf):
+        arr = ensure_contiguous_ndarray_like(buf).view(self.dtype)
+
+        arr_enc, enc_ratio = SZ3._sz.compress(
+            arr,
+            self.eb_mode,
+            self.eb_abs,
+            self.eb_rel,
+            self.eb_pwr,
+        )
+
+        ssize = 8
+
+        enc = np.empty(
+            arr_enc.size + 1 + ssize * len(arr.shape), dtype=np.uint8
+        )
+        enc[0] = len(arr.shape)
+        enc[1 : 1 + ssize * len(arr.shape)].view(np.uint64)[:] = arr.shape
+        ndarray_copy(arr_enc, enc[1 + ssize * len(arr.shape) :])
+
+        return enc
+
+    def decode(self, buf, out=None):
+        enc = ensure_contiguous_ndarray_like(buf).view(np.uint8)
+
+        ssize = 8
+
+        shape_len = enc[0]
+        shape = enc[1 : 1 + ssize * shape_len].view(np.uint64)[:]
+
+        dec = SZ3._sz.decompress(
+            enc[1 + ssize * shape_len :], shape, self.dtype
+        )
+
+        return ndarray_copy(dec.reshape(shape), out)
+
+    def __repr__(self):
+        return (
+            f"{type(self).__name__}(dtype={repr(self.dtype.str)},"
+            f" eb_mode={self.eb_mode}, eb_abs={self.eb_abs},"
+            f" eb_rel={self.eb_rel}, eb_pwr={self.eb_pwr})"
+        )
+
+
+register_codec(SZ3)
