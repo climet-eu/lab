@@ -29,7 +29,7 @@ dependencies = [
     "pysz",
     "scikit-image",
     "xarray",
-    "zarr",  # only for pre-loading
+    "zarr",
     "zfpy",  # only for pre-loading
 ]
 
