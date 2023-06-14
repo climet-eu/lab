@@ -52,6 +52,7 @@ jobs:
       - name: Build the JupyterLite site
         run: |
           jupyter lite build --output-dir dist
+          cp ./_headers dist/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
