@@ -1,6 +1,6 @@
 import shutil
 import uuid
-from contextlib import contextmanager
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Optional, Union
 from urllib.parse import unquote as urlunquote
@@ -37,7 +37,10 @@ def open_dataset(path: Path, **kwargs) -> xr.Dataset:
     if "cache" not in kwargs:
         kwargs["cache"] = False
 
-    return xr.open_dataset(str(path), **kwargs)
+    ds = xr.open_dataset(str(path), **kwargs)
+    ds.attrs["path"] = str(path)
+
+    return ds
 
 
 async def mount_user_local_file() -> Path:
@@ -76,7 +79,7 @@ def _get_name_from_url(url: str) -> str:
     return urlunquote(Path(urlparse(url).path).name)
 
 
-def download_dataset_as_zarr(
+async def download_dataset_as_zarr(
     ds: xr.Dataset,
     name: str,
     compressor: Union[
@@ -96,7 +99,7 @@ def download_dataset_as_zarr(
     else:
         name = f"{name}.zarr.zip"
 
-    with ipyfilite.FileDownloadPathLite(name) as path:
+    async with ipyfilite.FileDownloadPathLite(name) as path:
         store = zarr.storage.ZipStore(
             str(path), compression=zip_compression, allowZip64=True, mode="x"
         )
@@ -127,10 +130,10 @@ def download_dataset_as_zarr(
         store.close()
 
 
-@contextmanager
-def file_download_path(name: str) -> Path:
+@asynccontextmanager
+async def file_download_path(name: str) -> Path:
     try:
-        with ipyfilite.FileDownloadPathLite(name) as path:
+        async with ipyfilite.FileDownloadPathLite(name) as path:
             yield path
     finally:
         pass
