@@ -386,18 +386,18 @@ index 00000000..081bb2cf
 +  license: "Apache Software License"
 diff --git a/packages/ipyfilite/meta.yaml b/packages/ipyfilite/meta.yaml
 new file mode 100644
-index 00000000..c65eb8fe
+index 00000000..11f6eeac
 --- /dev/null
 +++ b/packages/ipyfilite/meta.yaml
 @@ -0,0 +1,19 @@
 +package:
 +  name: ipyfilite
-+  version: 0.1.14
++  version: 0.1.15
 +  top-level:
 +    - ipyfilite
 +source:
-+  url: https://files.pythonhosted.org/packages/fd/2b/ff2994f7c98e8cf92f23ba4eadac077dd90eaf54a236d111a5315f9299ce/ipyfilite-0.1.14-py3-none-any.whl
-+  sha256: f3ab5cdee03860660c879dc7580d086df3972529cf93152d53ed42ca54436810
++  url: https://files.pythonhosted.org/packages/4a/c7/5b1a5975e88ffffa82dcd8c59bb7bb68f3fe8bc41d0cbb7d9684ef3f5d0a/ipyfilite-0.1.15-py3-none-any.whl
++  sha256: 92f46d07d71e144b8ffafe237acdba5bfa8133013388015825827554f4b201bc
 +requirements:
 +  run:
 +    - ipywidgets
@@ -1504,10 +1504,26 @@ index 00000000..3ec19003
 +  summary: Jupyter interactive widgets for Jupyter Notebook
 +  license: BSD 3-Clause License
 diff --git a/packages/xarray/meta.yaml b/packages/xarray/meta.yaml
-index e3c6c337..5338926f 100644
+index e3c6c337..89082ce9 100644
 --- a/packages/xarray/meta.yaml
 +++ b/packages/xarray/meta.yaml
-@@ -12,6 +12,7 @@ requirements:
+@@ -1,17 +1,20 @@
+ package:
+   name: xarray
+-  version: 2023.3.0
++  version: 2023.5.0
+ 
+   top-level:
+     - xarray
+ source:
+-  url: https://files.pythonhosted.org/packages/68/77/2b19262874210e44c22f98f4cb42bacc314564fecc4218dfff96657f169c/xarray-2023.3.0-py3-none-any.whl
+-  sha256: 64b2a25338cff4f632a5d2ba66ffb875e9ce3ced68cefb5bb5736195bd28cff0
++  url: https://files.pythonhosted.org/packages/0a/1b/57b946c11b77f9ec1f4398bce9bf28ace25e4a644e4c5deed93b691ab70d/xarray-2023.5.0.tar.gz
++  sha256: 318a651f4182b9cecb7d1c57ad0ed9bdaed5f49c43dbb638c0a845b8faf405e8
++  patches:
++    - patches/0001-zarr-chunk-store-check.patch
+ requirements:
+   run:
      - numpy
      - packaging
      - pandas
@@ -1515,6 +1531,25 @@ index e3c6c337..5338926f 100644
  about:
    home: https://github.com/pydata/xarray
    PyPI: https://pypi.org/project/xarray
+diff --git a/packages/xarray/patches/0001-zarr-chunk-store-check.patch b/packages/xarray/patches/0001-zarr-chunk-store-check.patch
+new file mode 100644
+index 00000000..48bf8efb
+--- /dev/null
++++ b/packages/xarray/patches/0001-zarr-chunk-store-check.patch
+@@ -0,0 +1,13 @@
++diff --git a/xarray/backends/zarr.py b/xarray/backends/zarr.py
++index a4012a8a..33a2712b 100644
++--- a/xarray/backends/zarr.py
+++++ b/xarray/backends/zarr.py
++@@ -410,7 +410,7 @@ class ZarrStore(AbstractWritableDataStore):
++             if consolidated is None:
++                 consolidated = False
++ 
++-        if chunk_store:
+++        if chunk_store is not None:
++             open_kwargs["chunk_store"] = chunk_store
++             if consolidated is None:
++                 consolidated = False
 diff --git a/packages/zfpy/meta.yaml b/packages/zfpy/meta.yaml
 new file mode 100644
 index 00000000..9d376bdf

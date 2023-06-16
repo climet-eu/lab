@@ -100,8 +100,12 @@ async def download_dataset_as_zarr(
         name = f"{name}.zarr.zip"
 
     async with ipyfilite.FileDownloadPathLite(name) as path:
-        store = zarr.storage.ZipStore(
-            str(path), compression=zip_compression, allowZip64=True, mode="x"
+        store = zarr.storage.MemoryStore()
+        chunk_store = zarr.storage.ZipStore(
+            str(path),
+            compression=zip_compression,
+            allowZip64=True,
+            mode="x",
         )
 
         compressors = (
@@ -127,7 +131,11 @@ async def download_dataset_as_zarr(
 
         ds.to_zarr(store=store, mode="w-", encoding=encoding)
 
+        for key in store.keys():
+            chunk_store[key] = store[key]
+
         store.close()
+        chunk_store.close()
 
 
 @asynccontextmanager

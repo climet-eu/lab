@@ -333,6 +333,17 @@ class SZ3(Codec):
 
         return ndarray_copy(dec.reshape(shape), out)
 
+    def get_config(self):
+        # override to handle encoding dtypes
+        return dict(
+            id=self.codec_id,
+            dtype=self.dtype.str,
+            eb_mode=self.eb_mode,
+            eb_abs=self.eb_abs,
+            eb_rel=self.eb_rel,
+            eb_pwr=self.eb_pwr,
+        )
+
     def __repr__(self):
         return (
             f"{type(self).__name__}(dtype={repr(self.dtype.str)},"
