@@ -1,3 +1,9 @@
 /*
   Cross-Origin-Embedder-Policy: require-corp
   Cross-Origin-Opener-Policy: same-origin
+
+/data/*
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Headers: Range
+  Access-Control-Allow-Methods: HEAD, GET, OPTIONS
+  Access-Control-Expose-Headers: Accept-Ranges

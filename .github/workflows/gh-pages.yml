@@ -53,6 +53,7 @@ jobs:
         run: |
           jupyter lite build --output-dir dist
           cp ./_headers dist/
+          cp -r data dist/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
