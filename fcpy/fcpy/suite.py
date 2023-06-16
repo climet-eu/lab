@@ -13,6 +13,7 @@ from time import perf_counter
 from typing import Tuple, Union
 
 import cartopy.crs as ccrs
+import dask
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -299,3 +300,28 @@ def measure_compression_stats(display=True):
                 raw_bytes / enc_time / 1e9 if enc_time > 0.0 else float("inf"),
                 raw_bytes / dec_time / 1e9 if dec_time > 0.0 else float("inf"),
             ]
+
+
+def chunked_compute_sink(dsa: Union[xr.Dataset, xr.DataArray]):
+    """Evaluate the dataset or data array chunk-by-chunk and discard the
+    results. This helper function can be used to force lazy computation
+    to occur without needing to keep the results in memory.
+
+    Args:
+        dsa (Union[xr.Dataset, xr.DataArray]): dataset or data array to
+            compute
+    """
+
+    def chunk(x_chunk, *args, **kwargs):
+        x_chunk.compute()
+        return 0
+
+    def aggregate(*args, **kwargs):
+        return 0
+
+    def reducer(x, axis=None, **kwargs):
+        return dask.array.reduction(
+            x, chunk, aggregate, axis=axis, dtype=int, concatenate=False
+        )
+
+    dsa.reduce(reducer).compute()
