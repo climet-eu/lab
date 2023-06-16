@@ -16,6 +16,7 @@ classifiers = [
 dependencies = [
     "cartopy",
     "cfgrib",  # only for pre-loading
+    "cmcrameri",  # only for pre-loading
     "cycler",
     "dask",
     "ipyfilite",

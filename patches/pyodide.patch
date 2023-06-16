@@ -186,6 +186,25 @@ index 00000000..2104d93a
 +     )
 + 
 +     if "time" in coord_vars and "step" in coord_vars:
+diff --git a/packages/cmcrameri/meta.yaml b/packages/cmcrameri/meta.yaml
+new file mode 100644
+index 00000000..9ea051b9
+--- /dev/null
++++ b/packages/cmcrameri/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: cmcrameri
++  version: "1.5"
++  top-level:
++    - cmcrameri
++source:
++  url: https://files.pythonhosted.org/packages/12/ec/de245dfecc864e342dcf411e83d61c25e5f50102c4918d5ddf9f92778a2b/cmcrameri-1.5-py3-none-any.whl
++  sha256: c8af03345cd5d8d9f0f0f55d3cd29434fb279553ad44581c7dc9c74747f9a733
++about:
++  home: "https://github.com/callumrollo/cmcrameri"
++  PyPI: https://pypi.org/project/cmcrameri
++  summary: Perceptually uniform colormaps by Fabio Crameri
++  license: MIT
 diff --git a/packages/dask/meta.yaml b/packages/dask/meta.yaml
 new file mode 100644
 index 00000000..72e2ee63
@@ -305,10 +324,10 @@ index 00000000..671f423a
 +         "pytest",
 diff --git a/packages/fcpy/meta.yaml b/packages/fcpy/meta.yaml
 new file mode 100644
-index 00000000..c46875d2
+index 00000000..2607f70a
 --- /dev/null
 +++ b/packages/fcpy/meta.yaml
-@@ -0,0 +1,34 @@
+@@ -0,0 +1,35 @@
 +package:
 +  name: fcpy
 +  version: 0.2.0
@@ -323,6 +342,7 @@ index 00000000..c46875d2
 +  run:
 +    - Cartopy
 +    - cfgrib  # only for pre-loading
++    - cmcrameri  # only for pre-loading
 +    - cycler
 +    - dask
 +    - ipyfilite
