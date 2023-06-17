@@ -6,4 +6,4 @@
   Access-Control-Allow-Origin: *
   Access-Control-Allow-Headers: Range
   Access-Control-Allow-Methods: HEAD, GET, OPTIONS
-  Access-Control-Expose-Headers: Accept-Ranges
+  Access-Control-Expose-Headers: Accept-Ranges, Content-Encoding, Content-Range
