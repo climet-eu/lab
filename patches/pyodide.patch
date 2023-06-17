@@ -100,6 +100,62 @@ index 00000000..6dfc8934
 +    ax.coastlines()
 +
 +    plt.show()
+diff --git a/packages/basemap-data/meta.yaml b/packages/basemap-data/meta.yaml
+new file mode 100644
+index 00000000..c839d187
+--- /dev/null
++++ b/packages/basemap-data/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: basemap-data
++  version: 1.3.2
++  top-level:
++    - basemap_data
++source:
++  url: https://files.pythonhosted.org/packages/2c/c3/63fdb885308c999206c7a497d79a50891581626da7dc491d432d2732bb46/basemap_data-1.3.2-py2.py3-none-any.whl
++  sha256: 26e794556c496b26f7714658cdbea5c68cb47d6a8a9fb0e674844fa89c56fc59
++about:
++  home: https://matplotlib.org/basemap
++  PyPI: https://pypi.org/project/basemap-data
++  summary: Data assets for matplotlib basemap
++  license: GNU Lesser General Public License v3 or later (LGPLv3+)
+diff --git a/packages/basemap/meta.yaml b/packages/basemap/meta.yaml
+new file mode 100644
+index 00000000..d2ab4d7f
+--- /dev/null
++++ b/packages/basemap/meta.yaml
+@@ -0,0 +1,31 @@
++package:
++  name: basemap
++  version: 1.3.7
++  top-level:
++    - mpl_toolkits
++source:
++  url: https://files.pythonhosted.org/packages/01/7e/d4fab0d8a5e0a90611131261f5cc092de51fb810d9a36ce59b8834de6012/basemap-1.3.7.zip
++  sha256: 251afbed8a32cedb0194ef3809918ea961453faba8adb4e5730d8b5b2c1fd368
++requirements:
++  host:
++    - geos
++  run:
++    - basemap-data
++    - numpy
++    - cycler
++    - distutils
++    - pyparsing
++    - matplotlib
++    - pyproj
++    - pyshp
++
++build:
++  vendor-sharedlib: true
++  cflags: -Wno-int-conversion -Wno-incompatible-function-pointer-types
++  script: |
++    export GEOS_DIR=${WASM_LIBRARY_DIR}
++about:
++  home: https://matplotlib.org/basemap
++  PyPI: https://pypi.org/project/basemap
++  summary: Plot data on map projections with matplotlib
++  license: MIT
 diff --git a/packages/cfgrib/meta.yaml b/packages/cfgrib/meta.yaml
 new file mode 100644
 index 00000000..8fd06581

@@ -41,7 +41,7 @@ jobs:
           cd pyodide
           cp -r ../fcpy packages/fcpy/fcpy
           git apply --whitespace=nowarn ../patches/pyodide.patch
-          ./run_docker --non-interactive PYODIDE_PACKAGES="fcpy" make
+          ./run_docker --non-interactive PYODIDE_PACKAGES="basemap,fcpy" make
           git apply --whitespace=nowarn --reverse ../patches/pyodide.patch
           rm -rf packages/fcpy/fcpy
           cd ..
