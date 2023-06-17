@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - '*'
 
 jobs:
   build:
@@ -54,34 +51,10 @@ jobs:
           jupyter lite build --output-dir dist
           cp ./_headers dist/
           cp -r data dist/
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+      - name: Deploy to dist branch
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          path: ./dist
-      - name: Deploy to Netlify
-        uses: jsmrcaga/action-netlify-deploy@v2.0.0
-        with:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          NETLIFY_DEPLOY_MESSAGE: "Deployed from GitHub action"
-          NETLIFY_DEPLOY_TO_PROD: true
-          build_directory: ./dist
-          install_command: "echo No dependencies"
-          build_command: "echo No build command"
-
-  deploy:
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    permissions:
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: dist
+          publish_dir: ./dist
+          force_orphan: true
