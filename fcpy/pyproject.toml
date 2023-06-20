@@ -19,6 +19,7 @@ dependencies = [
     "cmcrameri",  # only for pre-loading
     "cycler",
     "dask",
+    "h5netcdf",  # only for pre-loading
     "ipyfilite",
     "lzma",  # only for pre-loading
     "matplotlib",

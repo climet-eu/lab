@@ -380,10 +380,10 @@ index 00000000..671f423a
 +         "pytest",
 diff --git a/packages/fcpy/meta.yaml b/packages/fcpy/meta.yaml
 new file mode 100644
-index 00000000..2607f70a
+index 00000000..b44f59ed
 --- /dev/null
 +++ b/packages/fcpy/meta.yaml
-@@ -0,0 +1,35 @@
+@@ -0,0 +1,36 @@
 +package:
 +  name: fcpy
 +  version: 0.2.0
@@ -401,6 +401,7 @@ index 00000000..2607f70a
 +    - cmcrameri  # only for pre-loading
 +    - cycler
 +    - dask
++    - h5netcdf  # only for pre-loading
 +    - ipyfilite
 +    - lzma  # only for pre-loading
 +    - matplotlib
@@ -438,6 +439,25 @@ index 00000000..b4213bfc
 +  PyPI: https://pypi.org/project/findlibs
 +  summary: A packages to search for shared libraries on various platforms
 +  license: Apache License Version 2.0
+diff --git a/packages/h5netcdf/meta.yaml b/packages/h5netcdf/meta.yaml
+new file mode 100644
+index 00000000..cdc8e640
+--- /dev/null
++++ b/packages/h5netcdf/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: h5netcdf
++  version: 1.2.0
++  top-level:
++    - h5netcdf
++source:
++  url: https://files.pythonhosted.org/packages/d1/11/8116d6f209c8588ceb1382fddb8820fc720330373d9bd1a09434d684dbde/h5netcdf-1.2.0-py3-none-any.whl
++  sha256: aa53c39b94bcd4595a2e5a2f62f3fb4fb8a723b5ca0a05f2db352f014bcfe72c
++about:
++  home: "https://github.com/h5netcdf/h5netcdf"
++  PyPI: https://pypi.org/project/h5netcdf
++  summary: netCDF4 via h5py
++  license: BSD-3-Clause
 diff --git a/packages/importlib_metadata/meta.yaml b/packages/importlib_metadata/meta.yaml
 new file mode 100644
 index 00000000..081bb2cf
@@ -462,18 +482,18 @@ index 00000000..081bb2cf
 +  license: "Apache Software License"
 diff --git a/packages/ipyfilite/meta.yaml b/packages/ipyfilite/meta.yaml
 new file mode 100644
-index 00000000..90e86955
+index 00000000..d3d5359f
 --- /dev/null
 +++ b/packages/ipyfilite/meta.yaml
 @@ -0,0 +1,19 @@
 +package:
 +  name: ipyfilite
-+  version: 0.1.25
++  version: 0.1.26
 +  top-level:
 +    - ipyfilite
 +source:
-+  url: https://files.pythonhosted.org/packages/96/25/c603a6eec99d1b3e0a6fdde9d04e20c88e87f56d54a4cae18c63adddb677/ipyfilite-0.1.25-py3-none-any.whl
-+  sha256: 6761e44b9dd69f5b9228a845be5453ab9f89359f2a14fef44edd94ff998ae11b
++  url: https://files.pythonhosted.org/packages/03/83/323331c4a7aff67103d0dc9743b04772be66658f7f158a58d76e302d06fb/ipyfilite-0.1.26-py3-none-any.whl
++  sha256: adf7a7f9250aba361d7314af4022ffbd0338cda910956ffaa0110afbebac6e3d
 +requirements:
 +  run:
 +    - ipywidgets
