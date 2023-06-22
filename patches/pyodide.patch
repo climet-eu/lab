@@ -441,15 +441,19 @@ index 00000000..b4213bfc
 +  license: Apache License Version 2.0
 diff --git a/packages/h5netcdf/meta.yaml b/packages/h5netcdf/meta.yaml
 new file mode 100644
-index 00000000..cdc8e640
+index 00000000..df93febc
 --- /dev/null
 +++ b/packages/h5netcdf/meta.yaml
-@@ -0,0 +1,13 @@
+@@ -0,0 +1,17 @@
 +package:
 +  name: h5netcdf
 +  version: 1.2.0
 +  top-level:
 +    - h5netcdf
++requirements:
++  run:
++    - h5py
++    - packaging
 +source:
 +  url: https://files.pythonhosted.org/packages/d1/11/8116d6f209c8588ceb1382fddb8820fc720330373d9bd1a09434d684dbde/h5netcdf-1.2.0-py3-none-any.whl
 +  sha256: aa53c39b94bcd4595a2e5a2f62f3fb4fb8a723b5ca0a05f2db352f014bcfe72c
@@ -482,18 +486,18 @@ index 00000000..081bb2cf
 +  license: "Apache Software License"
 diff --git a/packages/ipyfilite/meta.yaml b/packages/ipyfilite/meta.yaml
 new file mode 100644
-index 00000000..d3d5359f
+index 00000000..2618f15a
 --- /dev/null
 +++ b/packages/ipyfilite/meta.yaml
 @@ -0,0 +1,19 @@
 +package:
 +  name: ipyfilite
-+  version: 0.1.26
++  version: 0.1.27
 +  top-level:
 +    - ipyfilite
 +source:
-+  url: https://files.pythonhosted.org/packages/03/83/323331c4a7aff67103d0dc9743b04772be66658f7f158a58d76e302d06fb/ipyfilite-0.1.26-py3-none-any.whl
-+  sha256: adf7a7f9250aba361d7314af4022ffbd0338cda910956ffaa0110afbebac6e3d
++  url: https://files.pythonhosted.org/packages/9e/6d/6fbfe3cf613507188327710775ef193312869c348d7c2001407eff67b712/ipyfilite-0.1.27-py3-none-any.whl
++  sha256: d12a003a0e366fabeb236e7b7e9beefe7051a962d617cded60f59e445a88a35c
 +requirements:
 +  run:
 +    - ipywidgets
