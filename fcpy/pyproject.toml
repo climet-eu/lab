@@ -20,6 +20,7 @@ dependencies = [
     "cycler",
     "dask",
     "h5netcdf",  # only for pre-loading
+    "ipython",  # provided by JupyterLite
     "ipyfilite",
     "lzma",  # only for pre-loading
     "matplotlib",

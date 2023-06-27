@@ -16,4 +16,5 @@ from .dataset import *  # noqa
 from .metrics import *  # noqa
 from .sigma import *  # noqa
 from .suite import *  # noqa
+from .turing import *  # noqa
 from .utils import *  # noqa
