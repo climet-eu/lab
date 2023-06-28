@@ -1,4 +1,5 @@
 import html
+import traceback
 from copy import deepcopy
 from typing import Any, Callable, Coroutine, Optional, Tuple, Union
 
@@ -36,32 +37,41 @@ def generate_turing_examples_iterative_knockout(
 
             middle = len(round_remaining_compressors) // 2
 
-            for i in range(middle):
-                ds_a = all_ds[round_remaining_compressors[i]]
-                ds_b = all_ds[round_remaining_compressors[middle + i]]
+            for i_a, i_b in [
+                (
+                    # random pairs of compressors
+                    round_remaining_compressors[i],
+                    round_remaining_compressors[middle + i],
+                )
+                for i in range(middle)
+            ] + (
+                [
+                    (
+                        # extra pair in case the number of compressors is odd
+                        round_remaining_compressors[-1],
+                        rng.choice(round_remaining_compressors[:-1]),
+                    )
+                ]
+                if len(round_remaining_compressors) % 2 == 1
+                else []
+            ):
+                ds_a = all_ds[i_a]
+                ds_b = all_ds[i_b]
 
                 # is 'a' a (worse) compressor?
                 a_is_worse = yield ds_a, ds_b
 
-                comparison_counter[
-                    round_remaining_compressors[i]
-                ] += comparison_weight
-                comparison_counter[
-                    round_remaining_compressors[middle + i]
-                ] += comparison_weight
+                comparison_counter[i_a] += comparison_weight
+                comparison_counter[i_b] += comparison_weight
 
                 accusation_counter[
-                    round_remaining_compressors[
-                        i if a_is_worse else middle + i
-                    ]
+                    i_a if a_is_worse else i_b
                 ] += comparison_weight
 
             # Only the worst half of compressors continues to the next
-            #  round.
-            # If the number of compressors is odd, one is lucky and is
-            #  spared in this round.
+            #  round
             round_remaining_compressors = sorted(
-                round_remaining_compressors[::-1],
+                round_remaining_compressors,
                 key=lambda i: (accusation_counter[i] / comparison_counter[i]),
                 reverse=True,
             )[:middle]
@@ -258,21 +268,24 @@ def initiate_turing_test(
 
     def next_example(result=None):
         try:
-            if result is None:
-                ds_a, ds_b = next(example_generator)
-            else:
-                ds_a, ds_b = example_generator.send(result)
-        except StopIteration as err:
-            with answer:
-                display(err.value)
+            try:
+                if result is None:
+                    ds_a, ds_b = next(example_generator)
+                else:
+                    ds_a, ds_b = example_generator.send(result)
+            except StopIteration as err:
+                with answer:
+                    display(err.value)
 
-            return reset_outputs(complete=True)
+                return reset_outputs(complete=True)
 
-        reset_outputs(complete=False)
+            reset_outputs(complete=False)
 
-        run_analysis(analysis, ds_a, ds_b)
+            run_analysis(analysis, ds_a, ds_b)
 
-        choice.observe(handle_choice, "value")
+            choice.observe(handle_choice, "value")
+        except Exception as err:
+            answer.append_stderr("".join(traceback.format_exception(err)))
 
     def handle_choice(change):
         choice.unobserve(handle_choice, "value")
