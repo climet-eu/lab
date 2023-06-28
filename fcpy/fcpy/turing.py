@@ -68,15 +68,50 @@ def generate_turing_examples_iterative_knockout(
                     i_a if a_is_worse else i_b
                 ] += comparison_weight
 
-            # Only the worst half of compressors continues to the next
-            #  round
-            round_remaining_compressors = sorted(
-                round_remaining_compressors,
-                key=lambda i: (accusation_counter[i] / comparison_counter[i]),
+            # Collect the scores of all compressors remaining in this round
+            round_compressor_scores = sorted(
+                (
+                    (i, accusation_counter[i] / comparison_counter[i])
+                    for i in round_remaining_compressors
+                ),
+                key=lambda e: e[1],
                 reverse=True,
-            )[:middle]
+            )
 
-            comparison_weight *= 0.5
+            if round_compressor_scores[0][1] == round_compressor_scores[-1][1]:
+                # If all have the same score, do a tie-breaker round
+                continue
+
+            # Find a good split point to avoid splits between compressors with
+            #  equivalent scores
+            # new_middle will be the inclusive upper bound index of the
+            #  compressor advancing to the next round
+            new_middle = middle - 1
+            middle_score = round_compressor_scores[new_middle][1]
+
+            if middle_score == round_compressor_scores[-1][1]:
+                # Shorten the next round since most compressors are good
+                # Moves the split s.t. none of the good compressors are picked
+                for new_middle in range(new_middle - 1, 0, -1):
+                    if round_compressor_scores[new_middle][1] > middle_score:
+                        break
+            else:
+                # Extend the next round to avoid a premature split
+                for new_middle in range(
+                    new_middle + 1, len(round_compressor_scores) - 1
+                ):
+                    if round_compressor_scores[new_middle][1] < middle_score:
+                        new_middle -= 1
+                        break
+
+            # Downweigh further rounds as they only consider worse compressors
+            comparison_weight *= (new_middle + 1) / len(
+                round_remaining_compressors
+            )
+
+            round_remaining_compressors = [
+                i for i, s in round_compressor_scores[: new_middle + 1]
+            ]
 
         ranked_compressors.append(round_remaining_compressors[0])
         # Different from paper as we allow all unranked compressors back in
