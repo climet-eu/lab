@@ -5,7 +5,7 @@ from typing import Any, Callable, Coroutine, Optional, Tuple, Union
 import ipywidgets
 import numpy as np
 import xarray as xr
-from IPython import display
+from IPython.display import display
 from numcodecs.abc import Codec
 
 from .suite import compress_decompress_dataset
@@ -224,7 +224,10 @@ def initiate_turing_test(
         stack_b.selected_index = 0
 
     def run_analysis(analysis, ds_a, ds_b):
-        (rng_a,) = rng.spawn(1)
+        # FIXME: Switch to rng.spawn once numpy is updated to v1.25
+        seed = rng.integers(2**31)
+
+        rng_a = np.random.Generator(np.random.PCG64(seed=seed))
         rng_b = deepcopy(rng_a)
 
         with output_a:
