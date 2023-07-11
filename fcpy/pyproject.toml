@@ -24,6 +24,7 @@ dependencies = [
     "ipyfilite",
     "lzma",  # only for pre-loading
     "matplotlib",
+    "metpy",  # only for pre-loading
     "netcdf4",  # only for pre-loading
     "numcodecs",
     "numpy",

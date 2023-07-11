@@ -100,6 +100,38 @@ index 00000000..6dfc8934
 +    ax.coastlines()
 +
 +    plt.show()
+diff --git a/packages/MetPy/meta.yaml b/packages/MetPy/meta.yaml
+new file mode 100644
+index 00000000..f1169c46
+--- /dev/null
++++ b/packages/MetPy/meta.yaml
+@@ -0,0 +1,26 @@
++package:
++  name: MetPy
++  version: 1.5.1
++  top-level:
++    - metpy
++source:
++  url: https://files.pythonhosted.org/packages/6d/bf/9794cba86ef63644d41799d0dfe4031f430e937245a5f3f1e66508a6c8fb/MetPy-1.5.1-py3-none-any.whl
++  sha256: a654a1aae77422ad340c06daaa70bd34f0ca5325f4ff202796d2dce48e53e776
++requirements:
++  run:
++    - matplotlib
++    - numpy
++    - pandas
++    - pint
++    - pooch
++    - pyproj
++    - scipy
++    - traitlets
++    - xarray
++about:
++  home: https://github.com/Unidata/MetPy
++  PyPI: https://pypi.org/project/MetPy
++  summary:
++    Collection of tools for reading, visualizing and performing calculations
++    with weather data.
++  license: BSD-3-Clause
 diff --git a/packages/basemap-data/meta.yaml b/packages/basemap-data/meta.yaml
 new file mode 100644
 index 00000000..c839d187
@@ -242,6 +274,27 @@ index 00000000..2104d93a
 +     )
 + 
 +     if "time" in coord_vars and "step" in coord_vars:
+diff --git a/packages/charset-normalizer/meta.yaml b/packages/charset-normalizer/meta.yaml
+new file mode 100644
+index 00000000..7fa67812
+--- /dev/null
++++ b/packages/charset-normalizer/meta.yaml
+@@ -0,0 +1,15 @@
++package:
++  name: charset-normalizer
++  version: 3.1.0
++  top-level:
++    - charset_normalizer
++source:
++  url: https://files.pythonhosted.org/packages/ef/81/14b3b8f01ddaddad6cdec97f2f599aa2fa466bd5ee9af99b08b7713ccd29/charset_normalizer-3.1.0-py3-none-any.whl
++  sha256: 3d9098b479e78c85080c98e1e35ff40b4a31d8953102bb0fd7d1b6f8a2111a3d
++about:
++  home: https://github.com/Ousret/charset_normalizer
++  PyPI: https://pypi.org/project/charset-normalizer
++  summary:
++    The Real First Universal Charset Detector. Open, modern and actively maintained
++    alternative to Chardet.
++  license: MIT
 diff --git a/packages/cmcrameri/meta.yaml b/packages/cmcrameri/meta.yaml
 new file mode 100644
 index 00000000..9ea051b9
@@ -380,10 +433,10 @@ index 00000000..671f423a
 +         "pytest",
 diff --git a/packages/fcpy/meta.yaml b/packages/fcpy/meta.yaml
 new file mode 100644
-index 00000000..b44f59ed
+index 00000000..09451bbb
 --- /dev/null
 +++ b/packages/fcpy/meta.yaml
-@@ -0,0 +1,36 @@
+@@ -0,0 +1,37 @@
 +package:
 +  name: fcpy
 +  version: 0.2.0
@@ -405,6 +458,7 @@ index 00000000..b44f59ed
 +    - ipyfilite
 +    - lzma  # only for pre-loading
 +    - matplotlib
++    - MetPy  # only for pre-loading
 +    - netcdf4  # only for pre-loading
 +    - numcodecs
 +    - numpy
@@ -1416,6 +1470,77 @@ index 00000000..e10596cc
 +  PyPI: https://pypi.org/project/netcdf4
 +  summary: Provides an object-oriented python interface to the netCDF version 4 library
 +  license: MIT
+diff --git a/packages/pint/meta.yaml b/packages/pint/meta.yaml
+new file mode 100644
+index 00000000..75de2c5b
+--- /dev/null
++++ b/packages/pint/meta.yaml
+@@ -0,0 +1,16 @@
++package:
++  name: pint
++  version: "0.22"
++  top-level:
++    - pint
++source:
++  url: https://files.pythonhosted.org/packages/ba/70/f3fa88f899cdf17535ddb75c4d4f1d540199524d9dd7479e66aac777de47/Pint-0.22-py3-none-any.whl
++  sha256: 6e2b3c5c2b4d9b516608bc860a417a39d66eb99c958f36540cf931d2c2e9f80f
++requirements:
++  run:
++    - typing-extensions
++about:
++  home: https://github.com/hgrecco/pint
++  PyPI: https://pypi.org/project/pint
++  summary: Physical quantities module
++  license: BSD
+diff --git a/packages/platformdirs/meta.yaml b/packages/platformdirs/meta.yaml
+new file mode 100644
+index 00000000..218408e1
+--- /dev/null
++++ b/packages/platformdirs/meta.yaml
+@@ -0,0 +1,15 @@
++package:
++  name: platformdirs
++  version: 3.8.0
++  top-level:
++    - platformdirs
++source:
++  url: https://files.pythonhosted.org/packages/e7/61/7fde5beff25a0dae6c2056203696169bd29188b6cedefff8ba6e7b54417b/platformdirs-3.8.0-py3-none-any.whl
++  sha256: ca9ed98ce73076ba72e092b23d3c93ea6c4e186b3f1c3dad6edd98ff6ffcca2e
++about:
++  home: https://github.com/platformdirs/platformdirs
++  PyPI: https://pypi.org/project/platformdirs
++  summary:
++    A small Python package for determining appropriate platform-specific dirs,
++    e.g. a "user data dir".
++  license: MIT
+diff --git a/packages/pooch/meta.yaml b/packages/pooch/meta.yaml
+new file mode 100644
+index 00000000..d4398e5a
+--- /dev/null
++++ b/packages/pooch/meta.yaml
+@@ -0,0 +1,22 @@
++package:
++  name: pooch
++  version: 1.7.0
++  top-level:
++    - pooch
++source:
++  url: https://files.pythonhosted.org/packages/84/8c/4da580db7fb4cfce8f5ed78e7d2aa542e6f201edd69d3d8a96917a8ff63c/pooch-1.7.0-py3-none-any.whl
++  sha256: 74258224fc33d58f53113cf955e8d51bf01386b91492927d0d1b6b341a765ad7
++requirements:
++  run:
++    - lzma
++    - platformdirs
++    - packaging
++    - requests
++about:
++  home: https://github.com/fatiando/pooch
++  PyPI: https://pypi.org/project/pooch
++  summary:
++    "Pooch manages your Python library's sample data files: it automatically\
++    \ downloads and stores them in a local directory, with support for versioning\
++    \ and corruption checks."
++  license: BSD 3-Clause License
 diff --git a/packages/pyshp/meta.yaml b/packages/pyshp/meta.yaml
 new file mode 100644
 index 00000000..355a6426
@@ -1578,6 +1703,69 @@ index 00000000..0c911f47
 +-
 +-# verify
 +-sz.verify(data, data_dec)
+diff --git a/packages/requests/meta.yaml b/packages/requests/meta.yaml
+new file mode 100644
+index 00000000..f02af5f7
+--- /dev/null
++++ b/packages/requests/meta.yaml
+@@ -0,0 +1,19 @@
++package:
++  name: requests
++  version: 2.31.0
++  top-level:
++    - requests
++source:
++  url: https://files.pythonhosted.org/packages/70/8e/0e2d847013cb52cd35b38c009bb167a1a26b2ce6cd6965bf26b47bc0bf44/requests-2.31.0-py3-none-any.whl
++  sha256: 58cd2187c01e70e6e26505bca751777aa9f2ee0b7f4300988b709f44e013003f
++requirements:
++  run:
++    - charset-normalizer
++    - idna
++    - urllib3
++    - certifi
++about:
++  home: https://requests.readthedocs.io
++  PyPI: https://pypi.org/project/requests
++  summary: Python HTTP for Humans.
++  license: Apache 2.0
+diff --git a/packages/traitlets/meta.yaml b/packages/traitlets/meta.yaml
+new file mode 100644
+index 00000000..f77e693e
+--- /dev/null
++++ b/packages/traitlets/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: traitlets
++  version: 5.9.0
++  top-level:
++    - traitlets
++source:
++  url: https://files.pythonhosted.org/packages/77/75/c28e9ef7abec2b7e9ff35aea3e0be6c1aceaf7873c26c95ae1f0d594de71/traitlets-5.9.0-py3-none-any.whl
++  sha256: 9e6ec080259b9a5940c797d58b613b5e31441c2257b87c2e795c5228ae80d2d8
++about:
++  home: https://github.com/ipython/traitlets
++  PyPI: https://pypi.org/project/traitlets
++  summary: Traitlets Python configuration system
++  license: BSD-3-Clause
+diff --git a/packages/urllib3/meta.yaml b/packages/urllib3/meta.yaml
+new file mode 100644
+index 00000000..a634a1ec
+--- /dev/null
++++ b/packages/urllib3/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: urllib3
++  version: 2.0.3
++  top-level:
++    - urllib3
++source:
++  url: https://files.pythonhosted.org/packages/8a/03/ad9306a50d05c166e3456fe810f33cee2b8b2a7a6818ec5d4908c4ec6b36/urllib3-2.0.3-py3-none-any.whl
++  sha256: 48e7fafa40319d358848e1bc6809b208340fafe2096f1725d05d67443d0483d1
++about:
++  home: https://github.com/urllib3/urllib3
++  PyPI: https://pypi.org/project/urllib3
++  summary: HTTP library with thread-safe connection pooling, file post, and more.
++  license: MIT
 diff --git a/packages/widgetsnbextension/meta.yaml b/packages/widgetsnbextension/meta.yaml
 new file mode 100644
 index 00000000..3ec19003
