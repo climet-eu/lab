@@ -7,6 +7,7 @@
 # nor does it submit to any jurisdiction.
 #
 
+import ipyloglite as _  # noqa
 import pyodide_http
 
 pyodide_http.patch_all()

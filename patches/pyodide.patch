@@ -433,10 +433,10 @@ index 00000000..671f423a
 +         "pytest",
 diff --git a/packages/fcpy/meta.yaml b/packages/fcpy/meta.yaml
 new file mode 100644
-index 00000000..09451bbb
+index 00000000..54d6908a
 --- /dev/null
 +++ b/packages/fcpy/meta.yaml
-@@ -0,0 +1,37 @@
+@@ -0,0 +1,38 @@
 +package:
 +  name: fcpy
 +  version: 0.2.0
@@ -456,6 +456,7 @@ index 00000000..09451bbb
 +    - dask
 +    - h5netcdf  # only for pre-loading
 +    - ipyfilite
++    - ipyloglite
 +    - lzma  # only for pre-loading
 +    - matplotlib
 +    - MetPy  # only for pre-loading
@@ -563,6 +564,25 @@ index 00000000..2618f15a
 +    Uploaded files are not loaded into memory but mounted as read-only files in a
 +    new WORKERFS.
 +  license: BSD 3-Clause License
+diff --git a/packages/ipyloglite/meta.yaml b/packages/ipyloglite/meta.yaml
+new file mode 100644
+index 00000000..559208e3
+--- /dev/null
++++ b/packages/ipyloglite/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: ipyloglite
++  version: 0.0.0
++  top-level:
++    - ipyloglite
++source:
++  url: https://files.pythonhosted.org/packages/4d/0f/244966385120ce75d9d6f01e324820a366e8b83797e7b10e8aa519376146/ipyloglite-0.0.0-py3-none-any.whl
++  sha256: f3f1365dce45ce09ea2eb3c0e0dbaf392b21a8659b6bfaaf90f5a2fc620491e0
++about:
++  home: https://github.com/juntyr/ipyloglite
++  PyPI: https://pypi.org/project/ipyloglite
++  summary: Forward console.log and friends to cell outputs in JupyterLite.
++  license: MIT OR Apache-2.0
 diff --git a/packages/ipywidgets/meta.yaml b/packages/ipywidgets/meta.yaml
 new file mode 100644
 index 00000000..f4e47d07
