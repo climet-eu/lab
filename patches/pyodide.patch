@@ -1,5 +1,5 @@
 diff --git a/Dockerfile b/Dockerfile
-index 40288019..fbf397cf 100644
+index 40288019..5282f18e 100644
 --- a/Dockerfile
 +++ b/Dockerfile
 @@ -1,5 +1,5 @@
@@ -21,14 +21,15 @@ index 40288019..fbf397cf 100644
          ninja-build jq xxd \
    && rm -rf /var/lib/apt/lists/*
  
-@@ -33,7 +33,7 @@ ADD pyodide-build /pyodide-build
- WORKDIR /
- RUN pip3 --no-cache-dir install -r requirements.txt \
-     && pip3 --no-cache-dir install -r requirements-doc.txt \
--    && rm -rf requirements.txt requirements-doc.txt pyodide-build
-+    && rm -rf "pydantic<2" requirements.txt requirements-doc.txt pyodide-build
+@@ -31,7 +31,8 @@ ADD requirements.txt docs/requirements-doc.txt /
+ ADD pyodide-build /pyodide-build
  
- # Get Chrome and Firefox (borrowed from https://github.com/SeleniumHQ/docker-selenium)
+ WORKDIR /
+-RUN pip3 --no-cache-dir install -r requirements.txt \
++RUN pip3 --no-cache-dir install "pydantic<2" \
++    && pip3 --no-cache-dir install -r requirements.txt \
+     && pip3 --no-cache-dir install -r requirements-doc.txt \
+     && rm -rf requirements.txt requirements-doc.txt pyodide-build
  
 diff --git a/Makefile.envs b/Makefile.envs
 index d023781b..1f200fe0 100644
@@ -233,6 +234,29 @@ index 00000000..d2ab4d7f
 +  PyPI: https://pypi.org/project/basemap
 +  summary: Plot data on map projections with matplotlib
 +  license: MIT
+diff --git a/packages/cattrs/meta.yaml b/packages/cattrs/meta.yaml
+new file mode 100644
+index 00000000..5c64f582
+--- /dev/null
++++ b/packages/cattrs/meta.yaml
+@@ -0,0 +1,17 @@
++package:
++  name: cattrs
++  version: 23.1.2
++  top-level:
++    - cattr
++    - cattrs
++source:
++  url: https://files.pythonhosted.org/packages/3a/ba/05df14efaa0624fac6b1510e87f5ce446208d2f6ce50270a89b6268aebfe/cattrs-23.1.2-py3-none-any.whl
++  sha256: b2bb14311ac17bed0d58785e5a60f022e5431aca3932e3fc5cc8ed8639de50a4
++requirements:
++  run:
++    - attrs
++about:
++  home: https://github.com/python-attrs/cattrs
++  PyPI: https://pypi.org/project/cattrs
++  summary: Composable complex class support for attrs and dataclasses.
++  license: MIT
 diff --git a/packages/cfgrib/meta.yaml b/packages/cfgrib/meta.yaml
 new file mode 100644
 index 00000000..8fd06581
@@ -390,6 +414,25 @@ index 00000000..72e2ee63
 +  PyPI: https://pypi.org/project/dask
 +  summary: Parallel PyData with Task Scheduling
 +  license: BSD
+diff --git a/packages/defusedxml/meta.yaml b/packages/defusedxml/meta.yaml
+new file mode 100644
+index 00000000..15342db7
+--- /dev/null
++++ b/packages/defusedxml/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: defusedxml
++  version: 0.7.1
++  top-level:
++    - defusedxml
++source:
++  url: https://files.pythonhosted.org/packages/07/6c/aa3f2f849e01cb6a001cd8554a88d4c77c5c1a31c95bdf1cf9301e6d9ef4/defusedxml-0.7.1-py2.py3-none-any.whl
++  sha256: a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61
++about:
++  home: https://github.com/tiran/defusedxml
++  PyPI: https://pypi.org/project/defusedxml
++  summary: XML bomb protection for Python stdlib modules
++  license: PSFL
 diff --git a/packages/eccodes/meta.yaml b/packages/eccodes/meta.yaml
 new file mode 100644
 index 00000000..791a9f52
@@ -476,6 +519,719 @@ index 00000000..671f423a
 +     install_requires=install_requires,
 +     tests_require=[
 +         "pytest",
+diff --git a/packages/esgf-pyclient/meta.yaml b/packages/esgf-pyclient/meta.yaml
+new file mode 100644
+index 00000000..821b5d3b
+--- /dev/null
++++ b/packages/esgf-pyclient/meta.yaml
+@@ -0,0 +1,21 @@
++package:
++  name: esgf-pyclient
++  version: 0.3.1
++  top-level:
++    - pyesgf
++source:
++  url: https://files.pythonhosted.org/packages/03/54/60ba51d47ef18907d1a643a0f75dd4c2ac24e5bbefaa02d8ade0b4f20fbf/esgf-pyclient-0.3.1.tar.gz
++  sha256: d79fafc6ec2a1eff9645e098554103f1e9f3c270947b1ac4f4a8a07fece59f3b
++requirements:
++  run:
++    - defusedxml
++    - Jinja2
++    - requests
++    - requests_cache
++    - webob
++    - myproxyclient
++about:
++  home: http://esgf-pyclient.readthedocs.org
++  PyPI: https://pypi.org/project/esgf-pyclient
++  summary: A library interacting with ESGF services within Python
++  license: BSD
+diff --git a/packages/esmpy/meta.yaml b/packages/esmpy/meta.yaml
+new file mode 100644
+index 00000000..59e948b3
+--- /dev/null
++++ b/packages/esmpy/meta.yaml
+@@ -0,0 +1,65 @@
++package:
++  name: esmpy
++  version: 8.4.2
++  top-level:
++    - esmpy
++source:
++  url: https://github.com/esmf-org/esmf/archive/refs/tags/v8.4.2.tar.gz
++  sha256: 969304efa518c7859567fa6e65efd960df2b4f6d72dbf2c3f29e39e4ab5ae594
++  patches:
++    - patches/0001-remove-fragments.patch
++    - patches/0002-include-shared-library.patch
++requirements:
++  host:
++    - numpy
++    - libesmf
++  run:
++    - numpy
++
++build:
++  vendor-sharedlib: true
++  script: |
++    cd ..
++    mv esmpy-8.4.2/src/addon/esmpy .
++    rm -rf esmpy-8.4.2
++    mv esmpy esmpy-8.4.2
++    cd esmpy-8.4.2
++
++    cp ${WASM_LIBRARY_DIR}/lib/libesmf_fullylinked.so src/esmpy/
++    cp ${WASM_LIBRARY_DIR}/lib/esmf.mk src/esmpy/
++    
++about:
++  home: https://github.com/esmf-org/esmf
++  summary: ESMPy is a Python interface to the Earth System Modeling Framework (ESMF) regridding utility.
++  license: |
++    Earth System Modeling Framework
++
++    Copyright (c) 2002-2023 University Corporation for Atmospheric Research,
++    Massachusetts Institute of Technology, Geophysical Fluid Dynamics Laboratory,
++    University of Michigan, National Centers for Environmental Prediction,
++    Los Alamos National Laboratory, Argonne National Laboratory,
++    NASA Goddard Space Flight Center.
++    All rights reserved.
++
++    Permission is hereby granted, free of charge, to any person obtaining a copy
++    of this software and associated documentation files (the "Software"), to
++    deal with the Software without restriction, including without limitation the
++    rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
++    sell copies of the Software, and to permit persons to whom the Software is
++    furnished to do so, subject to the following conditions:
++      1. Redistributions of source code must retain the above copyright notice,
++        this list of conditions and the following disclaimers.
++      2. Redistributions in binary form must reproduce the above copyright
++        notice, this list of conditions and the following disclaimers in the
++        documentation and/or other materials provided with the distribution.
++      3. Neither the names of the organizations developing this software, nor
++        the names of its contributors may be used to endorse or promote products
++        derived from this Software without specific prior written permission.
++
++    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++    CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
++    WITH THE SOFTWARE.
+diff --git a/packages/esmpy/patches/0001-remove-fragments.patch b/packages/esmpy/patches/0001-remove-fragments.patch
+new file mode 100644
+index 00000000..2eb7f203
+--- /dev/null
++++ b/packages/esmpy/patches/0001-remove-fragments.patch
+@@ -0,0 +1,512 @@
++diff --git a/src/addon/esmpy/src/esmpy/fragments/dump_esmf_internal_info.py b/src/addon/esmpy/src/esmpy/fragments/dump_esmf_internal_info.py
++deleted file mode 100644
++index ed9b5f33b1..0000000000
++--- a/src/addon/esmpy/src/esmpy/fragments/dump_esmf_internal_info.py
+++++ /dev/null
++@@ -1,151 +0,0 @@
++-# This file contains old routines to dump internal ESMF info from ESMPy Grid and Field objects
++-# This code is likely obsolete, but was useful in the original development process ..
++-#    so it is being kept for a rainy day situation
++-
++-def dump_gridinfo(self, stagger):
++-
++-    [x,y,z] = [0,1,2]
++-
++-    print "bounds - low, high"
++-    print self.lower_bounds[stagger], \
++-                self.upper_bounds[stagger]
++-    print "shape - [x, y, z] or [lat, lon]"
++-    print self.coords[stagger][0].shape
++-
++-    if self.rank == 2:
++-        return [self.coords[stagger][x], self.coords[stagger][y]]
++-    elif self.rank == 3:
++-        return [self.coords[stagger][x], self.coords[stagger][y], self.coords[stagger][z]]
++-
++-def dump_gridinfo_lower(self, stagger):
++-    [x, y, z] = [0, 1, 2]
++-
++-    print "bounds - low, high"
++-    print self.lower_bounds[stagger], \
++-                self.upper_bounds[stagger]
++-    print "shape - [x, y, z] or [lat, lon]"
++-    print self.coords[stagger][0].shape
++-
++-    # retrieve buffers to esmf coordinate memory
++-    gridptrX = self.get_grid_coords_from_esmc(x, stagger)
++-    gridptrY = self.get_grid_coords_from_esmc(y, stagger)
++-
++-    #print esmf_coords
++-    if self.rank == 2:
++-        return [gridptrX, gridptrY]
++-    elif self.rank == 3:
++-        gridptrZ = self.get_grid_coords_from_esmc(z, stagger)
++-        return [gridptrX, gridptrY, gridptrZ]
++-
++-def dump_gridinfo_ctypes(self, stagger, dim=2):
++-
++-    # find the size of the local coordinates at this stagger location
++-    from operator import mul
++-    size = reduce(mul,self.size[stagger])
++-    [x, y, z] = [0, 1, 2]
++-
++-    # get the pointer to the underlying ESMF data array for coordinates
++-
++-    xptr = ESMP_GridGetCoordPtr(self, x, staggerloc=stagger)
++-
++-    import ctypes;
++-    buffer_from_memory = ctypes.pythonapi.PyBuffer_FromMemory
++-    buffer_from_memory.restype = ctypes.py_object
++-    xbuffer = buffer_from_memory(xptr, int(8*size))
++-    '''
++-    xbuffer = np.core.multiarray.int_asbuffer(
++-        ct.addressof(xptr.contents),
++-        np.dtype(constants._ESMF2PythonType[self.type]).itemsize*size)
++-    '''
++-    xcoords = np.frombuffer(xbuffer, np.float64)
++-    #xcoordarray = numpy.ndarray((nrows, ncols), dtype=numpy.float32, order='F',
++-    #                 buffer=buf)
++-
++-    yptr = ESMP_GridGetCoordPtr(self, y, staggerloc=stagger)
++-    ybuffer = np.core.multiarray.int_asbuffer(
++-        ct.addressof(yptr.contents),
++-        np.dtype(constants._ESMF2PythonType[self.type]).itemsize*size)
++-    ycoords = np.frombuffer(ybuffer, constants._ESMF2PythonType[self.type])
++-
++-    print "DIAGNOSTICS:"
++-    print "self.type = ", self.type
++-    print "constants._ESMF2PythonType", constants._ESMF2PythonType[self.type]
++-    print "constants._ESMF2PythonType.itemsize", constants._ESMF2PythonType[self.type].itemsize
++-
++-
++-    # find the size of the local coordinates at this stagger location
++-    from operator import mul
++-    size = reduce(mul,self.size[stagger])
++-
++-    # these appear to both return bounds information only
++-    lb, ub = ESMP_GridGetCoordBounds(self, staggerloc=stagger)
++-
++-    print "Bounds:"
++-    print "  ESMPy.Grid:    ", size
++-    print "  ESMPy.ctypes1: ", lb, ub
++-
++-
++-    print "Coordinates:"
++-    I = ub[x]-lb[x]
++-    J = ub[y]-lb[y]
++-    if dim == 3:
++-        K = ub[z]-lb[z]
++-
++-    coordcount = 0
++-    if dim == 2:
++-        for i in range(I):
++-            for j in range(J):
++-                ind = i*J + j
++-
++-                if  (1e-10 > xcoords[ind] and xcoords[ind] != 0) or \
++-                    xcoords[ind] > 360 or \
++-                    -90 > ycoords[ind] or \
++-                    (ycoords[ind] > -1e-10 and 1e-10 > ycoords[ind] and ycoords[ind] != 0) or \
++-                    ycoords[ind] > 90:
++-
++-                    print "[", i, ", ", j, "] = [", xcoords[ind], ", ", ycoords[ind], "]"
++-
++-                coordcount += 1
++-    elif dim == 3:
++-        zptr = ESMP_GridGetCoordPtr(self, z, staggerloc=stagger)
++-        zbuffer = np.core.multiarray.int_asbuffer(
++-            ct.addressof(zptr.contents),
++-            np.dtype(constants._ESMF2PythonType[self.type]).itemsize*size)
++-        zcoords = np.frombuffer(zbuffer, constants._ESMF2PythonType[self.type])
++-
++-        for i in xrange(I):
++-            for j in xrange(J):
++-                for k in xrange(K):
++-                    ind = i*I + j*J + k
++-                    if  (1e-10 > xcoords[ind] and xcoords[ind] != 0) or \
++-                        xcoords[ind] > 360 or \
++-                        -90 > ycoords[ind] or \
++-                        (ycoords[ind] > -1e-10 and 1e-10 > ycoords[ind] and ycoords[ind] != 0) or \
++-                        ycoords[ind] > 90:
++-
++-                        print "[", i, ", ", j, "] = [", xcoords[ind], ", ", ycoords[ind], "]"
++-                    coordcount += 1
++-
++-    print "Coordcount = ", coordcount
++-    '''
++-    # create a numpy array to point to the ESMF allocation
++-    # reshape the numpy array of coordinates using Fortran ordering in Grid
++-    gridCoordP = np.reshape(gridCoordP, self.size[stagger], order='F')
++-    '''
++-
++-def _dump_field_coords_(self):
++-    from operator import mul
++-
++-    # retrieve buffers to esmf coordinate memory
++-    field_data = ESMP_FieldGetPtr(self.struct)
++-
++-    # find the reduced size of the coordinate arrays
++-    size = reduce(mul,self.grid.size[self.staggerloc])
++-
++-    # loop through and alias esmf data to numpy arrays
++-    buffer = np.core.multiarray.int_asbuffer(
++-        ct.addressof(field_data.contents),
++-        np.dtype(constants._ESMF2PythonType[self.type]).itemsize*size)
++-    esmf_coords = np.frombuffer(buffer, constants._ESMF2PythonType[self.type])
++-
++-    print esmf_coords
++diff --git a/src/addon/esmpy/src/esmpy/fragments/extras.py b/src/addon/esmpy/src/esmpy/fragments/extras.py
++deleted file mode 100644
++index 9d357fceb2..0000000000
++--- a/src/addon/esmpy/src/esmpy/fragments/extras.py
+++++ /dev/null
++@@ -1,191 +0,0 @@
++-# $Id$
++-
++-"""
++-utilities module - most of these routines are not yet implemented.
++-"""
++-
++-#### IMPORT LIBRARIES #########################################################
++-
++-import ctypes as ct
++-import numpy as np
++-
++-from constants import *
++-from loadESMF import _ESMF
++-
++-#### CLASS DEFINITIONS ########################################################
++-
++-# shallow type 
++-#class ESMP_ArraySpec(Structure):
++-#    _fields_ = [("shallowMem", c_char*192)]
++-#    _fields_ = [("shallowMem", create_string_buffer(192))]
++-
++-
++-#### STATE ####################################################################
++-
++-_ESMF.ESMC_StateCreate.restype = c_void_p
++-_ESMF.ESMC_StateCreate.argtypes = [c_char_p, POINTER(c_int)]
++-def ESMP_StateCreate(name):
++-    """
++-    Preconditions: ESMP has been initialized.
++-    Postconditions: An ESMP_State has been created.
++-    Arguments:
++-        RETURN ESMP_State :: state
++-        string                        :: name
++-    """
++-    lrc = c_int(INIT)
++-    state = _ESMF.ESMC_StateCreate(name,byref(lrc))
++-    rc = lrc.value
++-    if rc != _ESMP_SUCCESS:
++-        raise NameError('ESMC_StateCreate() failed with rc = '+str(rc))
++-    return state
++-
++-_ESMF.ESMC_StateDestroy.restype = c_int
++-_ESMF.ESMC_StateDestroy.argtypes = [c_void_p]
++-def ESMP_StateDestroy(state):
++-    """
++-    Preconditions: An ESMP_State has been created.
++-    Postconditions: The 'state' has been destroyed.
++-    Arguments:
++-        ESMP_State :: state
++-    """
++-    ptr = POINTER(c_void_p)
++-    stateptr = ptr(c_void_p(state))
++-    rc = _ESMF.ESMC_StateDestroy(stateptr)
++-    if rc != _ESMP_SUCCESS:
++-        raise NameError('ESMC_StateDestroy() failed with rc = '+str(rc))
++-    return
++-
++-_ESMF.ESMC_StatePrint.restype = c_int
++-_ESMF.ESMC_StatePrint.argtypes = [c_void_p]
++-def ESMP_StatePrint(state):
++-    """
++-    Preconditions: An ESMP_State has been created.
++-    Postconditions: The contents of 'state' are printed to standard out.
++-    Arguments:
++-        ESMP_State :: state
++-    """
++-    rc = _ESMF.ESMC_StatePrint(state)
++-    if rc != _ESMP_SUCCESS:
++-        raise NameError('ESMC_StatePrint() failed with rc = '+str(rc))
++-    return
++-
++-#### ARRAYSPEC ################################################################
++-
++-_ESMF.ESMC_ArraySpecGet.restype = c_int
++-_ESMF.ESMC_ArraySpecGet.argtypes = [c_void_p, POINTER(c_int), POINTER(c_uint)]
++-def ESMP_ArraySpecGet(arrayspec, rank, typekind):
++-    '''
++-    Preconditions: ESMP has been initialized and 'arrayspec' has been Set.
++-    Postconditions: Information about 'arrayspec' has been returned in the form
++-                    of a tuple containing: [rank, typekind].
++-    Arguments:
++-        RETURN integer       :: rank
++-        RETURN TypeKind      :: typekind
++-        type(ESMP_ArraySpec) :: arrayspec
++-    '''
++-    las = create_string_buffer(192)
++-    las.value = arrayspec.shallowMem
++-    lrank = c_int(INIT)
++-    ltk = c_uint(INIT)
++-    rc = _ESMF.ESMC_ArraySpecGet(las, byref(lrank), byref(ltk))
++-    if rc != _ESMP_SUCCESS:
++-        raise NameError('ESMC_ArraySpecGet() failed with rc = '+str(rc))
++-    rank = lrank.value
++-    typekind.tk = ltk.value
++-    return rank, typekind
++-
++-_ESMF.ESMC_ArraySpecSet.restype = c_int
++-_ESMF.ESMC_ArraySpecSet.argtypes = [c_void_p, c_int, c_uint]
++-def ESMP_ArraySpecSet(arrayspec, rank, typekind):
++-    '''
++-    KNOWN BUG: This function is not yet implemented.
++-    Preconditions: ESMP has been initialized
++-    Postconditions: An ESMP_ArraySpec object has been setup.
++-    Arguments:
++-        RETURN ESMP_ArraySpec :: arrayspec
++-        integer               :: rank
++-        TypeKind              :: typekind
++-    '''
++-    las = create_string_buffer(192)
++-    
++-    rc = _ESMF.ESMC_ArraySpecSet(byref(las), rank, typekind.tk)
++-    if rc != _ESMP_SUCCESS:
++-        raise NameError('ESMC_ArraySpecSet() failed with rc = '+str(rc))
++-    arrayspec.shallowMem = las.value
++-    print 'sizeof(arrayspec) = '+str(sizeof(arrayspec))
++-    print 'arrayspec = '+str(arrayspec)
++-    print 'sizeof(las) = '+str(sizeof(las))
++-    print 'las = '+str(las)
++-    print "\n"
++-    
++-    return arrayspec
++-
++-#### MESH ################################################################
++-
++-_ESMF.ESMC_MeshVTKHeader.restype = c_int
++-_ESMF.ESMC_MeshVTKHeader.argtypes = [c_char_p, POINTER(c_int), \
++-                                     POINTER(c_int), POINTER(c_int)]
++-def ESMP_MeshVTKHeader(fname, num_elem, num_node, conn_size):
++-    """
++-    KNOWN BUG: This function is not yet implemented.
++-    Preconditions: An ESMP_Mesh has been created and 'fname' is a handle to a 
++-                   valid (set of) vtk file(s).
++-    Postconditions: The header information for 'fname' is returned in a tuple
++-                    containing [num_elem, num_node, conn_size].
++-    Arguments:
++-        RETURN integer :: num_elem
++-        RETURN integer :: num_node
++-        RETURN integer :: conn_size
++-        character      :: fname
++-    """
++-    nes = c_int(INIT)
++-    nns = c_int(INIT)
++-    cns = c_int(INIT)
++-    rc = _ESMF.ESMC_MeshVTKHeader(c_char_p(fname), byref(nes), byref(nns), byref(cns))
++-    if rc != _ESMP_SUCCESS:
++-        raise NameError('ESMC_MeshVTKHeader() failed with rc = '+str(rc))
++-    num_elem = nes.value
++-    num_node = nns.value
++-    conn_size = cns.value
++-    return num_elem, num_node, conn_size
++-    
++-_ESMF.ESMC_MeshVTKBody.restype = c_int
++-_ESMF.ESMC_MeshVTKBody.argtypes = [c_char_p, POINTER(c_int), \
++-                                   POINTER(c_double), POINTER(c_int), \
++-                                   POINTER(c_int), POINTER(c_int), \
++-                                   POINTER(c_int)]
++-def ESMP_MeshVTKBody(fname, nodeId, nodeCoord, nodeOwner,\
++-                     elemId, elemType, elemConn):
++-    """
++-    KNOWN BUG: This function is not yet implemented.
++-    Preconditions: An ESMP_Mesh has been created and 'fname' is a handle to a 
++-                   valid (set of) vtk file(s).
++-    Postconditions: The body information for 'fname' is returned in a tuple
++-                    containing [nodeId, nodeCoord, nodeOwner, 
++-                    elemId, elemType, elemConn].
++-    Arguments:
++-        RETURN integer :: nodeId
++-        RETURN double  :: nodeCoord
++-        RETURN integer :: nodeOwner
++-        RETURN integer :: elemId
++-        RETURN integer :: elemType
++-        RETURN integer :: elemConn
++-        character      :: fname
++-    """
++-    nis = c_int(INIT)
++-    ncs = c_double(INIT)
++-    nos = c_int(INIT)
++-    eis = c_int(INIT)
++-    ets = c_int(INIT)
++-    ecs = c_int(INIT)
++-    rc = _ESMF.ESMC_MeshVTKBody(fname, byref(nis), byref(ncs), byref(nos), \
++-                                byref(eis), byref(ets), byref(ecs))
++-    if rc != _ESMP_SUCCESS:
++-        raise NameError('ESMC_MeshVTKBody() failed with rc = '+str(rc))
++-    nodeId = nis.value
++-    nodeCoord = ncs.value
++-    nodeOwner = nos.value
++-    elemId = eis.value
++-    elemType = ets.value
++-    elemConn = ecs.value
++-    return nodeId, nodeCoord, nodeOwner, elemId, elemType, elemConn
++diff --git a/src/addon/esmpy/src/esmpy/fragments/remap.py b/src/addon/esmpy/src/esmpy/fragments/remap.py
++deleted file mode 100755
++index dc4206668f..0000000000
++--- a/src/addon/esmpy/src/esmpy/fragments/remap.py
+++++ /dev/null
++@@ -1,152 +0,0 @@
++-# $Id$
++-#===============================================================================
++-#                                                        remap.py
++-# 
++-# This is a driver python script for the ESMF_RegridWeightGen application
++-# CAUTION: this is extremely outdated
++-#===============================================================================
++-
++-# ================================================================================
++-# ================================================================================
++-# 
++-# Dependencies
++-# ------------
++-# 
++-# 
++-# 
++-# ESMF must be built and installed for this python module to run properly.
++-# If ESMF is not on your system you can download, build and install it by 
++-# following the instructions in the "MORE HELP" section below.
++-# 
++-# The ESMF library must be built with NetCDF, and LAPACK support to enable
++-# full functionality with this module.
++-# 
++-# If ESMF is already installed on the system you are using, you 
++-# should only have to set the ESMFMKFILE environment variable.
++-# This environment variable should be pointed to the esmf.mk file in the ESMF
++-# installation.
++-# 
++-# The PYTHONPATH environment variable must also be set to the top-level
++-# ESMP directory, then this module is accessed with: 
++-# 
++-#    from src import remap
++-# 
++-# ================================================================================
++-# ================================================================================
++-# 
++-# Use
++-# ---
++-# 
++-# There are three required input parameters to this python interface, and one 
++-# optional parameter.    These are listed below, with descriptions and
++-# default values if applicable:
++-# 
++-# srcgrid - The source grid, in NetCDF format, to be used in the remapping
++-# weight generation.
++-# 
++-# dstgrid - The destination grid, in NetCDF format, to be used in the remapping
++-# weight generation.
++-# 
++-# weights - The name of the NetCDF file into which the remapping weights will be
++-# written.    
++-# 
++-# method - The interpolation method to be used to generate the weights.    The 
++-# default method is "bilinear", other methods are "patch" and "conserve".    The
++-# "patch" option specifies a patch recovery based finite element interpolation, 
++-# and "conserve" specifies and area weighted first order locally conservative
++-# method.
++-# 
++-# Some examples of how to use this interface are:
++-# 
++-# remap(source, destination, myweightsfile)
++-# 
++-# remap(source, destination, myweightsfile, conserve)
++-# 
++-# ================================================================================
++-# ================================================================================
++-# 
++-# More Help
++-# ------------
++-# 
++-# Details about the ESMF_RegridWeightGen application that is driven by the
++-# interface can be found in the ESMF Reference Manual:
++-# http://www.earthsystemmodeling.org/esmf_releases/public/ESMF_5_2_0r/ESMF_refdoc/node3.html
++-# 
++-# Information about the ESMF project can be found at the ESMF web site:
++-#                     http://www.earthsystemmodeling.org
++-#     
++-# Software documentation for the last public release is at:
++-#                     http://www.earthsystemmodeling.org -> Users -> Documentation
++-#     
++-# Software documentation for all releases is at:
++-#                     http://www.earthsystemmodeling.org -> Download -> View All Releases
++-#     
++-# The ESMF library source code is also available for download at:
++-#                     http://sourceforge.net/projects/esmf
++-#     
++-# Please contact esmf_support@ucar.edu with any questions or problems.
++-#     
++-# ================================================================================
++-
++-def remap(srcgrid, dstgrid, weights, method='bilinear'):
++-    import os
++-    import re
++-    import sys
++-        
++-    # current running executable directory
++-    RUNDIR = os.getcwd()
++-    
++-    #TODO is this in the esmf.mk?
++-    # find out how many procs to use on this machine
++-    if os.environ.get('ESMF_NUM_PROCS'):
++-        NUM_PROCS = os.environ.get('ESMF_NUM_PROCS')
++-    else:
++-        print "ESMF_NUM_PROCS not defined in user environment, using default ESMF_NUM_PROCS=1"
++-        NUM_PROCS = "1"
++-    
++-    # read the esmf.mk and get the location of the executable and the OS for 
++-    # this system
++-    if os.environ.get('ESMFMKFILE'):
++-        esmfmkfile = open(os.environ.get('ESMFMKFILE'))
++-    else:
++-        print "ESMFMKFILE is not defined!"
++-        sys.exit
++-    
++-    for line in esmfmkfile:
++-        if re.search(".*ESMF_APPSDIR.*", line) != None:
++-            ap_match = line 
++-    
++-    esmfmkfile.close()
++-    
++-    # clean up the executable name string for proper usage
++-    ap_match = ap_match.split("=")[1]
++-    APP = ap_match.strip()+"/ESMF_RegridWeightGen"
++-    
++-    # TODO: use 'bilinear' instead of 'b' for filename
++-    # TODO: this could be a dict
++-    options = ''
++-    file = ''
++-    # methods
++-    if method == 'bilinear':
++-        options = ''
++-        file = 'b'
++-    elif method == 'patch':
++-        options = '-m patch'
++-        file = 'p'
++-    elif method == 'conserve':
++-        options = '-m conserve'
++-        file = 'c'
++-    else:
++-        print 'Method: '+method+' is not supported!'
++-        sys.exit
++-    
++-    # TODO: what is this cruft?
++-    #weights = weights.split('.')[0]
++-    #weights = weights+"_"+file+".nc"
++-    #srcgrid = "/export/shared/grids/ll1deg_grid.nc"
++-    #dstgrid = "/export/shared/grids/ll2.5deg_grid.nc"
++-    #options = ""
++-    #weights = "srcgrid_to_dstgrid_b.nc"
++-    
++-    return os.system("mpirun -np "+NUM_PROCS+" "+APP+" "+options+\
++-                     " -s "+srcgrid+" -d "+dstgrid+" -w "+weights+" > RegridWeightGen.out")
+diff --git a/packages/esmpy/patches/0002-include-shared-library.patch b/packages/esmpy/patches/0002-include-shared-library.patch
+new file mode 100644
+index 00000000..4e658627
+--- /dev/null
++++ b/packages/esmpy/patches/0002-include-shared-library.patch
+@@ -0,0 +1,48 @@
++diff --git a/src/addon/esmpy/pyproject.toml b/src/addon/esmpy/pyproject.toml
++index 18576c255b..fc2353229b 100644
++--- a/src/addon/esmpy/pyproject.toml
+++++ b/src/addon/esmpy/pyproject.toml
++@@ -37,6 +37,9 @@ version = "placeholder" # this is a placeholder for the version pulled with git-
++ where = ["src"]
++ exclude = ["doc*"]
++ 
+++[tool.setuptools.package-data]
+++esmpy = ["esmf.mk", "libesmf_fullylinked.so"]
+++
++ [tool.pytest.ini_options]
++ testpaths = [
++     "src/esmpy/test/test_api",
++diff --git a/src/addon/esmpy/src/esmpy/interface/loadESMF.py b/src/addon/esmpy/src/esmpy/interface/loadESMF.py
++index f5f73e68b0..6fa8b10763 100644
++--- a/src/addon/esmpy/src/esmpy/interface/loadESMF.py
+++++ b/src/addon/esmpy/src/esmpy/interface/loadESMF.py
++@@ -6,6 +6,7 @@ import os
++ import sys
++ import traceback
++ import re
+++from pathlib import Path
++ 
++ import esmpy.api.constants as constants
++ from esmpy.util.exceptions import VersionWarning, VersionMismatch
++@@ -21,11 +22,7 @@ try:
++ except:
++     raise ImportError('The CTypes library cannot be found.')
++ 
++-esmfmk = None
++-try:
++-    esmfmk = os.environ["ESMFMKFILE"]
++-except:
++-    raise ImportError('The ESMFMKFILE environment variable is not available.')
+++esmfmk = str(Path(__file__).parent.parent / "esmf.mk")
++ 
++ #### INVESTIGATE esmf.mk ######################################################
++ 
++@@ -84,6 +81,8 @@ if esmfversion != constants._ESMPY_VERSION:
++ 
++ constants._ESMF_VERSION = esmfversion
++ 
+++libsdir = str(Path(__file__).parent.parent)
+++
++ 
++ if not libsdir:
++     raise ValueError("ESMF_LIBSDIR not found!")
+diff --git a/packages/fcbench/meta.yaml b/packages/fcbench/meta.yaml
+new file mode 100644
+index 00000000..30d2f136
+--- /dev/null
++++ b/packages/fcbench/meta.yaml
+@@ -0,0 +1,37 @@
++package:
++  name: fcbench
++  version: 0.0.1
++  top-level:
++    - fcbench
++source:
++  path: ./field-compression-benchmark
++build:
++  script: |
++    # Set up a more modern nightly toolchain with support for emscripten and wasi
++    rm rust-toolchain
++    rustup default nightly-2023-09-29
++    rustup target add wasm32-unknown-emscripten --toolchain nightly-2023-09-29
++    rustup target add wasm32-wasi --toolchain nightly-2023-09-29
++
++    # For some reason, the .cargo/config is not respected during building
++    export RUSTFLAGS="--cfg uuid_unstable"
++requirements:
++  executable:
++    - rustup
++  run:
++    - cfgrib
++    - dask
++    - netcdf4
++    - pint
++    - proplot
++    - xarray
++    - xeofs
++    - xhistogram
++    - zarr
++about:
++  home: https://github.com/juntyr/field-compression-benchmark
++  summary:
++    The suite compares the performance of various data compression methods with
++    different settings across a variety of variables and their derivatives from
++    different GRIB, NetCDF, or Zarr datasets.
++  license: MIT OR Apache-2.0
 diff --git a/packages/fcpy/meta.yaml b/packages/fcpy/meta.yaml
 new file mode 100644
 index 00000000..54d6908a
@@ -1224,6 +1980,322 @@ index 00000000..3d270618
 + 
 + static int number_of_bits(size_t x, long* result)
 + {
+diff --git a/packages/libesmf/lfortran.py b/packages/libesmf/lfortran.py
+new file mode 100755
+index 00000000..b7fb87f1
+--- /dev/null
++++ b/packages/libesmf/lfortran.py
+@@ -0,0 +1,39 @@
++#!/usr/bin/env python3
++
++import shutil
++import subprocess
++import sys
++
++from pathlib import Path
++
++if __name__ == '__main__':
++    args = sys.argv
++
++    cpp_args = []
++
++    filepath = None
++    pre_filepath = None
++
++    i = 1
++    while i < len(args):
++        if args[i] == "-o":
++            filepath = args[i-1]
++            pre_filepath = str(Path(filepath).with_stem(Path(filepath).stem + "-pre"))
++            cpp_args[-1] = pre_filepath
++            i += 2
++        else:
++            if args[i] not in ["--generate-object-code", "--cpp", "--no-color"]:
++                cpp_args.append(args[i])
++            i += 1
++    
++    print("=== lfortran.py ===")
++    print(args)
++    print(filepath)
++    print(cpp_args)
++    
++    if filepath is not None:
++        shutil.copyfile(filepath, pre_filepath)
++
++        subprocess.run(["gcc", "-E", "-P", "-x", "c", "-C", "-nostdinc"] + cpp_args + ["-o", filepath], check=True)
++    
++    subprocess.run(["/src/miniconda3/bin/lfortran"] + args[1:], check=True)
+diff --git a/packages/libesmf/llvm.sh b/packages/libesmf/llvm.sh
+new file mode 100755
+index 00000000..5bb1bf20
+--- /dev/null
++++ b/packages/libesmf/llvm.sh
+@@ -0,0 +1,173 @@
++#!/bin/bash
++################################################################################
++# Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
++# See https://llvm.org/LICENSE.txt for license information.
++# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
++################################################################################
++#
++# This script will install the llvm toolchain on the different
++# Debian and Ubuntu versions
++
++set -eux
++
++usage() {
++    set +x
++    echo "Usage: $0 [llvm_major_version] [all] [OPTIONS]" 1>&2
++    echo -e "all\t\t\tInstall all packages." 1>&2
++    echo -e "-n=code_name\t\tSpecifies the distro codename, for example bionic" 1>&2
++    echo -e "-h\t\t\tPrints this help." 1>&2
++    echo -e "-m=repo_base_url\tSpecifies the base URL from which to download." 1>&2
++    exit 1;
++}
++
++CURRENT_LLVM_STABLE=16
++BASE_URL="http://apt.llvm.org"
++
++# Check for required tools
++needed_binaries=(lsb_release wget add-apt-repository gpg)
++missing_binaries=()
++for binary in "${needed_binaries[@]}"; do
++    if ! which $binary &>/dev/null ; then
++        missing_binaries+=($binary)
++    fi
++done
++if [[ ${#missing_binaries[@]} -gt 0 ]] ; then
++    echo "You are missing some tools this script requires: ${missing_binaries[@]}"
++    echo "(hint: apt install lsb-release wget software-properties-common gnupg)"
++    exit 4
++fi
++
++# Set default values for commandline arguments
++# We default to the current stable branch of LLVM
++LLVM_VERSION=$CURRENT_LLVM_STABLE
++ALL=0
++DISTRO=$(lsb_release -is)
++VERSION=$(lsb_release -sr)
++UBUNTU_CODENAME=""
++CODENAME_FROM_ARGUMENTS=""
++# Obtain VERSION_CODENAME and UBUNTU_CODENAME (for Ubuntu and its derivatives)
++source /etc/os-release
++DISTRO=${DISTRO,,}
++case ${DISTRO} in
++    debian)
++        if [[ "${VERSION}" == "unstable" ]] || [[ "${VERSION}" == "testing" ]]; then
++            CODENAME=unstable
++            LINKNAME=
++        else
++            # "stable" Debian release
++            CODENAME=${VERSION_CODENAME}
++            LINKNAME=-${CODENAME}
++        fi
++        ;;
++    *)
++        # ubuntu and its derivatives
++        if [[ -n "${UBUNTU_CODENAME}" ]]; then
++            CODENAME=${UBUNTU_CODENAME}
++            if [[ -n "${CODENAME}" ]]; then
++                LINKNAME=-${CODENAME}
++            fi
++        fi
++        ;;
++esac
++
++# read optional command line arguments
++if [ "$#" -ge 1 ] && [ "${1::1}" != "-" ]; then
++    if [ "$1" != "all" ]; then
++        LLVM_VERSION=$1
++    else
++        # special case for ./llvm.sh all
++        ALL=1
++    fi
++    OPTIND=2
++    if [ "$#" -ge 2 ]; then
++      if [ "$2" == "all" ]; then
++          # Install all packages
++          ALL=1
++          OPTIND=3
++      fi
++    fi
++fi
++
++while getopts ":hm:n:" arg; do
++    case $arg in
++    h)
++        usage
++        ;;
++    m)
++        BASE_URL=${OPTARG}
++        ;;
++    n)
++        CODENAME=${OPTARG}
++        if [[ "${CODENAME}" == "unstable" ]]; then
++            # link name does not apply to unstable repository
++            LINKNAME=
++        else
++            LINKNAME=-${CODENAME}
++        fi
++        CODENAME_FROM_ARGUMENTS="true"
++        ;;
++    esac
++done
++
++if [[ $EUID -ne 0 ]]; then
++   echo "This script must be run as root!"
++   exit 1
++fi
++
++declare -A LLVM_VERSION_PATTERNS
++LLVM_VERSION_PATTERNS[9]="-9"
++LLVM_VERSION_PATTERNS[10]="-10"
++LLVM_VERSION_PATTERNS[11]="-11"
++LLVM_VERSION_PATTERNS[12]="-12"
++LLVM_VERSION_PATTERNS[13]="-13"
++LLVM_VERSION_PATTERNS[14]="-14"
++LLVM_VERSION_PATTERNS[15]="-15"
++LLVM_VERSION_PATTERNS[16]="-16"
++LLVM_VERSION_PATTERNS[17]=""
++
++if [ ! ${LLVM_VERSION_PATTERNS[$LLVM_VERSION]+_} ]; then
++    echo "This script does not support LLVM version $LLVM_VERSION"
++    exit 3
++fi
++
++LLVM_VERSION_STRING=${LLVM_VERSION_PATTERNS[$LLVM_VERSION]}
++
++# join the repository name
++if [[ -n "${CODENAME}" ]]; then
++    REPO_NAME="deb ${BASE_URL}/${CODENAME}/  llvm-toolchain${LINKNAME}${LLVM_VERSION_STRING} main"
++
++    # check if the repository exists for the distro and version
++    if ! wget -q --method=HEAD ${BASE_URL}/${CODENAME} &> /dev/null; then
++        if [[ -n "${CODENAME_FROM_ARGUMENTS}" ]]; then
++            echo "Specified codename '${CODENAME}' is not supported by this script."
++        else
++            echo "Distribution '${DISTRO}' in version '${VERSION}' is not supported by this script."
++        fi
++        exit 2
++    fi
++fi
++
++
++# install everything
++
++if [[ ! -f /etc/apt/trusted.gpg.d/apt.llvm.org.asc ]]; then
++    # download GPG key once
++    wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
++fi
++
++if [[ -z "`apt-key list 2> /dev/null | grep -i llvm`" ]]; then
++    # Delete the key in the old format
++    apt-key del AF4F7421
++fi
++add-apt-repository "${REPO_NAME}"
++apt-get update
++PKG="clang-$LLVM_VERSION lldb-$LLVM_VERSION lld-$LLVM_VERSION clangd-$LLVM_VERSION"
++if [[ $ALL -eq 1 ]]; then
++    # same as in test-install.sh
++    # No worries if we have dups
++    PKG="$PKG clang-tidy-$LLVM_VERSION clang-format-$LLVM_VERSION clang-tools-$LLVM_VERSION llvm-$LLVM_VERSION-dev lld-$LLVM_VERSION lldb-$LLVM_VERSION llvm-$LLVM_VERSION-tools libomp-$LLVM_VERSION-dev libc++-$LLVM_VERSION-dev libc++abi-$LLVM_VERSION-dev libclang-common-$LLVM_VERSION-dev libclang-$LLVM_VERSION-dev libclang-cpp$LLVM_VERSION-dev libunwind-$LLVM_VERSION-dev"
++    if test $LLVM_VERSION -gt 14; then
++        PKG="$PKG libclang-rt-$LLVM_VERSION-dev libpolly-$LLVM_VERSION-dev"
++    fi
++fi
++apt-get install -y $PKG
+diff --git a/packages/libesmf/meta.yaml b/packages/libesmf/meta.yaml
+new file mode 100644
+index 00000000..825bba08
+--- /dev/null
++++ b/packages/libesmf/meta.yaml
+@@ -0,0 +1,86 @@
++package:
++  name: libesmf
++  version: 8.4.2
++source:
++  # url: https://github.com/esmf-org/esmf/archive/refs/tags/v8.4.2.tar.gz
++  # sha256: 969304efa518c7859567fa6e65efd960df2b4f6d72dbf2c3f29e39e4ab5ae594
++  # c95415956c711c366f684c8b93359d40cbd87207 from https://github.com/juntyr/esmf.git
++  path: esmf
++requirements:
++  host:
++    - numpy
++build:
++  type: shared_library
++  # cross-script: |
++  script: |
++    export ESMF_DIR=$(pwd)
++    export ESMF_INSTALL_PREFIX=${WASM_LIBRARY_DIR}
++    export ESMF_INSTALL_BINDIR=${WASM_LIBRARY_DIR}/bin
++    export ESMF_INSTALL_DOCDIR=${WASM_LIBRARY_DIR}/doc
++    export ESMF_INSTALL_HEADERDIR=${WASM_LIBRARY_DIR}/include
++    export ESMF_INSTALL_LIBDIR=${WASM_LIBRARY_DIR}/lib
++    export ESMF_INSTALL_MODDIR=${WASM_LIBRARY_DIR}/mod
++
++    which emcc
++
++    export ESMF_COMPILER=llvm
++    export ESMF_F90COMPILER=flang-new-17
++    # export ESMF_COMPILER=lfortran
++    # export ESMF_F90COMPILER=/src/packages/libesmf/lfortran.py
++    # export ESMF_F90COMPILER=/src/miniconda3/bin/lfortran
++    # export ESMF_F90COMPILER=/src/flang-new
++    export ESMF_CCOMPILER=emcc
++    export ESMF_CLINKER=emcc
++    export ESMF_CXXCOMPILER=em++
++    export ESMF_CXXLINKER=em++
++    # TODO: run the normal c preprocessor first
++    # export ESMF_CPP=emcc
++    export ESMF_CPP="gcc -E -P -x c -C -nostdinc"
++    export ESMF_ABI=32
++
++    export ESMF_OPENMP=OFF
++    export ESMF_PTHREADS=OFF
++    export ESMF_TRACE_LIB_BUILD=OFF
++    export ESMF_TESTCOMPTUNNEL=OFF
++
++    # #define ESMF_NO_INITIALIZERS 1
++    # #define ESMF_NO_F2018ASSUMEDTYPE 1
++    #? #define ESMF_NO_F2003_ALLOC_STRING_LENS 1
++
++    emmake make -j ${PYODIDE_JOBS:-3};
++    emmake make install
++about:
++  home: https://github.com/esmf-org/esmf
++  summary: The Earth System Modeling Framework (ESMF) is a suite of software tools for developing high-performance, multi-component Earth science modeling applications.
++  license: |
++    Earth System Modeling Framework
++
++    Copyright (c) 2002-2023 University Corporation for Atmospheric Research,
++    Massachusetts Institute of Technology, Geophysical Fluid Dynamics Laboratory,
++    University of Michigan, National Centers for Environmental Prediction,
++    Los Alamos National Laboratory, Argonne National Laboratory,
++    NASA Goddard Space Flight Center.
++    All rights reserved.
++
++    Permission is hereby granted, free of charge, to any person obtaining a copy
++    of this software and associated documentation files (the "Software"), to
++    deal with the Software without restriction, including without limitation the
++    rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
++    sell copies of the Software, and to permit persons to whom the Software is
++    furnished to do so, subject to the following conditions:
++      1. Redistributions of source code must retain the above copyright notice,
++        this list of conditions and the following disclaimers.
++      2. Redistributions in binary form must reproduce the above copyright
++        notice, this list of conditions and the following disclaimers in the
++        documentation and/or other materials provided with the distribution.
++      3. Neither the names of the organizations developing this software, nor
++        the names of its contributors may be used to endorse or promote products
++        derived from this Software without specific prior written permission.
++
++    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++    CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
++    WITH THE SOFTWARE.
 diff --git a/packages/libnetcdf/meta.yaml b/packages/libnetcdf/meta.yaml
 new file mode 100644
 index 00000000..2ea001c0
@@ -1498,6 +2570,29 @@ index 00000000..035525dc
 +     // Fast path
 +     if (s_size > 0 && s_size < 15) {
 +         std::int64_t acc = 0;
+diff --git a/packages/myproxyclient/meta.yaml b/packages/myproxyclient/meta.yaml
+new file mode 100644
+index 00000000..8697d67b
+--- /dev/null
++++ b/packages/myproxyclient/meta.yaml
+@@ -0,0 +1,17 @@
++package:
++  name: myproxyclient
++  version: 2.1.0
++  top-level:
++    - myproxy
++source:
++  url: https://files.pythonhosted.org/packages/e1/dd/e628684187d9607ccd987acd5dc8f5c909b1b2a6135ebfbceed22da7f733/MyProxyClient-2.1.0-py3-none-any.whl
++  sha256: fcb020ece502b42dda2a1fe43c8437ddedcca602b7ec81f8476bd5f6da5081fb
++requirements:
++  run:
++    - pyOpenSSL
++    - six
++about:
++  home: https://github.com/cedadev/MyProxyClient
++  PyPI: https://pypi.org/project/myproxyclient
++  summary: MyProxy Client
++  license: BSD
 diff --git a/packages/netcdf4/meta.yaml b/packages/netcdf4/meta.yaml
 new file mode 100644
 index 00000000..e10596cc
@@ -1632,6 +2727,28 @@ index 00000000..3465b5b4
 +    A succinct matplotlib wrapper for making beautiful, publication-quality
 +    graphics.
 +  license: MIT
+diff --git a/packages/pyOpenSSL/meta.yaml b/packages/pyOpenSSL/meta.yaml
+new file mode 100644
+index 00000000..e60b4d3f
+--- /dev/null
++++ b/packages/pyOpenSSL/meta.yaml
+@@ -0,0 +1,16 @@
++package:
++  name: pyOpenSSL
++  version: 23.2.0
++  top-level:
++    - OpenSSL
++source:
++  url: https://files.pythonhosted.org/packages/f0/e2/f8b4f1c67933a4907e52228241f4bd52169f3196b70af04403b29c63238a/pyOpenSSL-23.2.0-py3-none-any.whl
++  sha256: 24f0dc5227396b3e831f4c7f602b950a5e9833d292c8e4a2e06b709292806ae2
++requirements:
++  run:
++    - cryptography
++about:
++  home: https://pyopenssl.org/
++  PyPI: https://pypi.org/project/pyOpenSSL
++  summary: Python wrapper module around the OpenSSL library
++  license: Apache License, Version 2.0
 diff --git a/packages/pyshp/meta.yaml b/packages/pyshp/meta.yaml
 new file mode 100644
 index 00000000..355a6426
@@ -1819,6 +2936,33 @@ index 00000000..f02af5f7
 +  PyPI: https://pypi.org/project/requests
 +  summary: Python HTTP for Humans.
 +  license: Apache 2.0
+diff --git a/packages/requests_cache/meta.yaml b/packages/requests_cache/meta.yaml
+new file mode 100644
+index 00000000..01be1500
+--- /dev/null
++++ b/packages/requests_cache/meta.yaml
+@@ -0,0 +1,21 @@
++package:
++  name: requests_cache
++  version: 1.0.1
++  top-level:
++    - requests_cache
++source:
++  url: https://files.pythonhosted.org/packages/df/34/c9893aca1061ea42cf90536e1af9593474316a991a868c8ceda3631e2368/requests_cache-1.0.1-py3-none-any.whl
++  sha256: 55c5765c26fd98a38c633d6e3931a507b7708cdd07c0afb48773d0718ac15969
++requirements:
++  run:
++    - requests
++    - urllib3
++    - attrs
++    - cattrs
++    - platformdirs
++    - url-normalize
++about:
++  home: https://github.com/requests-cache/requests-cache
++  PyPI: https://pypi.org/project/requests_cache
++  summary: A persistent cache for python requests
++  license: BSD-2-Clause
 diff --git a/packages/traitlets/meta.yaml b/packages/traitlets/meta.yaml
 new file mode 100644
 index 00000000..f77e693e
@@ -1838,6 +2982,28 @@ index 00000000..f77e693e
 +  PyPI: https://pypi.org/project/traitlets
 +  summary: Traitlets Python configuration system
 +  license: BSD-3-Clause
+diff --git a/packages/url-normalize/meta.yaml b/packages/url-normalize/meta.yaml
+new file mode 100644
+index 00000000..c6a5276c
+--- /dev/null
++++ b/packages/url-normalize/meta.yaml
+@@ -0,0 +1,16 @@
++package:
++  name: url-normalize
++  version: 1.4.3
++  top-level:
++    - url_normalize
++source:
++  url: https://files.pythonhosted.org/packages/65/1c/6c6f408be78692fc850006a2b6dea37c2b8592892534e09996e401efc74b/url_normalize-1.4.3-py2.py3-none-any.whl
++  sha256: ec3c301f04e5bb676d333a7fa162fa977ad2ca04b7e652bfc9fac4e405728eed
++requirements:
++  run:
++    - six
++about:
++  home: https://github.com/niksite/url-normalize
++  PyPI: https://pypi.org/project/url-normalize
++  summary: URL normalization for Python
++  license: MIT
 diff --git a/packages/urllib3/meta.yaml b/packages/urllib3/meta.yaml
 new file mode 100644
 index 00000000..a634a1ec
@@ -1856,6 +3022,25 @@ index 00000000..a634a1ec
 +  home: https://github.com/urllib3/urllib3
 +  PyPI: https://pypi.org/project/urllib3
 +  summary: HTTP library with thread-safe connection pooling, file post, and more.
++  license: MIT
+diff --git a/packages/webob/meta.yaml b/packages/webob/meta.yaml
+new file mode 100644
+index 00000000..6fde784a
+--- /dev/null
++++ b/packages/webob/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: webob
++  version: 1.8.7
++  top-level:
++    - webob
++source:
++  url: https://files.pythonhosted.org/packages/62/9c/e94a9982e9f31fc35cf46cdc543a6c2c26cb7174635b5fd25b0bbc6a7bc0/WebOb-1.8.7-py2.py3-none-any.whl
++  sha256: 73aae30359291c14fa3b956f8b5ca31960e420c28c1bec002547fb04928cf89b
++about:
++  home: http://webob.org/
++  PyPI: https://pypi.org/project/webob
++  summary: WSGI request and response object
 +  license: MIT
 diff --git a/packages/widgetsnbextension/meta.yaml b/packages/widgetsnbextension/meta.yaml
 new file mode 100644
