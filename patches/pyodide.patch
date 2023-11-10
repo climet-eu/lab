@@ -364,10 +364,10 @@ index 00000000..671f423a
 +         "pytest",
 diff --git a/packages/fcbench/meta.yaml b/packages/fcbench/meta.yaml
 new file mode 100644
-index 00000000..30d2f136
+index 00000000..18488099
 --- /dev/null
 +++ b/packages/fcbench/meta.yaml
-@@ -0,0 +1,37 @@
+@@ -0,0 +1,42 @@
 +package:
 +  name: fcbench
 +  version: 0.0.1
@@ -385,6 +385,11 @@ index 00000000..30d2f136
 +
 +    # For some reason, the .cargo/config is not respected during building
 +    export RUSTFLAGS="--cfg uuid_unstable"
++
++    # Export the cmake inside Docker to circumvent Pyodide's wrapper
++    export CMAKE_NOCROSS=$(which cmake)
++  cross-script:
++    export CMAKE=$CMAKE_NOCROSS
 +requirements:
 +  executable:
 +    - rustup
