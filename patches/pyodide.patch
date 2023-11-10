@@ -1,3 +1,48 @@
+diff --git a/Dockerfile b/Dockerfile
+index 40288019..fbf397cf 100644
+--- a/Dockerfile
++++ b/Dockerfile
+@@ -1,5 +1,5 @@
+-FROM node:14.16.1-buster-slim AS node-image
+-FROM python:3.11.2-slim-buster
++FROM node:20.1.0-bullseye-slim AS node-image
++FROM python:3.11.2-slim-bullseye
+ 
+ # Requirements for building packages
+ RUN apt-get update \
+@@ -7,8 +7,8 @@ RUN apt-get update \
+         bzip2 ccache f2c g++ gfortran git make \
+         patch pkg-config swig unzip wget xz-utils \
+         autoconf autotools-dev automake texinfo dejagnu \
+-        build-essential prelink autoconf libtool libltdl-dev \
+-        gnupg2 libdbus-glib-1-2 sudo sqlite3 \
++        build-essential autoconf libtool libltdl-dev \
++        gnupg2 libdbus-glib-1-2 sudo sqlite3 clang libclang-dev cmake \
+         ninja-build jq xxd \
+   && rm -rf /var/lib/apt/lists/*
+ 
+@@ -33,7 +33,7 @@ ADD pyodide-build /pyodide-build
+ WORKDIR /
+ RUN pip3 --no-cache-dir install -r requirements.txt \
+     && pip3 --no-cache-dir install -r requirements-doc.txt \
+-    && rm -rf requirements.txt requirements-doc.txt pyodide-build
++    && rm -rf "pydantic<2" requirements.txt requirements-doc.txt pyodide-build
+ 
+ # Get Chrome and Firefox (borrowed from https://github.com/SeleniumHQ/docker-selenium)
+ 
+diff --git a/Makefile.envs b/Makefile.envs
+index d023781b..1f200fe0 100644
+--- a/Makefile.envs
++++ b/Makefile.envs
+@@ -160,7 +160,7 @@ export STDLIB_MODULE_CFLAGS= $(SIDE_MODULE_CFLAGS) -I Include/ -I . -I Include/i
+ # For RUST
+ export CARGO_BUILD_TARGET=wasm32-unknown-emscripten
+ export CARGO_TARGET_WASM32_UNKNOWN_EMSCRIPTEN_LINKER=emcc
+-export RUST_TOOLCHAIN=nightly-2022-06-26
++export RUST_TOOLCHAIN=nightly-2023-04-29
+ export PYO3_CROSS_LIB_DIR=${CPYTHONINSTALL}/lib
+ export PYO3_CROSS_INCLUDE_DIR=${PYTHONINCLUDE}
+ 
 diff --git a/packages/Cartopy/meta.yaml b/packages/Cartopy/meta.yaml
 new file mode 100644
 index 00000000..866a41ba
@@ -1561,6 +1606,32 @@ index 00000000..d4398e5a
 +    \ downloads and stores them in a local directory, with support for versioning\
 +    \ and corruption checks."
 +  license: BSD 3-Clause License
+diff --git a/packages/proplot/meta.yaml b/packages/proplot/meta.yaml
+new file mode 100644
+index 00000000..3465b5b4
+--- /dev/null
++++ b/packages/proplot/meta.yaml
+@@ -0,0 +1,20 @@
++package:
++  name: proplot
++  version: 0.9.7
++  top-level:
++    - proplot
++source:
++  url: https://files.pythonhosted.org/packages/af/cd/419a7137fe163614414bc8e9abdb1cd12baa12a80dc6930ed3bc60d19c2d/proplot-0.9.7-py3-none-any.whl
++  sha256: e2732cbf7520505a3bb399ef75d762d9645813bc2208deefe7ca2d5c8e4f6fa1
++requirements:
++  run:
++    - matplotlib
++    - numpy
++    - setuptools
++about:
++  home: https://proplot.readthedocs.io
++  PyPI: https://pypi.org/project/proplot
++  summary:
++    A succinct matplotlib wrapper for making beautiful, publication-quality
++    graphics.
++  license: MIT
 diff --git a/packages/pyshp/meta.yaml b/packages/pyshp/meta.yaml
 new file mode 100644
 index 00000000..355a6426
@@ -1858,6 +1929,80 @@ index 00000000..48bf8efb
 +             open_kwargs["chunk_store"] = chunk_store
 +             if consolidated is None:
 +                 consolidated = False
+diff --git a/packages/xeofs/meta.yaml b/packages/xeofs/meta.yaml
+new file mode 100644
+index 00000000..d370c744
+--- /dev/null
++++ b/packages/xeofs/meta.yaml
+@@ -0,0 +1,25 @@
++package:
++  name: xeofs
++  version: 1.2.2
++  top-level:
++    - xeofs
++source:
++  url: https://files.pythonhosted.org/packages/ee/ae/83e5e977c05aae4d5e9bf32cbe85c5415cb0af6e494f8b2d8160c17342c9/xeofs-1.2.2.tar.gz
++  sha256: e31c311ffdcd718d6bca960b547da2e599161a933a8cc67fa43f096a753421e6
++  patches:
++    - patches/0001-xeofs-no-gwpca.patch
++requirements:
++  run:
++    - numpy
++    - pandas
++    - xarray
++    - scikit-learn
++    - tqdm
++    - dask
++    - statsmodels
++    - typing-extensions
++about:
++  home: https://github.com/nicrie/xeofs
++  PyPI: https://pypi.org/project/xeofs
++  summary: Collection of EOF analysis and related techniques for climate science
++  license: MIT
+diff --git a/packages/xeofs/patches/0001-xeofs-no-gwpca.patch b/packages/xeofs/patches/0001-xeofs-no-gwpca.patch
+new file mode 100644
+index 00000000..01b8ea84
+--- /dev/null
++++ b/packages/xeofs/patches/0001-xeofs-no-gwpca.patch
+@@ -0,0 +1,13 @@
++diff --git a/xeofs/models/__init__.py b/xeofs/models/__init__.py
++index 49ee8ec..3513b20 100644
++--- a/xeofs/models/__init__.py
+++++ b/xeofs/models/__init__.py
++@@ -2,7 +2,7 @@ from .eof import EOF, ComplexEOF
++ from .mca import MCA, ComplexMCA
++ from .eeof import ExtendedEOF
++ from .opa import OPA
++-from .gwpca import GWPCA
+++# from .gwpca import GWPCA
++ from .rotator_factory import RotatorFactory
++ from .eof_rotator import EOFRotator, ComplexEOFRotator
++ from .mca_rotator import MCARotator, ComplexMCARotator
+diff --git a/packages/xhistogram/meta.yaml b/packages/xhistogram/meta.yaml
+new file mode 100644
+index 00000000..fc171790
+--- /dev/null
++++ b/packages/xhistogram/meta.yaml
+@@ -0,0 +1,18 @@
++package:
++  name: xhistogram
++  version: 0.3.2
++  top-level:
++    - xhistogram
++source:
++  url: https://files.pythonhosted.org/packages/18/08/1432dd10193a5d45294bd42042a5631259ee5a12cd2e9075350546d07a03/xhistogram-0.3.2-py3-none-any.whl
++  sha256: ad55330d55296d273b3370678223fde0f50085e04cb744c7b3b0bb7702a2c6bf
++requirements:
++  run:
++    - dask
++    - numpy
++    - xarray
++about:
++  home: https://github.com/xgcm/xhistogram
++  PyPI: https://pypi.org/project/xhistogram
++  summary: Fast, flexible, label-aware histograms for numpy and xarray
++  license: MIT
 diff --git a/packages/zfpy/meta.yaml b/packages/zfpy/meta.yaml
 new file mode 100644
 index 00000000..9d376bdf
@@ -1950,3 +2095,15 @@ index 00000000..0aa4ec79
 +  PyPI: https://pypi.org/project/zipp
 +  summary: Backport of pathlib-compatible object wrapper for zip files
 +  license: "MIT"
+diff --git a/pyodide-build/pyodide_build/pywasmcross.py b/pyodide-build/pyodide_build/pywasmcross.py
+index 871134db..59c74319 100755
+--- a/pyodide-build/pyodide_build/pywasmcross.py
++++ b/pyodide-build/pyodide_build/pywasmcross.py
+@@ -24,6 +24,7 @@ SYMLINKS = {
+     "ld",
+     "ar",
+     "gcc",
++    "g++",
+     "ranlib",
+     "strip",
+     "gfortran",
