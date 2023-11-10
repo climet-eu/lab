@@ -35,14 +35,20 @@ jobs:
           restore-keys: |
             pyodide-${{ env.PYODIDE_SHA_SHORT }}-${{ hashFiles('patches/pyodide.patch') }}
             pyodide-${{ env.PYODIDE_SHA_SHORT }}
+      - name: Add a read-only SSH key to pull private dependencies
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+            ssh-private-key: ${{ secrets.FCBENCH_SSH_TOKEN }}
       - name: Build Pyodide
         run: |
           cd pyodide
           git apply --whitespace=nowarn ../patches/pyodide.patch
           cp -r ../fcpy packages/fcpy/fcpy
-          ./run_docker --non-interactive PYODIDE_PACKAGES="basemap,fcpy" make
+          git clone -b fcbench git@github.com:juntyr/field-compression-benchmark.git packages/fcbench/field-compression-benchmark
+          PYODIDE_DOCKER_IMAGE=$(docker build . -q) ./run_docker --non-interactive PYODIDE_PACKAGES="basemap,fcpy,fcbench,ipyfilite,ipyloglite,pyodide-http" make
           git apply --whitespace=nowarn --reverse ../patches/pyodide.patch
           rm -rf packages/fcpy/fcpy
+          rm -rf packages/fcbench/field-compression-benchmark
           cd ..
           mkdir -p static
           cp -r pyodide/dist static/pyodide
