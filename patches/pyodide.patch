@@ -364,10 +364,10 @@ index 00000000..671f423a
 +         "pytest",
 diff --git a/packages/fcbench/meta.yaml b/packages/fcbench/meta.yaml
 new file mode 100644
-index 00000000..18488099
+index 00000000..6862934b
 --- /dev/null
 +++ b/packages/fcbench/meta.yaml
-@@ -0,0 +1,42 @@
+@@ -0,0 +1,43 @@
 +package:
 +  name: fcbench
 +  version: 0.0.1
@@ -390,6 +390,7 @@ index 00000000..18488099
 +    export CMAKE_NOCROSS=$(which cmake)
 +  cross-script:
 +    export CMAKE=$CMAKE_NOCROSS
++    unset CMAKE_TOOLCHAIN_FILE
 +requirements:
 +  executable:
 +    - rustup
