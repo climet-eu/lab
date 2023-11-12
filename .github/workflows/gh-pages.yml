@@ -45,6 +45,8 @@ jobs:
           git apply --whitespace=nowarn ../patches/pyodide.patch
           cp -r ../fcpy packages/fcpy/fcpy
           git clone -b fcbench git@github.com:juntyr/field-compression-benchmark.git packages/fcbench/field-compression-benchmark
+          find . -name jupyter-lite.json -delete
+          find . -name jupyter_lite_config.json -delete
           PYODIDE_DOCKER_IMAGE=$(docker build . -q) ./run_docker --non-interactive PYODIDE_PACKAGES="basemap,fcpy,fcbench,ipyfilite,ipyloglite,pyodide-http" make
           git apply --whitespace=nowarn --reverse ../patches/pyodide.patch
           rm -rf packages/fcpy/fcpy
