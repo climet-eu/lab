@@ -364,7 +364,7 @@ index 00000000..671f423a
 +         "pytest",
 diff --git a/packages/fcbench/meta.yaml b/packages/fcbench/meta.yaml
 new file mode 100644
-index 00000000..6862934b
+index 00000000..08563b3e
 --- /dev/null
 +++ b/packages/fcbench/meta.yaml
 @@ -0,0 +1,43 @@
@@ -379,9 +379,9 @@ index 00000000..6862934b
 +  script: |
 +    # Set up a more modern nightly toolchain with support for emscripten and wasi
 +    rm rust-toolchain
-+    rustup default nightly-2023-09-29
-+    rustup target add wasm32-unknown-emscripten --toolchain nightly-2023-09-29
-+    rustup target add wasm32-wasi --toolchain nightly-2023-09-29
++    rustup default nightly-2023-11-11
++    rustup target add wasm32-unknown-emscripten --toolchain nightly-2023-11-11
++    rustup target add wasm32-wasi --toolchain nightly-2023-11-11
 +
 +    # For some reason, the .cargo/config is not respected during building
 +    export RUSTFLAGS="--cfg uuid_unstable"
