@@ -761,10 +761,10 @@ index 00000000..b8d8fae1
 +  license: MIT
 diff --git a/packages/fcbench/meta.yaml b/packages/fcbench/meta.yaml
 new file mode 100644
-index 00000000..646f2a1c
+index 00000000..3ee4b97e
 --- /dev/null
 +++ b/packages/fcbench/meta.yaml
-@@ -0,0 +1,47 @@
+@@ -0,0 +1,48 @@
 +package:
 +  name: fcbench
 +  version: 0.0.0
@@ -778,6 +778,7 @@ index 00000000..646f2a1c
 +    rm rust-toolchain
 +    rustup default nightly-2023-12-21
 +    rustup target add wasm32-unknown-emscripten --toolchain nightly-2023-12-21
++    rustup target add wasm32-unknown-unknown --toolchain nightly-2023-12-21
 +    rustup target add wasm32-wasi --toolchain nightly-2023-12-21
 +    rustup component add rust-src --toolchain nightly-2023-12-21
 +
@@ -1509,13 +1510,13 @@ index 00000000..464a4be4
 + 
 diff --git a/packages/libeccodes/meta.yaml b/packages/libeccodes/meta.yaml
 new file mode 100644
-index 00000000..6efc9c87
+index 00000000..0d50c4a6
 --- /dev/null
 +++ b/packages/libeccodes/meta.yaml
 @@ -0,0 +1,41 @@
 +package:
 +  name: libeccodes
-+  version: 2.30.0
++  version: 2.34.1
 +
 +source:
 +  url: https://github.com/ecmwf/eccodes/archive/refs/tags/2.34.1.tar.gz
@@ -1801,7 +1802,7 @@ index 043bc6b8..48c378e0 100644
    host:
      - libhdf5
 diff --git a/packages/numcodecs/meta.yaml b/packages/numcodecs/meta.yaml
-index 66a5e765..04ed52e0 100644
+index 66a5e765..0b9a9d14 100644
 --- a/packages/numcodecs/meta.yaml
 +++ b/packages/numcodecs/meta.yaml
 @@ -1,11 +1,11 @@
@@ -1819,6 +1820,36 @@ index 66a5e765..04ed52e0 100644
    patches:
      - patches/fixblosc.patch
      - patches/fixzlib.patch
+@@ -13,7 +13,6 @@ build:
+   script: |
+     export DISABLE_NUMCODECS_SSE2=1
+     export DISABLE_NUMCODECS_AVX2=1
+-    rm numcodecs/blosc.c
+ requirements:
+   run:
+     - numpy
+diff --git a/packages/numcodecs/patches/fixblosc.patch b/packages/numcodecs/patches/fixblosc.patch
+index 375baabf..4d06db0a 100644
+--- a/packages/numcodecs/patches/fixblosc.patch
++++ b/packages/numcodecs/patches/fixblosc.patch
+@@ -1,17 +1,4 @@
+ This patch disables multiprocessing and pthread for blosc
+-diff --git a/numcodecs/blosc.pyx b/numcodecs/blosc.pyx
+-index 3bfdc00..c6521b7 100644
+---- a/numcodecs/blosc.pyx
+-+++ b/numcodecs/blosc.pyx
+-@@ -77,6 +77,8 @@ AUTOBLOCKS = 0
+- # synchronization
+- try:
+-     mutex = multiprocessing.Lock()
+-+except ModuleNotFoundError:
+-+    mutex = None
+- except OSError:
+-     mutex = None
+- 
+ diff --git a/c-blosc/blosc/blosc.h b/c-blosc/blosc/blosc.h
+ index 40857d0..8a1e969 100644
+ --- a/c-blosc/blosc/blosc.h
 diff --git a/packages/numpy/meta.yaml b/packages/numpy/meta.yaml
 index ffbecaae..9c3a8fee 100644
 --- a/packages/numpy/meta.yaml
@@ -3054,10 +3085,10 @@ index 00000000..fc171790
 +  summary: Fast, flexible, label-aware histograms for numpy and xarray
 +  license: MIT
 diff --git a/packages/zarr/meta.yaml b/packages/zarr/meta.yaml
-index ee04405e..81aa8235 100644
+index ee04405e..a3b6c8da 100644
 --- a/packages/zarr/meta.yaml
 +++ b/packages/zarr/meta.yaml
-@@ -1,11 +1,11 @@
+@@ -1,13 +1,11 @@
  package:
    name: zarr
 -  version: 2.13.3
@@ -3067,54 +3098,42 @@ index ee04405e..81aa8235 100644
  source:
 -  sha256: db24b090616c638f65e33a6bc5d956d642221182961515ccbc28b17fb0d0b48c
 -  url: https://files.pythonhosted.org/packages/73/6b/789fae6eb756ad97aa8bf352d55050cc91df3e80e0161998cd5adeffddec/zarr-2.13.3.tar.gz
+-  patches:
+-    - patches/0001-Fix-zarr-sync.patch
 +  sha256: 6390a2b8af31babaab4c963efc45bf1da7f9500c9aafac193f84cf019a7c66b0
 +  url: https://files.pythonhosted.org/packages/f0/b9/ea61804312f289910b712ab8de5b9811ed9c2bc2f091a41f372644c149f8/zarr-2.17.0.tar.gz
-   patches:
-     - patches/0001-Fix-zarr-sync.patch
  requirements:
+   run:
+     - numpy
 diff --git a/packages/zarr/patches/0001-Fix-zarr-sync.patch b/packages/zarr/patches/0001-Fix-zarr-sync.patch
-index 2e94aa44..a3a0d5b9 100644
+deleted file mode 100644
+index 2e94aa44..00000000
 --- a/packages/zarr/patches/0001-Fix-zarr-sync.patch
-+++ b/packages/zarr/patches/0001-Fix-zarr-sync.patch
-@@ -1,40 +1,31 @@
++++ /dev/null
+@@ -1,61 +0,0 @@
 -From 07c5440677066f82794df6e5ce9ad685e191407e Mon Sep 17 00:00:00 2001
-+From a6155a58d14e2819bb2a0b81b7344d39d073eae1 Mon Sep 17 00:00:00 2001
- From: Wei Ouyang <oeway007@gmail.com>
- Date: Mon, 12 Dec 2022 18:42:20 -0800
- Subject: [PATCH] Fix zarr sync
- 
- This patch removes fasteners and disables zarr.sync which uses process and thread
-+
-+Upstream PR:
-+https://github.com/zarr-developers/zarr-python/pull/1663
-+
- ---
+-From: Wei Ouyang <oeway007@gmail.com>
+-Date: Mon, 12 Dec 2022 18:42:20 -0800
+-Subject: [PATCH] Fix zarr sync
+-
+-This patch removes fasteners and disables zarr.sync which uses process and thread
+----
 - setup.py         | 1 -
 - zarr/__init__.py | 2 +-
 - zarr/sync.py     | 3 +--
 - 3 files changed, 2 insertions(+), 4 deletions(-)
-+ pyproject.toml | 2 +-
-+ zarr/sync.py   | 3 +--
-+ 2 files changed, 2 insertions(+), 3 deletions(-)
- 
+-
 -diff --git a/setup.py b/setup.py
 -index 79ff649d..8dee4cd5 100644
 ---- a/setup.py
 -+++ b/setup.py
 -@@ -9,7 +9,6 @@ with open('README.md') as f:
-+diff --git a/pyproject.toml b/pyproject.toml
-+index 292bfddd..6d252925 100644
-+--- a/pyproject.toml
-++++ b/pyproject.toml
-+@@ -14,7 +14,7 @@ requires-python = ">=3.8"
-  dependencies = [
-      'asciitree',
+- dependencies = [
+-     'asciitree',
 -     'numpy>=1.7',
-+     'numpy>=1.20,!=1.21.0',
- -    'fasteners',
-++    'fasteners; sys_platform != "emscripten"',
-      'numcodecs>=0.10.0',
-  ]
+--    'fasteners',
+-     'numcodecs>=0.10.0',
+- ]
 - 
 -diff --git a/zarr/__init__.py b/zarr/__init__.py
 -index 4d2c992d..900c7f92 100644
@@ -3129,10 +3148,30 @@ index 2e94aa44..a3a0d5b9 100644
 - from zarr.version import version as __version__
 - 
 - # in case setuptools scm screw up and find version to be 0.0.0
-+ dynamic = [
- diff --git a/zarr/sync.py b/zarr/sync.py
- index 49684a51..0ce4baa7 100644
- --- a/zarr/sync.py
+-diff --git a/zarr/sync.py b/zarr/sync.py
+-index 49684a51..0ce4baa7 100644
+---- a/zarr/sync.py
+-+++ b/zarr/sync.py
+-@@ -2,8 +2,6 @@ import os
+- from collections import defaultdict
+- from threading import Lock
+- 
+--import fasteners
+--
+- 
+- class ThreadSynchronizer:
+-     """Provides synchronization using thread locks."""
+-@@ -41,6 +39,7 @@ class ProcessSynchronizer:
+-         self.path = path
+- 
+-     def __getitem__(self, item):
+-+        import fasteners
+-         path = os.path.join(self.path, item)
+-         lock = fasteners.InterProcessLock(path)
+-         return lock
+--- 
+-2.25.1
+-
 diff --git a/packages/zfpy/meta.yaml b/packages/zfpy/meta.yaml
 new file mode 100644
 index 00000000..9d376bdf
@@ -3342,3 +3381,9 @@ index 4e437af7..20b3cb0c 100644
  
      assert rlist(install_prefix) == ["ex1/base.py"]
      assert rlist(test_install_prefix) == [
+diff --git a/tools/constraints.txt b/tools/constraints.txt
+index 039eb0db..e69de29b 100644
+--- a/tools/constraints.txt
++++ b/tools/constraints.txt
+@@ -1 +0,0 @@
+-cython<3
