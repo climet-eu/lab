@@ -64,14 +64,14 @@ index 00000000..f1169c46
 +    with weather data.
 +  license: BSD-3-Clause
 diff --git a/packages/Pillow/meta.yaml b/packages/Pillow/meta.yaml
-index 09f078e9..1838a92e 100644
+index 09f078e9..f92de7d8 100644
 --- a/packages/Pillow/meta.yaml
 +++ b/packages/Pillow/meta.yaml
 @@ -1,11 +1,11 @@
  package:
    name: Pillow
 -  version: 10.0.0
-+  version: 10.0.2
++  version: 10.2.0
    top-level:
      - PIL
  source:
@@ -759,60 +759,6 @@ index 00000000..b8d8fae1
 +  PyPI: https://pypi.org/project/executing
 +  summary: Get the currently executing AST node of a frame, and other information
 +  license: MIT
-diff --git a/packages/fcbench/meta.yaml b/packages/fcbench/meta.yaml
-new file mode 100644
-index 00000000..3ee4b97e
---- /dev/null
-+++ b/packages/fcbench/meta.yaml
-@@ -0,0 +1,48 @@
-+package:
-+  name: fcbench
-+  version: 0.0.0
-+  top-level:
-+    - fcbench
-+source:
-+  path: ./field-compression-benchmark
-+build:
-+  script: |
-+    # Set up a more modern nightly toolchain with support for emscripten and wasi
-+    rm rust-toolchain
-+    rustup default nightly-2023-12-21
-+    rustup target add wasm32-unknown-emscripten --toolchain nightly-2023-12-21
-+    rustup target add wasm32-unknown-unknown --toolchain nightly-2023-12-21
-+    rustup target add wasm32-wasi --toolchain nightly-2023-12-21
-+    rustup component add rust-src --toolchain nightly-2023-12-21
-+
-+    # For some reason, the .cargo/config is not respected during building
-+    export RUSTFLAGS="--cfg uuid_unstable"
-+
-+    # Export the cmake inside Docker to circumvent Pyodide's wrapper
-+    export CMAKE_NOCROSS=$(which cmake)
-+  cross-script:
-+    export CMAKE=$CMAKE_NOCROSS
-+    unset CMAKE_TOOLCHAIN_FILE
-+requirements:
-+  executable:
-+    - rustup
-+  run:
-+    - cfgrib  # 0.9.10.4
-+    - dask  # 2024.2.1
-+    - matplotlib  # 3.4.3
-+    - netcdf4  # 1.6.5
-+    - numcodecs  # 0.12.1
-+    - numpy  # 1.26.4
-+    - pint  # 0.23
-+    - proplot  # 0.9.7
-+    - xarray  # 2023.12.0
-+    - xeofs  # 2.3.1
-+    - xhistogram  # 0.3.2
-+    - zarr  # 2.17.0
-+about:
-+  home: https://github.com/juntyr/field-compression-benchmark
-+  summary:
-+    The suite compares the performance of various data compression methods with
-+    different settings across a variety of variables and their derivatives from
-+    different GRIB, NetCDF, or Zarr datasets.
-+  license: MIT OR Apache-2.0
 diff --git a/packages/fcpy/meta.yaml b/packages/fcpy/meta.yaml
 new file mode 100644
 index 00000000..54d6908a
@@ -857,6 +803,61 @@ index 00000000..54d6908a
 +  home: https://github.com/ecmwf-lab/field-compression
 +  summary: ECMWF Field Compression Laboratory
 +  license: Apache-2.0
+diff --git a/packages/field-compression-benchmark/meta.yaml b/packages/field-compression-benchmark/meta.yaml
+new file mode 100644
+index 00000000..25ceb993
+--- /dev/null
++++ b/packages/field-compression-benchmark/meta.yaml
+@@ -0,0 +1,49 @@
++package:
++  name: field-compression-benchmark
++  version: 0.0.0
++  top-level:
++    - fcbench
++source:
++  path: ./field-compression-benchmark
++build:
++  script: |
++    # Set up a more modern nightly toolchain with support for emscripten and wasi
++    rm rust-toolchain
++    rustup default nightly-2023-12-21
++    rustup target add wasm32-unknown-emscripten --toolchain nightly-2023-12-21
++    rustup target add wasm32-unknown-unknown --toolchain nightly-2023-12-21
++    rustup target add wasm32-wasi --toolchain nightly-2023-12-21
++    rustup component add rust-src --toolchain nightly-2023-12-21
++
++    # For some reason, the .cargo/config is not respected during building
++    export RUSTFLAGS="--cfg uuid_unstable"
++
++    # Export the cmake inside Docker to circumvent Pyodide's wrapper
++    export CMAKE_NOCROSS=$(which cmake)
++  cross-script:
++    export CMAKE=$CMAKE_NOCROSS
++    unset CMAKE_TOOLCHAIN_FILE
++requirements:
++  executable:
++    - rustup
++  run:
++    - cfgrib  # 0.9.10.4
++    - dask  # 2024.2.1
++    # FIXME: build matplotlib v3.4.3
++    - matplotlib  # ~~3.4.3~~ 3.5.2
++    - netcdf4  # 1.6.5
++    - numcodecs  # 0.12.1
++    - numpy  # 1.26.4
++    - pint  # 0.23
++    - proplot  # 0.9.7
++    - xarray  # 2023.12.0
++    - xeofs  # 2.3.1
++    - xhistogram  # 0.3.2
++    - zarr  # 2.17.0
++about:
++  home: https://github.com/juntyr/field-compression-benchmark
++  summary:
++    The suite compares the performance of various data compression methods with
++    different settings across a variety of variables and their derivatives from
++    different GRIB, NetCDF, or Zarr datasets.
++  license: MIT OR Apache-2.0
 diff --git a/packages/findlibs/meta.yaml b/packages/findlibs/meta.yaml
 new file mode 100644
 index 00000000..b4213bfc
@@ -1740,29 +1741,6 @@ index 00000000..60dfa71a
 +  PyPI: https://pypi.org/project/matplotlib-inline
 +  summary: Inline Matplotlib backend for Jupyter
 +  license: BSD 3-Clause
-diff --git a/packages/matplotlib/meta.yaml b/packages/matplotlib/meta.yaml
-index e5aa3194..634d2248 100644
---- a/packages/matplotlib/meta.yaml
-+++ b/packages/matplotlib/meta.yaml
-@@ -1,6 +1,6 @@
- package:
-   name: matplotlib
--  version: 3.5.2
-+  version: 3.5.1
-   tag:
-     - min-scipy-stack
-   top-level:
-@@ -8,8 +8,8 @@ package:
-     - mpl_toolkits
-     - matplotlib
- source:
--  url: https://files.pythonhosted.org/packages/2f/be/7d6e073a3eb740ebeba43a69f5de2b141fea50b801e24e0ae024ac94d4ac/matplotlib-3.5.2.tar.gz
--  sha256: 48cf850ce14fa18067f2d9e0d646763681948487a8080ec0af2686468b4607a2
-+  url: https://files.pythonhosted.org/packages/21/37/197e68df384ff694f78d687a49ad39f96c67b8d75718bc61503e1676b617/matplotlib-3.4.3.tar.gz
-+  sha256: fc4f526dfdb31c9bd6b8ca06bf9fab663ca12f3ec9cdf4496fb44bc680140318
- 
-   patches:
-     - patches/disable_macosx_backend.patch
 diff --git a/packages/msgpack/meta.yaml b/packages/msgpack/meta.yaml
 index e156640c..dc9b1d40 100644
 --- a/packages/msgpack/meta.yaml
