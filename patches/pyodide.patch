@@ -145,18 +145,18 @@ index 00000000..c839d187
 +  license: GNU Lesser General Public License v3 or later (LGPLv3+)
 diff --git a/packages/basemap/meta.yaml b/packages/basemap/meta.yaml
 new file mode 100644
-index 00000000..d2ab4d7f
+index 00000000..076bfc80
 --- /dev/null
 +++ b/packages/basemap/meta.yaml
 @@ -0,0 +1,31 @@
 +package:
 +  name: basemap
-+  version: 1.3.7
++  version: 1.4.1
 +  top-level:
 +    - mpl_toolkits
 +source:
-+  url: https://files.pythonhosted.org/packages/01/7e/d4fab0d8a5e0a90611131261f5cc092de51fb810d9a36ce59b8834de6012/basemap-1.3.7.zip
-+  sha256: 251afbed8a32cedb0194ef3809918ea961453faba8adb4e5730d8b5b2c1fd368
++  url: https://files.pythonhosted.org/packages/00/63/f3a5e74a8a31c20ea785ebd0fc1a9e680a9f1c5ac9ab4888f349ef9a3165/basemap-1.4.1.zip
++  sha256: 6822d3d08c11cdc443e3ed01d61d512e7cf62d4b40bbc1d235f0a898f2c54a7a
 +requirements:
 +  host:
 +    - geos
@@ -3322,7 +3322,7 @@ index 00000000..9d376bdf
 +  license: BSD-3-Clause
 diff --git a/packages/zfpy/patches/0001-setup-with-cython.patch b/packages/zfpy/patches/0001-setup-with-cython.patch
 new file mode 100644
-index 00000000..7c834c35
+index 00000000..bb4c5346
 --- /dev/null
 +++ b/packages/zfpy/patches/0001-setup-with-cython.patch
 @@ -0,0 +1,24 @@
@@ -3343,7 +3343,7 @@ index 00000000..7c834c35
 +-                           include_dirs=["include", np.get_include()],
 +-                           libraries=["zfp"], library_dirs=["build/lib64", "build/lib/Release"])]
 ++    ext_modules=[Extension(
-++        "zfpy", ["python/zfpy.pxd", "python/zfpy.pyx"],
+++        "zfpy", ["python/zfpy.pyx"],
 ++        include_dirs=["include", np.get_include()],
 ++        libraries=["zfp"],
 ++        library_dirs=[os.environ["WASM_LIBRARY_DIR"] + "/lib"],
