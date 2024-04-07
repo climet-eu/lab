@@ -761,7 +761,7 @@ index 00000000..b8d8fae1
 +  license: MIT
 diff --git a/packages/fcpy/meta.yaml b/packages/fcpy/meta.yaml
 new file mode 100644
-index 00000000..54d6908a
+index 00000000..2ba4d80a
 --- /dev/null
 +++ b/packages/fcpy/meta.yaml
 @@ -0,0 +1,38 @@
@@ -782,7 +782,7 @@ index 00000000..54d6908a
 +    - cmcrameri  # only for pre-loading
 +    - cycler
 +    - dask
-+    - h5netcdf  # only for pre-loading
++    # - h5netcdf  # only for pre-loading
 +    - ipyfilite
 +    - ipyloglite
 +    - lzma  # only for pre-loading
@@ -805,13 +805,13 @@ index 00000000..54d6908a
 +  license: Apache-2.0
 diff --git a/packages/field-compression-benchmark/meta.yaml b/packages/field-compression-benchmark/meta.yaml
 new file mode 100644
-index 00000000..25ceb993
+index 00000000..b6f0c9ee
 --- /dev/null
 +++ b/packages/field-compression-benchmark/meta.yaml
 @@ -0,0 +1,49 @@
 +package:
 +  name: field-compression-benchmark
-+  version: 0.0.0
++  version: 0.0.2
 +  top-level:
 +    - fcbench
 +source:
@@ -820,11 +820,11 @@ index 00000000..25ceb993
 +  script: |
 +    # Set up a more modern nightly toolchain with support for emscripten and wasi
 +    rm rust-toolchain
-+    rustup default nightly-2023-12-21
-+    rustup target add wasm32-unknown-emscripten --toolchain nightly-2023-12-21
-+    rustup target add wasm32-unknown-unknown --toolchain nightly-2023-12-21
-+    rustup target add wasm32-wasi --toolchain nightly-2023-12-21
-+    rustup component add rust-src --toolchain nightly-2023-12-21
++    rustup default nightly-2024-02-03
++    rustup target add wasm32-unknown-emscripten --toolchain nightly-2024-02-03
++    rustup target add wasm32-unknown-unknown --toolchain nightly-2024-02-03
++    rustup target add wasm32-wasi --toolchain nightly-2024-02-03
++    rustup component add rust-src --toolchain nightly-2024-02-03
 +
 +    # For some reason, the .cargo/config is not respected during building
 +    export RUSTFLAGS="--cfg uuid_unstable"
@@ -898,13 +898,13 @@ index 3572b48d..fa6c9b9c 100644
    PyPI: https://pypi.org/project/fsspec
 diff --git a/packages/h5netcdf/meta.yaml b/packages/h5netcdf/meta.yaml
 new file mode 100644
-index 00000000..df93febc
+index 00000000..59d3abbf
 --- /dev/null
 +++ b/packages/h5netcdf/meta.yaml
 @@ -0,0 +1,17 @@
 +package:
 +  name: h5netcdf
-+  version: 1.2.0
++  version: 1.3.0
 +  top-level:
 +    - h5netcdf
 +requirements:
@@ -912,13 +912,85 @@ index 00000000..df93febc
 +    - h5py
 +    - packaging
 +source:
-+  url: https://files.pythonhosted.org/packages/d1/11/8116d6f209c8588ceb1382fddb8820fc720330373d9bd1a09434d684dbde/h5netcdf-1.2.0-py3-none-any.whl
-+  sha256: aa53c39b94bcd4595a2e5a2f62f3fb4fb8a723b5ca0a05f2db352f014bcfe72c
++  url: https://files.pythonhosted.org/packages/68/2d/63851081b19d1ccf245091255797cb358c53c886609b5056da5457f7dbbf/h5netcdf-1.3.0-py3-none-any.whl
++  sha256: f2df69dcd3665dc9c4d43eb6529dedd113b2508090d12ac973573305a8406465
 +about:
 +  home: "https://github.com/h5netcdf/h5netcdf"
 +  PyPI: https://pypi.org/project/h5netcdf
 +  summary: netCDF4 via h5py
 +  license: BSD-3-Clause
+diff --git a/packages/h5py/meta.yaml b/packages/h5py/meta.yaml
+index 3e67ba26..9959cabf 100644
+--- a/packages/h5py/meta.yaml
++++ b/packages/h5py/meta.yaml
+@@ -1,14 +1,19 @@
+ package:
+   name: h5py
+-  version: 3.7.0
++  version: 3.10.0
+   top-level:
+     - h5py
+ source:
+-  url: https://files.pythonhosted.org/packages/c5/40/7cf58e6230f0e76699f011c6d293dd47755997709a303a4e644823f3a753/h5py-3.7.0.tar.gz
+-  sha256: 3fcf37884383c5da64846ab510190720027dca0768def34dd8dcb659dbe5cbf3
++  url: https://files.pythonhosted.org/packages/37/fc/0b1825077a1c4c79a13984c59997e4b36702962df0bca420698f77b70b10/h5py-3.10.0.tar.gz
++  sha256: d93adc48ceeb33347eb24a634fb787efc7ae4644e6ea4ba733d099605045c049
+   patches:
+     - patches/0001-Fix-incompatible-pointer-type.patch
+     - patches/configure.patch
++about:
++  home: ""
++  PyPI: https://pypi.org/project/h5py
++  summary: Read and write HDF5 files from Python
++  license: BSD-3-Clause
+ 
+ requirements:
+   run:
+diff --git a/packages/h5py/patches/0001-Fix-incompatible-pointer-type.patch b/packages/h5py/patches/0001-Fix-incompatible-pointer-type.patch
+index f52cd8e5..00351e83 100644
+--- a/packages/h5py/patches/0001-Fix-incompatible-pointer-type.patch
++++ b/packages/h5py/patches/0001-Fix-incompatible-pointer-type.patch
+@@ -3,37 +3,18 @@ From: Gyeongjae Choi <def6488@gmail.com>
+ Date: Fri, 2 Sep 2022 07:54:44 +0000
+ Subject: [PATCH] Fix incompatible pointer type
+ 
++
++Removed hunks upstreamed in 3.10.0
++
+ ---
+  h5py/_errors.pxd | 2 +-
+  h5py/_errors.pyx | 6 +++---
+  2 files changed, 4 insertions(+), 4 deletions(-)
+ 
+-diff --git a/h5py/_errors.pxd b/h5py/_errors.pxd
+-index 13b299e2..e7791a6b 100644
+---- a/h5py/_errors.pxd
+-+++ b/h5py/_errors.pxd
+-@@ -412,7 +412,7 @@ cdef extern from "hdf5.h":
+- 
+-     herr_t    H5Eprint(hid_t estack_id, void *stream)
+- 
+--    ctypedef herr_t (*H5E_walk_t)(int n, H5E_error_t *err_desc, void* client_data)
+-+    ctypedef herr_t (*H5E_walk_t)(unsigned int n, const H5E_error_t *err_desc, void* client_data)
+-     herr_t    H5Ewalk(hid_t estack_id, H5E_direction_t direction, H5E_walk_t func, void* client_data)
+- 
+- # --- Functions for managing the HDF5 error callback mechanism ---
+ diff --git a/h5py/_errors.pyx b/h5py/_errors.pyx
+ index 612052fb..dabbc632 100644
+ --- a/h5py/_errors.pyx
+ +++ b/h5py/_errors.pyx
+-@@ -94,7 +94,7 @@ cdef struct err_data_t:
+-     H5E_error_t err
+-     int n
+- 
+--cdef herr_t walk_cb(int n, H5E_error_t *desc, void *e) nogil:
+-+cdef herr_t walk_cb(unsigned int n, const H5E_error_t *desc, void *e) nogil:
+- 
+-     cdef err_data_t *ee = <err_data_t*>e
+- 
+ @@ -120,7 +120,7 @@ cdef int set_exception() except -1:
+  
+      err.n = -1
 diff --git a/packages/idna/meta.yaml b/packages/idna/meta.yaml
 index 0fcf8f57..e74aaa1a 100644
 --- a/packages/idna/meta.yaml
@@ -1699,6 +1771,25 @@ index 0bdbf223..f7914e3e 100644
  
  requirements:
    host:
+diff --git a/packages/libproj/meta.yaml b/packages/libproj/meta.yaml
+index b5445efc..6e5e6c66 100644
+--- a/packages/libproj/meta.yaml
++++ b/packages/libproj/meta.yaml
+@@ -1,11 +1,11 @@
+ package:
+   name: libproj
+-  version: 8.2.1
++  version: 9.3.1
+   tag:
+     - library
+ source:
+-  sha256: 76ed3d0c3a348a6693dfae535e5658bbfd47f71cb7ff7eb96d9f12f7e068b1cf
+-  url: https://download.osgeo.org/proj/proj-8.2.1.tar.gz
++  sha256: b0f919cb9e1f42f803a3e616c2b63a78e4d81ecfaed80978d570d3a5e29d10bc
++  url: https://download.osgeo.org/proj/proj-9.3.1.tar.gz
+   patches:
+     - patches/0001-stod-empty-zero.patch
+ 
 diff --git a/packages/locket/meta.yaml b/packages/locket/meta.yaml
 new file mode 100644
 index 00000000..fb798f21
@@ -1761,7 +1852,7 @@ index e156640c..dc9b1d40 100644
    home: https://msgpack.org/
    PyPI: https://pypi.org/project/msgpack
 diff --git a/packages/netcdf4/meta.yaml b/packages/netcdf4/meta.yaml
-index 043bc6b8..48c378e0 100644
+index 043bc6b8..991ce5f4 100644
 --- a/packages/netcdf4/meta.yaml
 +++ b/packages/netcdf4/meta.yaml
 @@ -1,11 +1,11 @@
@@ -1779,6 +1870,14 @@ index 043bc6b8..48c378e0 100644
  requirements:
    host:
      - libhdf5
+@@ -13,7 +13,6 @@ requirements:
+   run:
+     - numpy
+     - packaging
+-    - h5py
+     - cftime
+     - certifi
+ test:
 diff --git a/packages/numcodecs/meta.yaml b/packages/numcodecs/meta.yaml
 index 66a5e765..0b9a9d14 100644
 --- a/packages/numcodecs/meta.yaml
@@ -2085,6 +2184,34 @@ index 00000000..692b3f0e
 +  PyPI: https://pypi.org/project/pure_eval
 +  summary: Safely evaluate AST nodes without side effects
 +  license: MIT
+diff --git a/packages/pyproj/meta.yaml b/packages/pyproj/meta.yaml
+index 5a5ee080..aee2c27c 100644
+--- a/packages/pyproj/meta.yaml
++++ b/packages/pyproj/meta.yaml
+@@ -1,11 +1,11 @@
+ package:
+   name: pyproj
+-  version: 3.4.1
++  version: 3.6.1
+   top-level:
+     - pyproj
+ source:
+-  url: https://files.pythonhosted.org/packages/c0/fc/fd53e45d2ad5862d32ab8614e70c3c1f52a8e0d8bd243ee6a23b6a481b4a/pyproj-3.4.1.tar.gz
+-  sha256: 261eb29b1d55b1eb7f336127344d9b31284d950a9446d1e0d1c2411f7dd8e3ac
++  url: https://files.pythonhosted.org/packages/7d/84/2b39bbf888c753ea48b40d47511548c77aa03445465c35cc4c4e9649b643/pyproj-3.6.1.tar.gz
++  sha256: 44aa7c704c2b7d8fb3d483bbf75af6cb2350d30a63b144279a09b75fead501bf
+ 
+ requirements:
+   host:
+@@ -16,7 +16,7 @@ requirements:
+ 
+ build:
+   script: |
+-    export PROJ_VERSION=8.2.1
++    export PROJ_VERSION=9.3.1
+     export PROJ_DIR=${WASM_LIBRARY_DIR}
+     export PROJ_INCDIR=${WASM_LIBRARY_DIR}/include
+     export PROJ_LIBDIR=${WASM_LIBRARY_DIR}/lib
 diff --git a/packages/pysz/meta.yaml b/packages/pysz/meta.yaml
 new file mode 100644
 index 00000000..760029ff
