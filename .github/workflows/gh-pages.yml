@@ -49,6 +49,7 @@ jobs:
           git apply --whitespace=nowarn --reverse ../patches/pyodide.patch
           rm -rf packages/fcpy/fcpy
           rm -rf packages/field-compression-benchmark/field-compression-benchmark
+          rm -rf .docker_home
           find . -name jupyter-lite.json -delete
           find . -name jupyter_lite_config.json -delete
           cd ..
@@ -61,6 +62,7 @@ jobs:
           jupyter lite build --output-dir dist
           cp ./_headers dist/
           cp -r data dist/
+          rm -rf static
       - name: Deploy to dist branch
         uses: peaceiris/actions-gh-pages@v3
         with:
