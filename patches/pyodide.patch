@@ -761,7 +761,7 @@ index 00000000..b8d8fae1
 +  license: MIT
 diff --git a/packages/fcpy/meta.yaml b/packages/fcpy/meta.yaml
 new file mode 100644
-index 00000000..2ba4d80a
+index 00000000..54d6908a
 --- /dev/null
 +++ b/packages/fcpy/meta.yaml
 @@ -0,0 +1,38 @@
@@ -782,7 +782,7 @@ index 00000000..2ba4d80a
 +    - cmcrameri  # only for pre-loading
 +    - cycler
 +    - dask
-+    # - h5netcdf  # only for pre-loading
++    - h5netcdf  # only for pre-loading
 +    - ipyfilite
 +    - ipyloglite
 +    - lzma  # only for pre-loading
@@ -920,7 +920,7 @@ index 00000000..59d3abbf
 +  summary: netCDF4 via h5py
 +  license: BSD-3-Clause
 diff --git a/packages/h5py/meta.yaml b/packages/h5py/meta.yaml
-index 3e67ba26..9959cabf 100644
+index 3e67ba26..0e4c7b3c 100644
 --- a/packages/h5py/meta.yaml
 +++ b/packages/h5py/meta.yaml
 @@ -1,14 +1,19 @@
@@ -946,6 +946,13 @@ index 3e67ba26..9959cabf 100644
  
  requirements:
    run:
+@@ -22,5 +27,5 @@ build:
+   script: |
+     export HDF5_MPI=OFF
+     export H5PY_SETUP_REQUIRES="0"
+-    export HDF5_VERSION=1.12.1
++    export HDF5_VERSION=1.14.3
+     export HDF5_DIR=${WASM_LIBRARY_DIR}
 diff --git a/packages/h5py/patches/0001-Fix-incompatible-pointer-type.patch b/packages/h5py/patches/0001-Fix-incompatible-pointer-type.patch
 index f52cd8e5..00351e83 100644
 --- a/packages/h5py/patches/0001-Fix-incompatible-pointer-type.patch
@@ -1852,7 +1859,7 @@ index e156640c..dc9b1d40 100644
    home: https://msgpack.org/
    PyPI: https://pypi.org/project/msgpack
 diff --git a/packages/netcdf4/meta.yaml b/packages/netcdf4/meta.yaml
-index 043bc6b8..991ce5f4 100644
+index 043bc6b8..6a7b453d 100644
 --- a/packages/netcdf4/meta.yaml
 +++ b/packages/netcdf4/meta.yaml
 @@ -1,11 +1,11 @@
@@ -1870,14 +1877,26 @@ index 043bc6b8..991ce5f4 100644
  requirements:
    host:
      - libhdf5
-@@ -13,7 +13,6 @@ requirements:
+@@ -13,9 +13,9 @@ requirements:
    run:
      - numpy
      - packaging
 -    - h5py
      - cftime
      - certifi
++    - h5py
  test:
+   imports:
+     - netCDF4
+@@ -24,7 +24,7 @@ build:
+   script: |
+     export PATH=${WASM_LIBRARY_DIR}/bin:${PATH}
+     export HDF5_DIR=${WASM_LIBRARY_DIR}
+-    echo ${HDF5_DIR}
++    export HDF5_VERSION=1.14.3
+ about:
+   home: https://github.com/Unidata/netcdf4-python
+   PyPI: https://pypi.org/project/netcdf4
 diff --git a/packages/numcodecs/meta.yaml b/packages/numcodecs/meta.yaml
 index 66a5e765..0b9a9d14 100644
 --- a/packages/numcodecs/meta.yaml

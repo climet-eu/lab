@@ -2,11 +2,11 @@
 pytz~=2023.3
 
 # Jupyter Lite
-jupyterlite-core==0.2.0
+jupyterlite-core==0.3.0
 jupyterlab~=4.0.7
 
 # Pyodide kernel
-jupyterlite-pyodide-kernel==0.2.0
+jupyterlite-pyodide-kernel==0.3.1
 
 # JupyterLab: guided tour (optional)
 jupyterlab-tour~=4.0.0
@@ -15,6 +15,8 @@ jupyterlab-night~=0.4.6
 # JupyterLab: auto-run cells on notebook launch
 # FIXME: not compatible with JupyterLab 4.0
 # jupyterlab_autorun_cells
+# JupyterLab: import files from URLs
+jupyterlab-open-url-parameter~=0.3.0
 
 # Python: ipywidget library for Jupyter notebooks (optional)
 ipywidgets>=8.0.0,<9

@@ -19,7 +19,7 @@ dependencies = [
     "cmcrameri",  # only for pre-loading
     "cycler",
     "dask",
-    # "h5netcdf",  # only for pre-loading
+    "h5netcdf",  # only for pre-loading
     "ipyfilite",
     "ipyloglite",
     "ipython",  # provided by JupyterLite
