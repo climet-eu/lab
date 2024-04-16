@@ -62,6 +62,8 @@ jobs:
           jupyter lite build --output-dir dist
           cp ./_headers dist/
           cp -r data dist/
+          cp static/favicons/favicon.ico dist/
+          find dist/ -name favicon.ico | xargs -L1 cp -f static/favicons/favicon.ico
           rm -rf static
       - name: Deploy to dist branch
         uses: peaceiris/actions-gh-pages@v3
