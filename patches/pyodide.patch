@@ -1009,10 +1009,10 @@ index 00000000..54d6908a
 +  license: Apache-2.0
 diff --git a/packages/field-compression-benchmark/meta.yaml b/packages/field-compression-benchmark/meta.yaml
 new file mode 100644
-index 00000000..b6f0c9ee
+index 00000000..66307e54
 --- /dev/null
 +++ b/packages/field-compression-benchmark/meta.yaml
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,51 @@
 +package:
 +  name: field-compression-benchmark
 +  version: 0.0.2
@@ -1020,6 +1020,8 @@ index 00000000..b6f0c9ee
 +    - fcbench
 +source:
 +  path: ./field-compression-benchmark
++  # patches:
++  #   - patches/0001-codecs-build.patch
 +build:
 +  script: |
 +    # Set up a more modern nightly toolchain with support for emscripten and wasi
@@ -1062,6 +1064,33 @@ index 00000000..b6f0c9ee
 +    different settings across a variety of variables and their derivatives from
 +    different GRIB, NetCDF, or Zarr datasets.
 +  license: MIT OR Apache-2.0
+diff --git a/packages/field-compression-benchmark/patches/0001-codecs-build.patch b/packages/field-compression-benchmark/patches/0001-codecs-build.patch
+new file mode 100644
+index 00000000..510fb8d8
+--- /dev/null
++++ b/packages/field-compression-benchmark/patches/0001-codecs-build.patch
+@@ -0,0 +1,21 @@
++diff --git a/codecs/build/Cargo.toml b/codecs/build/Cargo.toml
++index 923ac1da..b7c7dbd8 100644
++--- a/codecs/build/Cargo.toml
+++++ b/codecs/build/Cargo.toml
++@@ -20,12 +20,12 @@ reinterpret-codec = { path = "../reinterpret" }
++ round-codec = { path = "../round" }
++ running-standardize-codec = { path = "../running-standardize" }
++ uniform-noise-codec = { path = "../uniform-noise" }
++-zfp-codec = { path = "../zfp" }
+++# zfp-codec = { path = "../zfp" }
++ zlib-codec = { path = "../zlib" }
++-zstd-codec = { path = "../zstd" }
+++# zstd-codec = { path = "../zstd" }
++ 
++-[target.'cfg(not(target_arch = "wasm32"))'.build-dependencies]
++-sz3-codec = { path = "../sz3" }
+++# [target.'cfg(not(target_arch = "wasm32"))'.build-dependencies]
+++# sz3-codec = { path = "../sz3" }
++ 
++ [lints]
++ workspace = true
 diff --git a/packages/filelock/meta.yaml b/packages/filelock/meta.yaml
 new file mode 100644
 index 00000000..2184c029
