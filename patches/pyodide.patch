@@ -1009,7 +1009,7 @@ index 00000000..54d6908a
 +  license: Apache-2.0
 diff --git a/packages/field-compression-benchmark/meta.yaml b/packages/field-compression-benchmark/meta.yaml
 new file mode 100644
-index 00000000..66307e54
+index 00000000..e41e592c
 --- /dev/null
 +++ b/packages/field-compression-benchmark/meta.yaml
 @@ -0,0 +1,51 @@
@@ -1020,8 +1020,8 @@ index 00000000..66307e54
 +    - fcbench
 +source:
 +  path: ./field-compression-benchmark
-+  # patches:
-+  #   - patches/0001-codecs-build.patch
++  patches:
++    - patches/0001-codecs-build.patch
 +build:
 +  script: |
 +    # Set up a more modern nightly toolchain with support for emscripten and wasi
@@ -1066,22 +1066,41 @@ index 00000000..66307e54
 +  license: MIT OR Apache-2.0
 diff --git a/packages/field-compression-benchmark/patches/0001-codecs-build.patch b/packages/field-compression-benchmark/patches/0001-codecs-build.patch
 new file mode 100644
-index 00000000..510fb8d8
+index 00000000..b69cc1f3
 --- /dev/null
 +++ b/packages/field-compression-benchmark/patches/0001-codecs-build.patch
-@@ -0,0 +1,21 @@
+@@ -0,0 +1,74 @@
 +diff --git a/codecs/build/Cargo.toml b/codecs/build/Cargo.toml
-+index 923ac1da..b7c7dbd8 100644
++index 923ac1da..19d4df95 100644
 +--- a/codecs/build/Cargo.toml
 ++++ b/codecs/build/Cargo.toml
-+@@ -20,12 +20,12 @@ reinterpret-codec = { path = "../reinterpret" }
-+ round-codec = { path = "../round" }
-+ running-standardize-codec = { path = "../running-standardize" }
-+ uniform-noise-codec = { path = "../uniform-noise" }
++@@ -11,21 +11,21 @@ tar = { version = "0.4", default-features = false }
++ wit-component = { version = "0.205", default-features = false }
++ 
++ # list of all codecs we build
++-bit-round-codec = { path = "../bit-round" }
++-bit-transpose-codec = { path = "../bit-transpose" }
++-identity-codec = { path = "../identity" }
++-linear-quantize-codec = { path = "../linear-quantize" }
++-log-codec = { path = "../log" }
++-reinterpret-codec = { path = "../reinterpret" }
++-round-codec = { path = "../round" }
++-running-standardize-codec = { path = "../running-standardize" }
++-uniform-noise-codec = { path = "../uniform-noise" }
 +-zfp-codec = { path = "../zfp" }
-++# zfp-codec = { path = "../zfp" }
-+ zlib-codec = { path = "../zlib" }
++-zlib-codec = { path = "../zlib" }
 +-zstd-codec = { path = "../zstd" }
+++# bit-round-codec = { path = "../bit-round" }
+++# bit-transpose-codec = { path = "../bit-transpose" }
+++# identity-codec = { path = "../identity" }
+++# linear-quantize-codec = { path = "../linear-quantize" }
+++# log-codec = { path = "../log" }
+++# reinterpret-codec = { path = "../reinterpret" }
+++# round-codec = { path = "../round" }
+++# running-standardize-codec = { path = "../running-standardize" }
+++# uniform-noise-codec = { path = "../uniform-noise" }
+++# zfp-codec = { path = "../zfp" }
+++# zlib-codec = { path = "../zlib" }
 ++# zstd-codec = { path = "../zstd" }
 + 
 +-[target.'cfg(not(target_arch = "wasm32"))'.build-dependencies]
@@ -1091,6 +1110,40 @@ index 00000000..510fb8d8
 + 
 + [lints]
 + workspace = true
++diff --git a/codecs/build/build.rs b/codecs/build/build.rs
++index 9c70b6f8..5d43ab2f 100644
++--- a/codecs/build/build.rs
+++++ b/codecs/build/build.rs
++@@ -46,7 +46,7 @@ fn main() -> io::Result<()> {
++         ("log-codec", "log"),
++         ("reinterpret-codec", "reinterpret"),
++         ("round-codec", "round"),
++-        ("running-standardize-codec", "running-standardize"),
+++        // ("running-standardize-codec", "running-standardize"),
++         ("sz3-codec", "sz3"),
++         ("uniform-noise-codec", "uniform-noise"),
++         ("zfp-codec", "zfp"),
++diff --git a/wasi/build/Cargo.toml b/wasi/build/Cargo.toml
++index 5313a7a0..a9425491 100644
++--- a/wasi/build/Cargo.toml
+++++ b/wasi/build/Cargo.toml
++@@ -8,11 +8,11 @@ edition = "2021"
++ [dependencies]
++ 
++ # list of all WASI components we build
++-virtual-wasi-cli = { path = "../cli" }
++-virtual-wasi-clocks = { path = "../clocks" }
++-virtual-wasi-filesystem = { path = "../filesystem" }
++-virtual-wasi-io = { path = "../io" }
++-virtual-wasi-random = { path = "../random" }
+++# virtual-wasi-cli = { path = "../cli" }
+++# virtual-wasi-clocks = { path = "../clocks" }
+++# virtual-wasi-filesystem = { path = "../filesystem" }
+++# virtual-wasi-io = { path = "../io" }
+++# virtual-wasi-random = { path = "../random" }
++ 
++ [build-dependencies]
++ wit-component = { version = "0.205", default-features = false }
 diff --git a/packages/filelock/meta.yaml b/packages/filelock/meta.yaml
 new file mode 100644
 index 00000000..2184c029
