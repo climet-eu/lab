@@ -1009,7 +1009,7 @@ index 00000000..54d6908a
 +  license: Apache-2.0
 diff --git a/packages/field-compression-benchmark/meta.yaml b/packages/field-compression-benchmark/meta.yaml
 new file mode 100644
-index 00000000..e41e592c
+index 00000000..66307e54
 --- /dev/null
 +++ b/packages/field-compression-benchmark/meta.yaml
 @@ -0,0 +1,51 @@
@@ -1020,8 +1020,8 @@ index 00000000..e41e592c
 +    - fcbench
 +source:
 +  path: ./field-compression-benchmark
-+  patches:
-+    - patches/0001-codecs-build.patch
++  # patches:
++  #   - patches/0001-codecs-build.patch
 +build:
 +  script: |
 +    # Set up a more modern nightly toolchain with support for emscripten and wasi
