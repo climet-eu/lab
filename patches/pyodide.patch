@@ -82,6 +82,30 @@ index 09f078e9..f92de7d8 100644
    patches:
      - patches/0001-Enable-image-formats.patch
  build:
+diff --git a/packages/adjustText/meta.yaml b/packages/adjustText/meta.yaml
+new file mode 100644
+index 00000000..3c730a0f
+--- /dev/null
++++ b/packages/adjustText/meta.yaml
+@@ -0,0 +1,18 @@
++package:
++  name: adjustText
++  version: 1.1.1
++  top-level:
++    - adjustText
++source:
++  url: https://files.pythonhosted.org/packages/e7/e9/83c53c56a3251bf92903d0ad817f0e73f98e42add91d585a9c26e67eac0b/adjustText-1.1.1-py3-none-any.whl
++  sha256: ad2285f4239cd6c172508d772b026a133806deed9779977dfbeadcf233454938
++requirements:
++  run:
++    - numpy
++    - matplotlib
++    - scipy
++about:
++  home: https://github.com/Phlya/adjustText
++  PyPI: https://pypi.org/project/adjustText
++  summary: Iteratively adjust text position in matplotlib plots to minimize overlaps
++  license: MIT
 diff --git a/packages/asttokens/meta.yaml b/packages/asttokens/meta.yaml
 new file mode 100644
 index 00000000..fcefde3d
@@ -654,6 +678,167 @@ index 2ba624f2..7b59119c 100644
  build:
    post: |
      find $WHEELDIR -name '*.exe' -delete
+diff --git a/packages/earthkit-data/meta.yaml b/packages/earthkit-data/meta.yaml
+new file mode 100644
+index 00000000..0fd0ae34
+--- /dev/null
++++ b/packages/earthkit-data/meta.yaml
+@@ -0,0 +1,31 @@
++package:
++  name: earthkit-data
++  version: 0.7.0
++  top-level:
++    - earthkit.data
++source:
++  url: https://files.pythonhosted.org/packages/98/69/bfafdd039f846cfbeba12f8f83cfc3a55b1b261c52bedb1b22c2468d28fc/earthkit_data-0.7.0-py3-none-any.whl
++  sha256: 0376730eba485fee910a389c010dfd9125af68691e0a4d09cfa17766cdcc9a26
++requirements:
++  run:
++    - cfgrib
++    - eccodes
++    - dask
++    - entrypoints
++    - filelock
++    - Jinja2
++    - jsonschema
++    - markdown
++    - multiurl
++    - netcdf4
++    - pandas
++    - pdbufr
++    - pyyaml
++    - tqdm
++    - xarray
++    - earthkit-meteo
++about:
++  home: https://github.com/ecmwf/earthkit-data
++  PyPI: https://pypi.org/project/earthkit-data
++  summary: A format-agnostic Python interface for geospatial data
++  license: Apache License 2.0
+diff --git a/packages/earthkit-maps/meta.yaml b/packages/earthkit-maps/meta.yaml
+new file mode 100644
+index 00000000..84e7ac04
+--- /dev/null
++++ b/packages/earthkit-maps/meta.yaml
+@@ -0,0 +1,21 @@
++package:
++  name: earthkit-maps
++  version: 0.0.18
++  top-level:
++    - earthkit.maps
++source:
++  url: https://files.pythonhosted.org/packages/43/60/4acbb83dc3914bfc8d263c72af2af03dc0c5ed92865548ca26e8af79ace6/earthkit_maps-0.0.18-py3-none-any.whl
++  sha256: 5ca5e77d81412d4ba3aa0bcb946bbe3914123b936a7818a5660d91a7bebaa986
++requirements:
++  run:
++    - earthkit-data
++    - Cartopy
++    - matplotlib
++    - pyyaml
++    - numpy
++    - adjustText
++about:
++  home: https://github.com/ecmwf/earthkit-maps
++  PyPI: https://pypi.org/project/earthkit-maps
++  summary: Geospatial visualisation tools and templates
++  license: Apache License 2.0
+diff --git a/packages/earthkit-meteo/meta.yaml b/packages/earthkit-meteo/meta.yaml
+new file mode 100644
+index 00000000..781ee418
+--- /dev/null
++++ b/packages/earthkit-meteo/meta.yaml
+@@ -0,0 +1,16 @@
++package:
++  name: earthkit-meteo
++  version: 0.1.0
++  top-level:
++    - earthkit.meteo
++source:
++  url: https://files.pythonhosted.org/packages/e6/d3/844809d454d269d0db9931d88be2bacf2243ea95fd2ff21203e00536686b/earthkit_meteo-0.1.0-py3-none-any.whl
++  sha256: 170249c83c9a5a9f1dd3f980e7bc114d8cd3e0bd84141a4da34ab00bfdbebde9
++requirements:
++  run:
++    - numpy
++about:
++  home: https://github.com/ecmwf/earthkit-meteo
++  PyPI: https://pypi.org/project/earthkit-meteo
++  summary: Meteorological computations
++  license: Apache License 2.0
+diff --git a/packages/earthkit-plots/meta.yaml b/packages/earthkit-plots/meta.yaml
+new file mode 100644
+index 00000000..02ee69dd
+--- /dev/null
++++ b/packages/earthkit-plots/meta.yaml
+@@ -0,0 +1,20 @@
++package:
++  name: earthkit-plots
++  version: 0.0.7
++  top-level:
++    - earthkit.plots
++source:
++  url: https://files.pythonhosted.org/packages/d8/f5/51f0ffc2ced29f7637b5772374557d836489eb8388be679174a959de988d/earthkit_plots-0.0.7-py3-none-any.whl
++  sha256: c276616ddb4035247f11ce90ae0913547de29abfee137a0cdf8827944efdcd9b
++requirements:
++  run:
++    - earthkit-data
++    - plotly
++    - numpy
++    - xarray
++    - pyyaml
++about:
++  home: https://github.com/ecmwf/earthkit-plots
++  PyPI: https://pypi.org/project/earthkit-plots
++  summary: Interactive meteorological and climate visualisation tools and templates
++  license: Apache License 2.0
+diff --git a/packages/earthkit-regrid/meta.yaml b/packages/earthkit-regrid/meta.yaml
+new file mode 100644
+index 00000000..830e3ef4
+--- /dev/null
++++ b/packages/earthkit-regrid/meta.yaml
+@@ -0,0 +1,18 @@
++package:
++  name: earthkit-regrid
++  version: 0.3.0
++  top-level:
++    - earthkit.regrid
++source:
++  url: https://files.pythonhosted.org/packages/c8/89/dc53a36fe9014c732d9a763ce7d30d95642a0be93aeb5f81ac12aeae02c2/earthkit_regrid-0.3.0-py3-none-any.whl
++  sha256: 0bd93d9cb63179ea1311909538d2c0a68204472b267e5bdc51fa793e7f54952c
++requirements:
++  run:
++    - multiurl
++    - filelock
++    - scipy
++about:
++  home: https://github.com/ecmwf/earthkit-regrid
++  PyPI: https://pypi.org/project/earthkit-regrid
++  summary: ECMWF python regridding toolkit
++  license: Apache License 2.0
+diff --git a/packages/earthkit/meta.yaml b/packages/earthkit/meta.yaml
+new file mode 100644
+index 00000000..45e3a89d
+--- /dev/null
++++ b/packages/earthkit/meta.yaml
+@@ -0,0 +1,19 @@
++package:
++  name: earthkit
++  version: 0.4.4
++  top-level:
++    - earthkit
++source:
++  url: https://files.pythonhosted.org/packages/8e/27/0f0650c4b09fc4500d5f6d04a9362d0b2199b67b959a61c50ff55aa0e620/earthkit-0.4.4-py3-none-any.whl
++  sha256: b2c4da6d63e21e44d07dac77d44bbe952a03759a61df49dd613a0c91ab44d43b
++requirements:
++  run:
++    - earthkit-data
++    - earthkit-maps
++    - earthkit-meteo
++    - earthkit-plots
++    - earthkit-regrid
++about:
++  home: https://github.com/ecmwf/earthkit
++  PyPI: https://pypi.org/project/earthkit
++  license: Apache License 2.0
 diff --git a/packages/eccodes/meta.yaml b/packages/eccodes/meta.yaml
 new file mode 100644
 index 00000000..2d13cf3a
@@ -740,6 +925,25 @@ index 00000000..671f423a
 +     install_requires=install_requires,
 +     tests_require=[
 +         "pytest",
+diff --git a/packages/entrypoints/meta.yaml b/packages/entrypoints/meta.yaml
+new file mode 100644
+index 00000000..45d496cf
+--- /dev/null
++++ b/packages/entrypoints/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: entrypoints
++  version: "0.4"
++  top-level:
++    - entrypoints
++source:
++  url: https://files.pythonhosted.org/packages/35/a8/365059bbcd4572cbc41de17fd5b682be5868b218c3c5479071865cab9078/entrypoints-0.4-py3-none-any.whl
++  sha256: f174b5ff827504fd3cd97cc3f8649f3693f51538c7e4bdf3ef002c8429d42f9f
++about:
++  home: https://github.com/takluyver/entrypoints
++  PyPI: https://pypi.org/project/entrypoints
++  summary: Discover and load entry points from installed packages.
++  license: MIT
 diff --git a/packages/executing/meta.yaml b/packages/executing/meta.yaml
 new file mode 100644
 index 00000000..b8d8fae1
@@ -805,10 +1009,10 @@ index 00000000..54d6908a
 +  license: Apache-2.0
 diff --git a/packages/field-compression-benchmark/meta.yaml b/packages/field-compression-benchmark/meta.yaml
 new file mode 100644
-index 00000000..b6f0c9ee
+index 00000000..e41e592c
 --- /dev/null
 +++ b/packages/field-compression-benchmark/meta.yaml
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,51 @@
 +package:
 +  name: field-compression-benchmark
 +  version: 0.0.2
@@ -816,6 +1020,8 @@ index 00000000..b6f0c9ee
 +    - fcbench
 +source:
 +  path: ./field-compression-benchmark
++  patches:
++    - patches/0001-codecs-build.patch
 +build:
 +  script: |
 +    # Set up a more modern nightly toolchain with support for emscripten and wasi
@@ -858,6 +1064,105 @@ index 00000000..b6f0c9ee
 +    different settings across a variety of variables and their derivatives from
 +    different GRIB, NetCDF, or Zarr datasets.
 +  license: MIT OR Apache-2.0
+diff --git a/packages/field-compression-benchmark/patches/0001-codecs-build.patch b/packages/field-compression-benchmark/patches/0001-codecs-build.patch
+new file mode 100644
+index 00000000..b69cc1f3
+--- /dev/null
++++ b/packages/field-compression-benchmark/patches/0001-codecs-build.patch
+@@ -0,0 +1,74 @@
++diff --git a/codecs/build/Cargo.toml b/codecs/build/Cargo.toml
++index 923ac1da..19d4df95 100644
++--- a/codecs/build/Cargo.toml
+++++ b/codecs/build/Cargo.toml
++@@ -11,21 +11,21 @@ tar = { version = "0.4", default-features = false }
++ wit-component = { version = "0.205", default-features = false }
++ 
++ # list of all codecs we build
++-bit-round-codec = { path = "../bit-round" }
++-bit-transpose-codec = { path = "../bit-transpose" }
++-identity-codec = { path = "../identity" }
++-linear-quantize-codec = { path = "../linear-quantize" }
++-log-codec = { path = "../log" }
++-reinterpret-codec = { path = "../reinterpret" }
++-round-codec = { path = "../round" }
++-running-standardize-codec = { path = "../running-standardize" }
++-uniform-noise-codec = { path = "../uniform-noise" }
++-zfp-codec = { path = "../zfp" }
++-zlib-codec = { path = "../zlib" }
++-zstd-codec = { path = "../zstd" }
+++# bit-round-codec = { path = "../bit-round" }
+++# bit-transpose-codec = { path = "../bit-transpose" }
+++# identity-codec = { path = "../identity" }
+++# linear-quantize-codec = { path = "../linear-quantize" }
+++# log-codec = { path = "../log" }
+++# reinterpret-codec = { path = "../reinterpret" }
+++# round-codec = { path = "../round" }
+++# running-standardize-codec = { path = "../running-standardize" }
+++# uniform-noise-codec = { path = "../uniform-noise" }
+++# zfp-codec = { path = "../zfp" }
+++# zlib-codec = { path = "../zlib" }
+++# zstd-codec = { path = "../zstd" }
++ 
++-[target.'cfg(not(target_arch = "wasm32"))'.build-dependencies]
++-sz3-codec = { path = "../sz3" }
+++# [target.'cfg(not(target_arch = "wasm32"))'.build-dependencies]
+++# sz3-codec = { path = "../sz3" }
++ 
++ [lints]
++ workspace = true
++diff --git a/codecs/build/build.rs b/codecs/build/build.rs
++index 9c70b6f8..5d43ab2f 100644
++--- a/codecs/build/build.rs
+++++ b/codecs/build/build.rs
++@@ -46,7 +46,7 @@ fn main() -> io::Result<()> {
++         ("log-codec", "log"),
++         ("reinterpret-codec", "reinterpret"),
++         ("round-codec", "round"),
++-        ("running-standardize-codec", "running-standardize"),
+++        // ("running-standardize-codec", "running-standardize"),
++         ("sz3-codec", "sz3"),
++         ("uniform-noise-codec", "uniform-noise"),
++         ("zfp-codec", "zfp"),
++diff --git a/wasi/build/Cargo.toml b/wasi/build/Cargo.toml
++index 5313a7a0..a9425491 100644
++--- a/wasi/build/Cargo.toml
+++++ b/wasi/build/Cargo.toml
++@@ -8,11 +8,11 @@ edition = "2021"
++ [dependencies]
++ 
++ # list of all WASI components we build
++-virtual-wasi-cli = { path = "../cli" }
++-virtual-wasi-clocks = { path = "../clocks" }
++-virtual-wasi-filesystem = { path = "../filesystem" }
++-virtual-wasi-io = { path = "../io" }
++-virtual-wasi-random = { path = "../random" }
+++# virtual-wasi-cli = { path = "../cli" }
+++# virtual-wasi-clocks = { path = "../clocks" }
+++# virtual-wasi-filesystem = { path = "../filesystem" }
+++# virtual-wasi-io = { path = "../io" }
+++# virtual-wasi-random = { path = "../random" }
++ 
++ [build-dependencies]
++ wit-component = { version = "0.205", default-features = false }
+diff --git a/packages/filelock/meta.yaml b/packages/filelock/meta.yaml
+new file mode 100644
+index 00000000..2184c029
+--- /dev/null
++++ b/packages/filelock/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: filelock
++  version: 3.13.4
++  top-level:
++    - filelock
++source:
++  url: https://files.pythonhosted.org/packages/6e/b5/15b3b36f298bcbc0be82a371ac744f4f5a10309ade0b8bbde286598dd612/filelock-3.13.4-py3-none-any.whl
++  sha256: 404e5e9253aa60ad457cae1be07c0f0ca90a63931200a47d9b6a6af84fd7b45f
++about:
++  home: https://github.com/tox-dev/filelock
++  PyPI: https://pypi.org/project/filelock
++  summary: A platform independent file lock.
++  license: The Unlicense
 diff --git a/packages/findlibs/meta.yaml b/packages/findlibs/meta.yaml
 new file mode 100644
 index 00000000..b4213bfc
@@ -1816,6 +2121,46 @@ index 00000000..fb798f21
 +  PyPI: https://pypi.org/project/locket
 +  summary: File-based locks for Python on Linux and Windows
 +  license: BSD-2-Clause
+diff --git a/packages/markdown/meta.yaml b/packages/markdown/meta.yaml
+new file mode 100644
+index 00000000..6e911328
+--- /dev/null
++++ b/packages/markdown/meta.yaml
+@@ -0,0 +1,34 @@
++package:
++  name: markdown
++  version: "3.6"
++  top-level:
++    - markdown
++source:
++  url: https://files.pythonhosted.org/packages/fc/b3/0c0c994fe49cd661084f8d5dc06562af53818cc0abefaca35bdc894577c3/Markdown-3.6-py3-none-any.whl
++  sha256: 48f276f4d8cfb8ce6527c8f79e2ee29708508bf4d40aa410fbc3b4ee832c850f
++about:
++  home: https://github.com/Python-Markdown/markdown
++  PyPI: https://pypi.org/project/markdown
++  summary: Python implementation of John Gruber's Markdown.
++  license:
++    'BSD 3-Clause License  Copyright 2007, 2008 The Python Markdown Project
++    (v. 1.7 and later) Copyright 2004, 2005, 2006 Yuri Takhteyev (v. 0.2-1.6b) Copyright
++    2004 Manfred Stienstra (the original version)  Redistribution and use in source
++    and binary forms, with or without modification, are permitted provided that the
++    following conditions are met:  1. Redistributions of source code must retain the
++    above copyright notice, this list of conditions and the following disclaimer.  2.
++    Redistributions in binary form must reproduce the above copyright notice, this
++    list of conditions and the following disclaimer in the documentation and/or other
++    materials provided with the distribution.  3. Neither the name of the copyright
++    holder nor the names of its contributors may be used to endorse or promote products
++    derived from this software without specific prior written permission.  THIS SOFTWARE
++    IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
++    OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
++    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
++    SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
++    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
++    TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
++    OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
++    IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
++    IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
++    OF SUCH DAMAGE. '
 diff --git a/packages/matplotlib-inline/meta.yaml b/packages/matplotlib-inline/meta.yaml
 new file mode 100644
 index 00000000..60dfa71a
@@ -1858,6 +2203,33 @@ index e156640c..dc9b1d40 100644
  about:
    home: https://msgpack.org/
    PyPI: https://pypi.org/project/msgpack
+diff --git a/packages/multiurl/meta.yaml b/packages/multiurl/meta.yaml
+new file mode 100644
+index 00000000..9d9d90e8
+--- /dev/null
++++ b/packages/multiurl/meta.yaml
+@@ -0,0 +1,21 @@
++package:
++  name: multiurl
++  version: 0.3.1
++  top-level:
++    - multiurl
++source:
++  url: https://files.pythonhosted.org/packages/cc/12/4e979f71d90ca5625647f93cd484c733a7e8ae4fd9f6d15369613d727301/multiurl-0.3.1.tar.gz
++  sha256: c7001437b59d56d4c310d725c3dcfff98c97c4b652893d88989853827465d442
++requirements:
++  run:
++    - requests
++    - tqdm
++    - pytz
++    - python-dateutil
++about:
++  home: https://github.com/ecmwf/multiurl
++  PyPI: https://pypi.org/project/multiurl
++  summary:
++    A package to download several URL as one, as well as supporting multi-part
++    URLs
++  license: Apache License Version 2.0
 diff --git a/packages/netcdf4/meta.yaml b/packages/netcdf4/meta.yaml
 index 043bc6b8..6a7b453d 100644
 --- a/packages/netcdf4/meta.yaml
@@ -2065,6 +2437,30 @@ index 99b141ba..3a813d2a 100644
  requirements:
    run:
      - numpy
+diff --git a/packages/pdbufr/meta.yaml b/packages/pdbufr/meta.yaml
+new file mode 100644
+index 00000000..faa6a516
+--- /dev/null
++++ b/packages/pdbufr/meta.yaml
+@@ -0,0 +1,18 @@
++package:
++  name: pdbufr
++  version: 0.11.0
++  top-level:
++    - pdbufr
++source:
++  url: https://files.pythonhosted.org/packages/17/ac/2f955e67be411362129d435545f8e66f2ebdc2c51da634837e7830986f18/pdbufr-0.11.0.tar.gz
++  sha256: a9ea85e29cad5c66a0573f28ac21874df37859516458b311b5e3398bbc8e9c78
++requirements:
++  run:
++    - attrs
++    - eccodes
++    - pandas
++about:
++  home: https://github.com/ecmwf/pdbufr
++  PyPI: https://pypi.org/project/pdbufr
++  summary: Pandas reader for the BUFR format using ecCodes.
++  license: Apache License Version 2.0
 diff --git a/packages/pint/meta.yaml b/packages/pint/meta.yaml
 new file mode 100644
 index 00000000..f94e353a
@@ -2107,6 +2503,28 @@ index 00000000..1e136364
 +  summary:
 +    A small Python package for determining appropriate platform-specific dirs,
 +    e.g. a "user data dir".
++  license: MIT
+diff --git a/packages/plotly/meta.yaml b/packages/plotly/meta.yaml
+new file mode 100644
+index 00000000..cd6250f1
+--- /dev/null
++++ b/packages/plotly/meta.yaml
+@@ -0,0 +1,16 @@
++package:
++  name: plotly
++  version: 5.21.0
++  top-level:
++    - _plotly_future_
++    - _plotly_utils
++    - jupyterlab_plotly
++    - plotly
++source:
++  url: https://files.pythonhosted.org/packages/04/e5/04cf049c08975e016da446356a47566889be8b6cf88ed45045774f5bf112/plotly-5.21.0-py3-none-any.whl
++  sha256: a33f41fd5922e45b2b253f795b200d14452eb625790bb72d0a72cf1328a6abbf
++about:
++  home: https://plotly.com/python/
++  PyPI: https://pypi.org/project/plotly
++  summary: An open-source, interactive data visualization library for Python
 +  license: MIT
 diff --git a/packages/pooch/meta.yaml b/packages/pooch/meta.yaml
 new file mode 100644

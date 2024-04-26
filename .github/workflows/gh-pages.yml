@@ -45,7 +45,7 @@ jobs:
           git apply --whitespace=nowarn ../patches/pyodide.patch
           cp -r ../fcpy packages/fcpy/fcpy
           git clone git@github.com:juntyr/field-compression-benchmark.git packages/field-compression-benchmark/field-compression-benchmark
-          PYODIDE_DOCKER_IMAGE=$(docker build . -q) ./run_docker --non-interactive PYODIDE_PACKAGES="basemap,fcpy,field-compression-benchmark,ipyfilite,ipyloglite,pyodide-http,ipython" make
+          PYODIDE_DOCKER_IMAGE=$(docker build . -q) ./run_docker --non-interactive PYODIDE_PACKAGES="basemap,fcpy,field-compression-benchmark,ipyfilite,ipyloglite,pyodide-http,ipython,earthkit" make
           git apply --whitespace=nowarn --reverse ../patches/pyodide.patch
           rm -rf packages/fcpy/fcpy
           rm -rf packages/field-compression-benchmark/field-compression-benchmark
