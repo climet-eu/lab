@@ -1009,13 +1009,13 @@ index 00000000..54d6908a
 +  license: Apache-2.0
 diff --git a/packages/field-compression-benchmark/meta.yaml b/packages/field-compression-benchmark/meta.yaml
 new file mode 100644
-index 00000000..66307e54
+index 00000000..4cb45b8b
 --- /dev/null
 +++ b/packages/field-compression-benchmark/meta.yaml
 @@ -0,0 +1,51 @@
 +package:
 +  name: field-compression-benchmark
-+  version: 0.0.2
++  version: 0.0.3
 +  top-level:
 +    - fcbench
 +source:
