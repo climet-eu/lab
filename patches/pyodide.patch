@@ -1146,23 +1146,45 @@ index 00000000..b69cc1f3
 + wit-component = { version = "0.205", default-features = false }
 diff --git a/packages/filelock/meta.yaml b/packages/filelock/meta.yaml
 new file mode 100644
-index 00000000..2184c029
+index 00000000..8acc00dc
 --- /dev/null
 +++ b/packages/filelock/meta.yaml
-@@ -0,0 +1,13 @@
+@@ -0,0 +1,15 @@
 +package:
 +  name: filelock
 +  version: 3.13.4
 +  top-level:
 +    - filelock
 +source:
-+  url: https://files.pythonhosted.org/packages/6e/b5/15b3b36f298bcbc0be82a371ac744f4f5a10309ade0b8bbde286598dd612/filelock-3.13.4-py3-none-any.whl
-+  sha256: 404e5e9253aa60ad457cae1be07c0f0ca90a63931200a47d9b6a6af84fd7b45f
++  url: https://files.pythonhosted.org/packages/38/ff/877f1dbe369a2b9920e2ada3c9ab81cf6fe8fa2dce45f40cad510ef2df62/filelock-3.13.4.tar.gz
++  sha256: d13f466618bfde72bd2c18255e269f72542c6e70e7bac83a0232d6b1cc5c8cf4
++  patches:
++    - patches/0001-fcntl-lock-check.patch
 +about:
 +  home: https://github.com/tox-dev/filelock
 +  PyPI: https://pypi.org/project/filelock
 +  summary: A platform independent file lock.
 +  license: The Unlicense
+diff --git a/packages/filelock/patches/0001-fcntl-lock-check.patch b/packages/filelock/patches/0001-fcntl-lock-check.patch
+new file mode 100644
+index 00000000..6a52dbe3
+--- /dev/null
++++ b/packages/filelock/patches/0001-fcntl-lock-check.patch
+@@ -0,0 +1,14 @@
++diff --git a/src/filelock/_unix.py b/src/filelock/_unix.py
++index 4ae1fbe..dbbe408 100644
++--- a/src/filelock/_unix.py
+++++ b/src/filelock/_unix.py
++@@ -26,7 +26,8 @@ if sys.platform == "win32":  # pragma: win32 cover
++ else:  # pragma: win32 no cover
++     try:
++         import fcntl
++-    except ImportError:
+++        _ = (fcntl.lock, fcntl.LOCK_EX, fcntl.LOCK_NB, fcntl.LOCK_UN)
+++    except (ImportError, AttributeError):
++         pass
++     else:
++         has_fcntl = True
 diff --git a/packages/findlibs/meta.yaml b/packages/findlibs/meta.yaml
 new file mode 100644
 index 00000000..b4213bfc
@@ -2205,10 +2227,10 @@ index e156640c..dc9b1d40 100644
    PyPI: https://pypi.org/project/msgpack
 diff --git a/packages/multiurl/meta.yaml b/packages/multiurl/meta.yaml
 new file mode 100644
-index 00000000..9d9d90e8
+index 00000000..a038e385
 --- /dev/null
 +++ b/packages/multiurl/meta.yaml
-@@ -0,0 +1,21 @@
+@@ -0,0 +1,24 @@
 +package:
 +  name: multiurl
 +  version: 0.3.1
@@ -2217,12 +2239,15 @@ index 00000000..9d9d90e8
 +source:
 +  url: https://files.pythonhosted.org/packages/cc/12/4e979f71d90ca5625647f93cd484c733a7e8ae4fd9f6d15369613d727301/multiurl-0.3.1.tar.gz
 +  sha256: c7001437b59d56d4c310d725c3dcfff98c97c4b652893d88989853827465d442
++  patches:
++    - patches/0001-pyodide-http.patch
 +requirements:
 +  run:
 +    - requests
 +    - tqdm
 +    - pytz
 +    - python-dateutil
++    - pyodide-http
 +about:
 +  home: https://github.com/ecmwf/multiurl
 +  PyPI: https://pypi.org/project/multiurl
@@ -2230,6 +2255,26 @@ index 00000000..9d9d90e8
 +    A package to download several URL as one, as well as supporting multi-part
 +    URLs
 +  license: Apache License Version 2.0
+diff --git a/packages/multiurl/patches/0001-pyodide-http.patch b/packages/multiurl/patches/0001-pyodide-http.patch
+new file mode 100644
+index 00000000..e6e806f5
+--- /dev/null
++++ b/packages/multiurl/patches/0001-pyodide-http.patch
+@@ -0,0 +1,14 @@
++diff --git a/multiurl/__init__.py b/multiurl/__init__.py
++index 30045d8..ab484ef 100644
++--- a/multiurl/__init__.py
+++++ b/multiurl/__init__.py
++@@ -10,6 +10,9 @@
++ 
++ from .downloader import Downloader, download, robust
++ 
+++import pyodide_http as _pyodide_http
+++_pyodide_http.patch_all()
+++
++ __version__ = "0.3.1"
++ 
++ __all__ = [
 diff --git a/packages/netcdf4/meta.yaml b/packages/netcdf4/meta.yaml
 index 043bc6b8..6a7b453d 100644
 --- a/packages/netcdf4/meta.yaml
