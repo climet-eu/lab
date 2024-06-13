@@ -1,5 +1,5 @@
 diff --git a/Dockerfile b/Dockerfile
-index 2569e238..57697987 100644
+index 2569e238..44cb23a7 100644
 --- a/Dockerfile
 +++ b/Dockerfile
 @@ -1,5 +1,5 @@
@@ -10,17 +10,15 @@ index 2569e238..57697987 100644
  
  # Requirements for building packages
  RUN apt-get update \
-@@ -7,8 +7,8 @@ RUN apt-get update \
+@@ -7,7 +7,7 @@ RUN apt-get update \
          bzip2 ccache f2c g++ gfortran git make \
          patch pkg-config swig unzip wget xz-utils \
          autoconf autotools-dev automake texinfo dejagnu \
 -        build-essential prelink autoconf libtool libltdl-dev \
--        gnupg2 libdbus-glib-1-2 sudo sqlite3 \
 +        build-essential autoconf libtool libltdl-dev \
-+        gnupg2 libdbus-glib-1-2 sudo sqlite3 clang libclang-dev cmake \
+         gnupg2 libdbus-glib-1-2 sudo sqlite3 \
          ninja-build jq xxd \
    && rm -rf /var/lib/apt/lists/*
- 
 @@ -31,7 +31,8 @@ ADD requirements.txt docs/requirements-doc.txt /
  ADD pyodide-build /pyodide-build
  
@@ -31,6 +29,55 @@ index 2569e238..57697987 100644
      && pip3 --no-cache-dir install -r requirements-doc.txt \
      && rm -rf requirements.txt requirements-doc.txt pyodide-build
  
+@@ -82,27 +83,27 @@ RUN if [ $FIREFOX_VERSION = "latest" ] || [ $FIREFOX_VERSION = "nightly-latest"
+ #       97
+ #============================================
+ 
+-RUN if [ $CHROME_VERSION = "latest" ]; \
+-  then CHROMEDRIVER_VERSION_FULL=$(wget --no-verbose -O - "https://chromedriver.storage.googleapis.com/LATEST_RELEASE"); \
+-  else CHROMEDRIVER_VERSION_FULL=$(wget --no-verbose -O - "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}"); \
+-  fi \
+-  && CHROME_VERSION_MAJOR=$(echo $CHROMEDRIVER_VERSION_FULL | cut -d '.' -f 1) \
+-  && CHROME_VERSION_FULL=$(wget --no-verbose -O - "https://versionhistory.googleapis.com/v1/chrome/platforms/linux/channels/stable/versions" | jq -r '.versions[] | .version' | grep "^${CHROME_VERSION_MAJOR}" | head -n 1) \
+-  && CHROME_DOWNLOAD_URL="https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION_FULL}-1_amd64.deb" \
+-  && wget --no-verbose -O /tmp/google-chrome.deb ${CHROME_DOWNLOAD_URL} \
+-  && apt-get update \
+-  && apt install -qqy /tmp/google-chrome.deb \
+-  && rm -f /tmp/google-chrome.deb \
+-  && rm -rf /var/lib/apt/lists/* \
+-  && wget --no-verbose -O /tmp/chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION_FULL/chromedriver_linux64.zip \
+-  && rm -rf /opt/selenium/chromedriver \
+-  && unzip /tmp/chromedriver_linux64.zip -d /opt/selenium \
+-  && rm /tmp/chromedriver_linux64.zip \
+-  && mv /opt/selenium/chromedriver /opt/selenium/chromedriver-$CHROMEDRIVER_VERSION_FULL \
+-  && chmod 755 /opt/selenium/chromedriver-$CHROMEDRIVER_VERSION_FULL \
+-  && ln -fs /opt/selenium/chromedriver-$CHROMEDRIVER_VERSION_FULL /usr/local/bin/chromedriver \
+-  && echo "Using Chrome version: $(google-chrome --version)" \
+-  && echo "Using Chromedriver version: "$CHROMEDRIVER_VERSION_FULL
++# RUN if [ $CHROME_VERSION = "latest" ]; \
++#   then CHROMEDRIVER_VERSION_FULL=$(wget --no-verbose -O - "https://chromedriver.storage.googleapis.com/LATEST_RELEASE"); \
++#   else CHROMEDRIVER_VERSION_FULL=$(wget --no-verbose -O - "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}"); \
++#   fi \
++#   && CHROME_VERSION_MAJOR=$(echo $CHROMEDRIVER_VERSION_FULL | cut -d '.' -f 1) \
++#   && CHROME_VERSION_FULL=$(wget --no-verbose -O - "https://versionhistory.googleapis.com/v1/chrome/platforms/linux/channels/stable/versions" | jq -r '.versions[] | .version' | grep "^${CHROME_VERSION_MAJOR}" | head -n 1) \
++#   && CHROME_DOWNLOAD_URL="https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION_FULL}-1_amd64.deb" \
++#   && wget --no-verbose -O /tmp/google-chrome.deb ${CHROME_DOWNLOAD_URL} \
++#   && apt-get update \
++#   && apt install -qqy /tmp/google-chrome.deb \
++#   && rm -f /tmp/google-chrome.deb \
++#   && rm -rf /var/lib/apt/lists/* \
++#   && wget --no-verbose -O /tmp/chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION_FULL/chromedriver_linux64.zip \
++#   && rm -rf /opt/selenium/chromedriver \
++#   && unzip /tmp/chromedriver_linux64.zip -d /opt/selenium \
++#   && rm /tmp/chromedriver_linux64.zip \
++#   && mv /opt/selenium/chromedriver /opt/selenium/chromedriver-$CHROMEDRIVER_VERSION_FULL \
++#   && chmod 755 /opt/selenium/chromedriver-$CHROMEDRIVER_VERSION_FULL \
++#   && ln -fs /opt/selenium/chromedriver-$CHROMEDRIVER_VERSION_FULL /usr/local/bin/chromedriver \
++#   && echo "Using Chrome version: $(google-chrome --version)" \
++#   && echo "Using Chromedriver version: "$CHROMEDRIVER_VERSION_FULL
+ 
+ COPY --from=node-image /usr/local/bin/node /usr/local/bin/
+ COPY --from=node-image /usr/local/lib/node_modules /usr/local/lib/node_modules
 diff --git a/packages/MetPy/meta.yaml b/packages/MetPy/meta.yaml
 new file mode 100644
 index 00000000..f1169c46
@@ -1009,10 +1056,10 @@ index 00000000..54d6908a
 +  license: Apache-2.0
 diff --git a/packages/field-compression-benchmark/meta.yaml b/packages/field-compression-benchmark/meta.yaml
 new file mode 100644
-index 00000000..4cb45b8b
+index 00000000..ceeda440
 --- /dev/null
 +++ b/packages/field-compression-benchmark/meta.yaml
-@@ -0,0 +1,51 @@
+@@ -0,0 +1,50 @@
 +package:
 +  name: field-compression-benchmark
 +  version: 0.0.3
@@ -1020,26 +1067,25 @@ index 00000000..4cb45b8b
 +    - fcbench
 +source:
 +  path: ./field-compression-benchmark
++  # TODO: include patches once fcbench is included from git or PyPi
 +  # patches:
 +  #   - patches/0001-codecs-build.patch
 +build:
 +  script: |
 +    # Set up a more modern nightly toolchain with support for emscripten and wasi
-+    rm rust-toolchain
-+    rustup default nightly-2024-02-03
-+    rustup target add wasm32-unknown-emscripten --toolchain nightly-2024-02-03
-+    rustup target add wasm32-unknown-unknown --toolchain nightly-2024-02-03
-+    rustup target add wasm32-wasi --toolchain nightly-2024-02-03
-+    rustup component add rust-src --toolchain nightly-2024-02-03
++    export RUSTUP_TOOLCHAIN="nightly-2024-03-17"
++    rustup target add wasm32-unknown-emscripten --toolchain ${RUSTUP_TOOLCHAIN}
++    rustup target add wasm32-unknown-unknown --toolchain ${RUSTUP_TOOLCHAIN}
++    rustup component add rust-src --toolchain ${RUSTUP_TOOLCHAIN}
 +
-+    # For some reason, the .cargo/config is not respected during building
-+    export RUSTFLAGS="--cfg uuid_unstable"
-+
-+    # Export the cmake inside Docker to circumvent Pyodide's wrapper
-+    export CMAKE_NOCROSS=$(which cmake)
-+  cross-script:
-+    export CMAKE=$CMAKE_NOCROSS
-+    unset CMAKE_TOOLCHAIN_FILE
++    # Install nix-portable and add it to the PATH
++    mkdir -p .nix
++    wget -q -O - https://github.com/DavHau/nix-portable/releases/download/v012/nix-portable-x86_64 > .nix/nix-portable
++    cd ./.nix
++    chmod +x ./nix-portable
++    ln -s ./nix-portable ./nix
++    cd ..
++    export PATH="$(pwd)/.nix:${PATH}"
 +requirements:
 +  executable:
 +    - rustup
@@ -1066,84 +1112,69 @@ index 00000000..4cb45b8b
 +  license: MIT OR Apache-2.0
 diff --git a/packages/field-compression-benchmark/patches/0001-codecs-build.patch b/packages/field-compression-benchmark/patches/0001-codecs-build.patch
 new file mode 100644
-index 00000000..b69cc1f3
+index 00000000..5de7eef3
 --- /dev/null
 +++ b/packages/field-compression-benchmark/patches/0001-codecs-build.patch
-@@ -0,0 +1,74 @@
+@@ -0,0 +1,59 @@
 +diff --git a/codecs/build/Cargo.toml b/codecs/build/Cargo.toml
-+index 923ac1da..19d4df95 100644
++index 10c879b8..86fb7c4c 100644
 +--- a/codecs/build/Cargo.toml
 ++++ b/codecs/build/Cargo.toml
-+@@ -11,21 +11,21 @@ tar = { version = "0.4", default-features = false }
-+ wit-component = { version = "0.205", default-features = false }
++@@ -17,20 +17,20 @@ tar = { workspace = true }
++ wit-component = { workspace = true }
 + 
 + # list of all codecs we build
-+-bit-round-codec = { path = "../bit-round" }
-+-bit-transpose-codec = { path = "../bit-transpose" }
-+-identity-codec = { path = "../identity" }
-+-linear-quantize-codec = { path = "../linear-quantize" }
-+-log-codec = { path = "../log" }
-+-reinterpret-codec = { path = "../reinterpret" }
-+-round-codec = { path = "../round" }
-+-running-standardize-codec = { path = "../running-standardize" }
-+-uniform-noise-codec = { path = "../uniform-noise" }
-+-zfp-codec = { path = "../zfp" }
-+-zlib-codec = { path = "../zlib" }
-+-zstd-codec = { path = "../zstd" }
-++# bit-round-codec = { path = "../bit-round" }
-++# bit-transpose-codec = { path = "../bit-transpose" }
-++# identity-codec = { path = "../identity" }
-++# linear-quantize-codec = { path = "../linear-quantize" }
-++# log-codec = { path = "../log" }
-++# reinterpret-codec = { path = "../reinterpret" }
-++# round-codec = { path = "../round" }
-++# running-standardize-codec = { path = "../running-standardize" }
-++# uniform-noise-codec = { path = "../uniform-noise" }
-++# zfp-codec = { path = "../zfp" }
-++# zlib-codec = { path = "../zlib" }
-++# zstd-codec = { path = "../zstd" }
++-bit-round-codec = { workspace = true }
++-bit-transpose-codec = { workspace = true }
++-identity-codec = { workspace = true }
++-linear-quantize-codec = { workspace = true }
++-log-codec = { workspace = true }
++-reinterpret-codec = { workspace = true }
++-round-codec = { workspace = true }
++-uniform-noise-codec = { workspace = true }
++-zfp-codec = { workspace = true }
++-zlib-codec = { workspace = true }
++-zstd-codec = { workspace = true }
+++# bit-round-codec = { workspace = true }
+++# bit-transpose-codec = { workspace = true }
+++# identity-codec = { workspace = true }
+++# linear-quantize-codec = { workspace = true }
+++# log-codec = { workspace = true }
+++# reinterpret-codec = { workspace = true }
+++# round-codec = { workspace = true }
+++# uniform-noise-codec = { workspace = true }
+++# zfp-codec = { workspace = true }
+++# zlib-codec = { workspace = true }
+++# zstd-codec = { workspace = true }
 + 
 +-[target.'cfg(not(target_arch = "wasm32"))'.build-dependencies]
-+-sz3-codec = { path = "../sz3" }
++-sz3-codec = { workspace = true }
 ++# [target.'cfg(not(target_arch = "wasm32"))'.build-dependencies]
-++# sz3-codec = { path = "../sz3" }
+++# sz3-codec = { workspace = true }
 + 
 + [lints]
 + workspace = true
-+diff --git a/codecs/build/build.rs b/codecs/build/build.rs
-+index 9c70b6f8..5d43ab2f 100644
-+--- a/codecs/build/build.rs
-++++ b/codecs/build/build.rs
-+@@ -46,7 +46,7 @@ fn main() -> io::Result<()> {
-+         ("log-codec", "log"),
-+         ("reinterpret-codec", "reinterpret"),
-+         ("round-codec", "round"),
-+-        ("running-standardize-codec", "running-standardize"),
-++        // ("running-standardize-codec", "running-standardize"),
-+         ("sz3-codec", "sz3"),
-+         ("uniform-noise-codec", "uniform-noise"),
-+         ("zfp-codec", "zfp"),
 +diff --git a/wasi/build/Cargo.toml b/wasi/build/Cargo.toml
-+index 5313a7a0..a9425491 100644
++index 2df0d5f5..3a741c4d 100644
 +--- a/wasi/build/Cargo.toml
 ++++ b/wasi/build/Cargo.toml
-+@@ -8,11 +8,11 @@ edition = "2021"
++@@ -13,11 +13,11 @@ rust-version = { workspace = true }
 + [dependencies]
 + 
 + # list of all WASI components we build
-+-virtual-wasi-cli = { path = "../cli" }
-+-virtual-wasi-clocks = { path = "../clocks" }
-+-virtual-wasi-filesystem = { path = "../filesystem" }
-+-virtual-wasi-io = { path = "../io" }
-+-virtual-wasi-random = { path = "../random" }
-++# virtual-wasi-cli = { path = "../cli" }
-++# virtual-wasi-clocks = { path = "../clocks" }
-++# virtual-wasi-filesystem = { path = "../filesystem" }
-++# virtual-wasi-io = { path = "../io" }
-++# virtual-wasi-random = { path = "../random" }
++-virtual-wasi-cli = { workspace = true }
++-virtual-wasi-clocks = { workspace = true }
++-virtual-wasi-filesystem = { workspace = true }
++-virtual-wasi-io = { workspace = true }
++-virtual-wasi-random = { workspace = true }
+++# virtual-wasi-cli = { workspace = true }
+++# virtual-wasi-clocks = { workspace = true }
+++# virtual-wasi-filesystem = { workspace = true }
+++# virtual-wasi-io = { workspace = true }
+++# virtual-wasi-random = { workspace = true }
 + 
 + [build-dependencies]
-+ wit-component = { version = "0.205", default-features = false }
++ outdir = { workspace = true }
 diff --git a/packages/filelock/meta.yaml b/packages/filelock/meta.yaml
 new file mode 100644
 index 00000000..8acc00dc
