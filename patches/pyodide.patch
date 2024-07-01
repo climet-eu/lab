@@ -1056,10 +1056,10 @@ index 00000000..54d6908a
 +  license: Apache-2.0
 diff --git a/packages/field-compression-benchmark/meta.yaml b/packages/field-compression-benchmark/meta.yaml
 new file mode 100644
-index 00000000..a4f2809e
+index 00000000..fde15832
 --- /dev/null
 +++ b/packages/field-compression-benchmark/meta.yaml
-@@ -0,0 +1,51 @@
+@@ -0,0 +1,54 @@
 +package:
 +  name: field-compression-benchmark
 +  version: 0.0.3
@@ -1073,7 +1073,7 @@ index 00000000..a4f2809e
 +build:
 +  script: |
 +    # Set up a more modern nightly toolchain with support for emscripten and wasi
-+    export RUSTUP_TOOLCHAIN="nightly-2024-03-17"
++    export RUSTUP_TOOLCHAIN="nightly-2024-04-28"
 +    rustup toolchain install ${RUSTUP_TOOLCHAIN}
 +    rustup target add wasm32-unknown-emscripten --toolchain ${RUSTUP_TOOLCHAIN}
 +    rustup target add wasm32-unknown-unknown --toolchain ${RUSTUP_TOOLCHAIN}
@@ -1086,7 +1086,10 @@ index 00000000..a4f2809e
 +    chmod +x ./nix-portable
 +    ln -s ./nix-portable ./nix
 +    cd ..
-+    export PATH="$(pwd)/.nix:${PATH}"
++
++    PATH="$(pwd)/.nix:${PATH}" cargo build -p codecs-build
++    cargo clean
++    rm -rf ./.nix
 +requirements:
 +  executable:
 +    - rustup
@@ -1113,15 +1116,15 @@ index 00000000..a4f2809e
 +  license: MIT OR Apache-2.0
 diff --git a/packages/field-compression-benchmark/patches/0001-codecs-build.patch b/packages/field-compression-benchmark/patches/0001-codecs-build.patch
 new file mode 100644
-index 00000000..5de7eef3
+index 00000000..85964ad4
 --- /dev/null
 +++ b/packages/field-compression-benchmark/patches/0001-codecs-build.patch
-@@ -0,0 +1,59 @@
+@@ -0,0 +1,129 @@
 +diff --git a/codecs/build/Cargo.toml b/codecs/build/Cargo.toml
-+index 10c879b8..86fb7c4c 100644
++index d348ea54..0f42a9d0 100644
 +--- a/codecs/build/Cargo.toml
 ++++ b/codecs/build/Cargo.toml
-+@@ -17,20 +17,20 @@ tar = { workspace = true }
++@@ -16,20 +16,20 @@ wasi-preview1-component-adapter-provider = { workspace = true }
 + wit-component = { workspace = true }
 + 
 + # list of all codecs we build
@@ -1155,12 +1158,63 @@ index 00000000..5de7eef3
 + 
 + [lints]
 + workspace = true
++diff --git a/codecs/build/build.rs b/codecs/build/build.rs
++index ef18bf3b..a7636c56 100644
++--- a/codecs/build/build.rs
+++++ b/codecs/build/build.rs
++@@ -5,13 +5,13 @@ use std::{
++     process::Command,
++ };
++ 
++-#[cfg(not(target_arch = "wasm32"))]
++-use sz3_codec as _;
++-use ::{
++-    bit_round_codec as _, bit_transpose_codec as _, identity_codec as _,
++-    linear_quantize_codec as _, log_codec as _, reinterpret_codec as _, round_codec as _,
++-    uniform_noise_codec as _, zfp_codec as _, zlib_codec as _, zstd_codec as _,
++-};
+++// #[cfg(not(target_arch = "wasm32"))]
+++// use sz3_codec as _;
+++// use ::{
+++//     bit_round_codec as _, bit_transpose_codec as _, identity_codec as _,
+++//     linear_quantize_codec as _, log_codec as _, reinterpret_codec as _, round_codec as _,
+++//     uniform_noise_codec as _, zfp_codec as _, zlib_codec as _, zstd_codec as _,
+++// };
++ 
++ fn main() -> io::Result<()> {
++     // Check for `clippy` and return early in this case
++diff --git a/fcbench/Cargo.toml b/fcbench/Cargo.toml
++index 8539ef15..5f0eb6ea 100644
++--- a/fcbench/Cargo.toml
+++++ b/fcbench/Cargo.toml
++@@ -14,7 +14,7 @@ name = "fcbench"
++ crate-type = ["cdylib"]
++ 
++ [dependencies]
++-codecs-build = { workspace = true }
+++# codecs-build = { workspace = true }
++ convert_case = { workspace = true }
++ core-benchmark = { workspace = true }
++ core-compressor = { workspace = true }
++diff --git a/fcbench/src/lib.rs b/fcbench/src/lib.rs
++index a17dbfac..ec0171c4 100644
++--- a/fcbench/src/lib.rs
+++++ b/fcbench/src/lib.rs
++@@ -3,7 +3,7 @@
++ 
++ use pyo3::{exceptions::PyRuntimeError, prelude::*};
++ 
++-use codecs_build as _;
+++// use codecs_build as _;
++ 
++ mod benchmark;
++ pub mod compressor;
 +diff --git a/wasi/build/Cargo.toml b/wasi/build/Cargo.toml
-+index 2df0d5f5..3a741c4d 100644
++index 47ccdb44..67644654 100644
 +--- a/wasi/build/Cargo.toml
 ++++ b/wasi/build/Cargo.toml
-+@@ -13,11 +13,11 @@ rust-version = { workspace = true }
-+ [dependencies]
++@@ -15,11 +15,11 @@ scratch = { workspace = true }
++ wit-component = { workspace = true }
 + 
 + # list of all WASI components we build
 +-virtual-wasi-cli = { workspace = true }
@@ -1174,8 +1228,27 @@ index 00000000..5de7eef3
 ++# virtual-wasi-io = { workspace = true }
 ++# virtual-wasi-random = { workspace = true }
 + 
-+ [build-dependencies]
-+ outdir = { workspace = true }
++ [lints]
++ workspace = true
++diff --git a/wasi/build/build.rs b/wasi/build/build.rs
++index c6150452..d04b6554 100644
++--- a/wasi/build/build.rs
+++++ b/wasi/build/build.rs
++@@ -5,10 +5,10 @@ use std::{
++     process::Command,
++ };
++ 
++-use ::{
++-    virtual_wasi_cli as _, virtual_wasi_clocks as _, virtual_wasi_filesystem as _,
++-    virtual_wasi_io as _, virtual_wasi_random as _,
++-};
+++// use ::{
+++//     virtual_wasi_cli as _, virtual_wasi_clocks as _, virtual_wasi_filesystem as _,
+++//     virtual_wasi_io as _, virtual_wasi_random as _,
+++// };
++ 
++ fn main() -> io::Result<()> {
++     // Check for `clippy` and skip compilation in that case
 diff --git a/packages/filelock/meta.yaml b/packages/filelock/meta.yaml
 new file mode 100644
 index 00000000..8acc00dc

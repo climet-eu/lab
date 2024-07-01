@@ -45,7 +45,7 @@ jobs:
           git apply --whitespace=nowarn ../patches/pyodide.patch
           cp -r ../fcpy packages/fcpy/fcpy
           git clone git@github.com:juntyr/field-compression-benchmark.git packages/field-compression-benchmark/field-compression-benchmark
-          cd packages/field-compression-benchmark/field-compression-benchmark && git apply ../patches/0001-codecs-build.patch && cd ../../..
+          cd packages/field-compression-benchmark/field-compression-benchmark && git submodule update --init wasi/wit-deps/wasi-* && git apply ../patches/0001-codecs-build.patch && cd ../../..
           PYODIDE_DOCKER_IMAGE=$(docker build . -q) ./run_docker --non-interactive PYODIDE_PACKAGES="basemap,fcpy,field-compression-benchmark,ipyfilite,ipyloglite,pyodide-http,ipython,earthkit" make
           git apply --whitespace=nowarn --reverse ../patches/pyodide.patch
           rm -rf packages/fcpy/fcpy
