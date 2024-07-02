@@ -39,14 +39,56 @@ jobs:
         uses: webfactory/ssh-agent@v0.8.0
         with:
             ssh-private-key: ${{ secrets.FCBENCH_SSH_TOKEN }}
-      - name: Build Pyodide
+      - name: Checkout and patch pyodide
         run: |
           cd pyodide
           git apply --whitespace=nowarn ../patches/pyodide.patch
           cp -r ../fcpy packages/fcpy/fcpy
-          git clone git@github.com:juntyr/field-compression-benchmark.git packages/field-compression-benchmark/field-compression-benchmark
-          cd packages/field-compression-benchmark/field-compression-benchmark && git submodule update --init wasi/wit-deps/wasi-* && git apply ../patches/0001-codecs-build.patch && cd ../../..
-          PYODIDE_DOCKER_IMAGE=$(docker build . -q) ./run_docker --non-interactive PYODIDE_PACKAGES="basemap,fcpy,field-compression-benchmark,ipyfilite,ipyloglite,pyodide-http,ipython,earthkit" make
+          git clone git@github.com:juntyr/field-compression-benchmark.git \
+            packages/field-compression-benchmark/field-compression-benchmark
+          cd packages/field-compression-benchmark/field-compression-benchmark
+          git submodule update --init wasi/wit-deps/wasi-*
+          git apply ../patches/0001-codecs-build.patch
+      - name: Pre-build the wasm codecs for fcbench
+        run: |
+            cd pyodide/packages/field-compression-benchmark/field-compression-benchmark
+
+            # Set up a more modern nightly toolchain with support for emscripten and wasi
+            rustup toolchain install ${RUSTUP_TOOLCHAIN}
+            rustup target add wasm32-unknown-emscripten --toolchain ${RUSTUP_TOOLCHAIN}
+            rustup target add wasm32-unknown-unknown --toolchain ${RUSTUP_TOOLCHAIN}
+            rustup component add rust-src --toolchain ${RUSTUP_TOOLCHAIN}
+
+            # Install nix-portable and add it to the PATH
+            mkdir -p .nix
+            wget -q -O - https://github.com/DavHau/nix-portable/releases/download/v012/nix-portable-x86_64 > .nix/nix-portable
+            cd ./.nix
+            chmod +x ./nix-portable
+            ln -s ./nix-portable ./nix
+            cd ..
+
+            # Build the codecs
+            PATH="$(pwd)/.nix:${PATH}" cargo build -p codecs-build -vv
+
+            # Clean up everything after the build
+            cargo clean
+            rm -rf ./.nix
+            chmod -R 777 ~/.nix-portable
+            rm -rf ~/.nix-portable
+            rustup toolchain uninstall ${RUSTUP_TOOLCHAIN}
+        env:
+          RUSTUP_TOOLCHAIN: "nightly-2024-04-28"
+      - name: Build Pyodide and all required packages
+        run: |
+          cd pyodide
+          PYODIDE_DOCKER_IMAGE=$(docker build . -q) \
+            ./run_docker \
+            --non-interactive \
+            PYODIDE_PACKAGES="basemap,fcpy,field-compression-benchmark,ipyfilite,ipyloglite,pyodide-http,ipython,earthkit" \
+            make
+      - name: Clean up the pyodide build
+        run: |
+          cd pyodide
           git apply --whitespace=nowarn --reverse ../patches/pyodide.patch
           rm -rf packages/fcpy/fcpy
           rm -rf packages/field-compression-benchmark/field-compression-benchmark

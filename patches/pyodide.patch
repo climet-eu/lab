@@ -1056,10 +1056,10 @@ index 00000000..54d6908a
 +  license: Apache-2.0
 diff --git a/packages/field-compression-benchmark/meta.yaml b/packages/field-compression-benchmark/meta.yaml
 new file mode 100644
-index 00000000..e44c45f5
+index 00000000..c2860a8c
 --- /dev/null
 +++ b/packages/field-compression-benchmark/meta.yaml
-@@ -0,0 +1,56 @@
+@@ -0,0 +1,42 @@
 +package:
 +  name: field-compression-benchmark
 +  version: 0.0.3
@@ -1072,26 +1072,12 @@ index 00000000..e44c45f5
 +  #   - patches/0001-codecs-build.patch
 +build:
 +  script: |
-+    # Set up a more modern nightly toolchain with support for emscripten and wasi
++    # Set up a more modern nightly toolchain with support for emscripten and wasm
 +    export RUSTUP_TOOLCHAIN="nightly-2024-04-28"
 +    rustup toolchain install ${RUSTUP_TOOLCHAIN}
 +    rustup target add wasm32-unknown-emscripten --toolchain ${RUSTUP_TOOLCHAIN}
 +    rustup target add wasm32-unknown-unknown --toolchain ${RUSTUP_TOOLCHAIN}
 +    rustup component add rust-src --toolchain ${RUSTUP_TOOLCHAIN}
-+
-+    # Install nix-portable and add it to the PATH
-+    mkdir -p .nix
-+    wget -q -O - https://github.com/DavHau/nix-portable/releases/download/v012/nix-portable-x86_64 > .nix/nix-portable
-+    cd ./.nix
-+    chmod +x ./nix-portable
-+    ln -s ./nix-portable ./nix
-+    cd ..
-+
-+    PATH="$(pwd)/.nix:${PATH}" cargo build -p codecs-build
-+    cargo clean
-+    rm -rf ./.nix
-+    chmod -R 777 ~/.nix-portable
-+    rm -rf ~/.nix-portable
 +requirements:
 +  executable:
 +    - rustup
