@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
+      - name: Install nix
+        uses: cachix/install-nix-action@v27
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
@@ -59,23 +61,13 @@ jobs:
             rustup target add wasm32-unknown-unknown --toolchain ${RUSTUP_TOOLCHAIN}
             rustup component add rust-src --toolchain ${RUSTUP_TOOLCHAIN}
 
-            # Install nix-portable and add it to the PATH
-            mkdir -p .nix
-            wget -q -O - https://github.com/DavHau/nix-portable/releases/download/v012/nix-portable-x86_64 > .nix/nix-portable
-            cd ./.nix
-            chmod +x ./nix-portable
-            ln -s ./nix-portable ./nix
-            cd ..
-
             # Build the codecs
-            PATH="$(pwd)/.nix:${PATH}" cargo build -p codecs-build -vv
+            cargo build -p codecs-build -vv
 
             # Clean up everything after the build
             cargo clean
-            rm -rf ./.nix
-            chmod -R 777 ~/.nix-portable
-            rm -rf ~/.nix-portable
             rustup toolchain uninstall ${RUSTUP_TOOLCHAIN}
+            nix store gc
         env:
           RUSTUP_TOOLCHAIN: "nightly-2024-04-28"
       - name: Build Pyodide and all required packages
