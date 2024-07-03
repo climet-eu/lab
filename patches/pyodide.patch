@@ -1056,10 +1056,10 @@ index 00000000..54d6908a
 +  license: Apache-2.0
 diff --git a/packages/field-compression-benchmark/meta.yaml b/packages/field-compression-benchmark/meta.yaml
 new file mode 100644
-index 00000000..c2860a8c
+index 00000000..b7008a09
 --- /dev/null
 +++ b/packages/field-compression-benchmark/meta.yaml
-@@ -0,0 +1,42 @@
+@@ -0,0 +1,40 @@
 +package:
 +  name: field-compression-benchmark
 +  version: 0.0.3
@@ -1084,13 +1084,11 @@ index 00000000..c2860a8c
 +  run:
 +    - cfgrib  # 0.9.10.4
 +    - dask  # 2024.2.1
-+    # FIXME: build matplotlib v3.4.3
-+    - matplotlib  # ~~3.4.3~~ 3.5.2
++    - matplotlib  # 3.5.2
 +    - netcdf4  # 1.6.5
 +    - numcodecs  # 0.12.1
 +    - numpy  # 1.26.4
 +    - pint  # 0.23
-+    - proplot  # 0.9.7
 +    - xarray  # 2023.12.0
 +    - xeofs  # 2.3.1
 +    - xhistogram  # 0.3.2
@@ -1505,18 +1503,20 @@ index 00000000..559208e3
 +  license: MIT OR Apache-2.0
 diff --git a/packages/ipython/meta.yaml b/packages/ipython/meta.yaml
 new file mode 100644
-index 00000000..64f0418e
+index 00000000..692b8e28
 --- /dev/null
 +++ b/packages/ipython/meta.yaml
-@@ -0,0 +1,23 @@
+@@ -0,0 +1,26 @@
 +package:
 +  name: ipython
 +  version: 8.22.1
 +  top-level:
 +    - IPython
 +source:
-+  url: https://files.pythonhosted.org/packages/11/3e/956d40991c152010d71b38b1a9763edc8fe5944d360e1c256fae60cb9165/ipython-8.22.1-py3-none-any.whl
-+  sha256: 869335e8cded62ffb6fac8928e5287a05433d6462e3ebaac25f4216474dd6bc4
++  url: https://files.pythonhosted.org/packages/95/2c/9ef08ee0cc836f95bc2750e7c3f18790a90dff596d372cee4bcd2561ae1c/ipython-8.22.1.tar.gz
++  sha256: 39c6f9efc079fb19bfb0f17eee903978fe9a290b1b82d68196c641cecb76ea22
++  patches:
++    - patches/0001-jupyterlite-preload.patch
 +requirements:
 +  run:
 +    - comm
@@ -1527,11 +1527,31 @@ index 00000000..64f0418e
 +    - Pygments
 +    - stack_data
 +    - traitlets
++    - jupyterlite-preload
 +about:
 +  home: "https://ipython.org/"
 +  PyPI: https://pypi.org/project/ipython
 +  summary: "IPython: Productive Interactive Computing"
 +  license: BSD-3-Clause
+diff --git a/packages/ipython/patches/0001-jupyterlite-preload.patch b/packages/ipython/patches/0001-jupyterlite-preload.patch
+new file mode 100644
+index 00000000..84bcb0b0
+--- /dev/null
++++ b/packages/ipython/patches/0001-jupyterlite-preload.patch
+@@ -0,0 +1,13 @@
++diff --git a/IPython/__init__.py b/IPython/__init__.py
++index b7235481f..679ee70d8 100644
++--- a/IPython/__init__.py
+++++ b/IPython/__init__.py
++@@ -19,6 +19,8 @@
++ # Imports
++ #-----------------------------------------------------------------------------
++ 
+++import jupyterlite_preload
+++
++ import sys
++ 
++ #-----------------------------------------------------------------------------
 diff --git a/packages/ipywidgets/meta.yaml b/packages/ipywidgets/meta.yaml
 new file mode 100644
 index 00000000..f4e47d07
@@ -1574,6 +1594,51 @@ index 00000000..f8920c6c
 +  PyPI: https://pypi.org/project/jupyterlab_widgets
 +  summary: Jupyter interactive widgets for JupyterLab
 +  license: BSD-3-Clause
+diff --git a/packages/jupyterlite-preload/jupyterlite-preload/jupyterlite_preload.py b/packages/jupyterlite-preload/jupyterlite-preload/jupyterlite_preload.py
+new file mode 100644
+index 00000000..bb926791
+--- /dev/null
++++ b/packages/jupyterlite-preload/jupyterlite-preload/jupyterlite_preload.py
+@@ -0,0 +1,4 @@
++import ipyloglite
++
++import pyodide_http
++pyodide_http.patch_all()
+diff --git a/packages/jupyterlite-preload/jupyterlite-preload/pyproject.toml b/packages/jupyterlite-preload/jupyterlite-preload/pyproject.toml
+new file mode 100644
+index 00000000..44219eaa
+--- /dev/null
++++ b/packages/jupyterlite-preload/jupyterlite-preload/pyproject.toml
+@@ -0,0 +1,12 @@
++[build-system]
++requires = ["setuptools"]
++build-backend = "setuptools.build_meta"
++
++[project]
++name = "jupyterlite-preload"
++version = "0.0.0"
++
++dependencies = [
++    "ipyloglite == 0.0.0",
++    "pyodide-http == 0.2.1",
++]
+diff --git a/packages/jupyterlite-preload/meta.yaml b/packages/jupyterlite-preload/meta.yaml
+new file mode 100644
+index 00000000..d34d2d36
+--- /dev/null
++++ b/packages/jupyterlite-preload/meta.yaml
+@@ -0,0 +1,11 @@
++package:
++  name: jupyterlite-preload
++  version: 0.0.0
++  top-level:
++    - jupyterlite_preload
++source:
++  path: ./jupyterlite-preload
++requirements:
++  run:
++    - ipyloglite  # 0.0.0
++    - pyodide-http  # 0.2.1
 diff --git a/packages/kiwisolver/meta.yaml b/packages/kiwisolver/meta.yaml
 index 7069d169..f05036af 100644
 --- a/packages/kiwisolver/meta.yaml

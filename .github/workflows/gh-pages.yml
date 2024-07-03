@@ -55,28 +55,22 @@ jobs:
         run: |
             cd pyodide/packages/field-compression-benchmark/field-compression-benchmark
 
-            # Set up a more modern nightly toolchain with support for emscripten and wasi
-            rustup toolchain install ${RUSTUP_TOOLCHAIN}
-            rustup target add wasm32-unknown-emscripten --toolchain ${RUSTUP_TOOLCHAIN}
-            rustup target add wasm32-unknown-unknown --toolchain ${RUSTUP_TOOLCHAIN}
-            rustup component add rust-src --toolchain ${RUSTUP_TOOLCHAIN}
-
             # Build the codecs
             cargo build -p codecs-build -vv
 
-            # Clean up everything after the build
+            # Clean up after the build
             cargo clean
-            rustup toolchain uninstall ${RUSTUP_TOOLCHAIN}
+            grep '^channel\s*=\s*' rust-toolchain \
+              | sed 's/channel.*=.*\"\(.*\)\"/\1/' \
+              | xargs rustup toolchain uninstall
             nix store gc
-        env:
-          RUSTUP_TOOLCHAIN: "nightly-2024-04-28"
       - name: Build Pyodide and all required packages
         run: |
           cd pyodide
           PYODIDE_DOCKER_IMAGE=$(docker build . -q) \
             ./run_docker \
             --non-interactive \
-            PYODIDE_PACKAGES="basemap,fcpy,field-compression-benchmark,ipyfilite,ipyloglite,pyodide-http,ipython,earthkit" \
+            PYODIDE_PACKAGES="basemap,fcpy,field-compression-benchmark,ipyfilite,ipython,earthkit,proplot" \
             make
       - name: Clean up the pyodide build
         run: |
