@@ -1314,6 +1314,71 @@ index 3572b48d..fa6c9b9c 100644
  about:
    home: http://github.com/fsspec/filesystem_spec
    PyPI: https://pypi.org/project/fsspec
+diff --git a/packages/git2/git2/git2/__init__.py b/packages/git2/git2/git2/__init__.py
+new file mode 100644
+index 00000000..4e57d6ad
+--- /dev/null
++++ b/packages/git2/git2/git2/__init__.py
+@@ -0,0 +1,21 @@
++import ctypes as _ctypes
++
++from pathlib import Path as _Path
++
++
++_dll = _ctypes.CDLL(_Path(__file__).parent / "libgit2.so")
++
++
++def git(*args: list[str]):
++    argc = len(args) + 1
++
++    argv = (_ctypes.c_char_p * argc)()
++    argv[0] = "git".encode("utf-8")
++    argv[1:] = [a.encode("utf-8") for a in args]
++
++    status = _dll.git_main(argc, argv)
++
++    if status == 0:
++        return
++
++    raise RuntimeError(status)
+diff --git a/packages/git2/git2/pyproject.toml b/packages/git2/git2/pyproject.toml
+new file mode 100644
+index 00000000..537ce3ca
+--- /dev/null
++++ b/packages/git2/git2/pyproject.toml
+@@ -0,0 +1,12 @@
++[build-system]
++requires = ["setuptools"]
++build-backend = "setuptools.build_meta"
++
++[project]
++name = "git2"
++version = "1.7.1"
++
++dependencies = []
++
++[tool.setuptools.package-data]
++git2 = ["libgit2.so"]
+diff --git a/packages/git2/meta.yaml b/packages/git2/meta.yaml
+new file mode 100644
+index 00000000..98de1e7b
+--- /dev/null
++++ b/packages/git2/meta.yaml
+@@ -0,0 +1,14 @@
++package:
++  name: git2
++  version: 1.7.1
++  top-level:
++    - git2
++source:
++  path: ./git2
++requirements:
++  host:
++    - libgit2
++build:
++  vendor-sharedlib: true
++  script: |
++    cp ${WASM_LIBRARY_DIR}/lib/libgit2.so git2/
 diff --git a/packages/h5netcdf/meta.yaml b/packages/h5netcdf/meta.yaml
 new file mode 100644
 index 00000000..59d3abbf
@@ -2240,6 +2305,3073 @@ index 00000000..982d3065
 + typedef struct { doublereal r, i; } doublecomplex;
 + typedef long int logical;
 + typedef short int shortlogical;
+diff --git a/packages/libgit2/meta.yaml b/packages/libgit2/meta.yaml
+new file mode 100644
+index 00000000..5ca9773e
+--- /dev/null
++++ b/packages/libgit2/meta.yaml
+@@ -0,0 +1,36 @@
++# Based on https://github.com/petersalomonsen/wasm-git
++
++package:
++  name: libgit2
++  version: 1.7.1
++
++source:
++  url: https://github.com/libgit2/libgit2/archive/refs/tags/v1.7.1.tar.gz
++  sha256: 17d2b292f21be3892b704dddff29327b3564f96099a1c53b00edc23160c71327
++  patches:
++    - patches/0001-emscripten-transport-fs.patch
++    - patches/0002-pre-post.patch
++
++build:
++  type: shared_library
++  exports: requested
++  script: |
++    emcmake cmake \
++      -DCMAKE_BUILD_TYPE=Release \
++      -DCMAKE_C_FLAGS="-Oz --pre-js $(pwd)/emscriptenbuild/pre.js --post-js $(pwd)/emscriptenbuild/post.js -lz" \
++      -DREGEX_BACKEND=regcomp \
++      -DSONAME=OFF \
++      -DUSE_HTTPS=OFF \
++      -DBUILD_SHARED_LIBS=OFF \
++      -DTHREADSAFE=OFF \
++      -DUSE_SSH=OFF \
++      -DBUILD_CLAR=OFF \
++      -DBUILD_EXAMPLES=ON \
++      .
++    emmake make lg2 -j ${PYODIDE_JOBS:-3}
++
++    cp -P examples/liblg2.so ${DISTDIR}/libgit2.so
++    cp -P examples/liblg2.so ${WASM_LIBRARY_DIR}/lib/libgit2.so
++requirements:
++  host:
++    - zlib
+diff --git a/packages/libgit2/patches/0001-emscripten-transport-fs.patch b/packages/libgit2/patches/0001-emscripten-transport-fs.patch
+new file mode 100644
+index 00000000..24f0a60c
+--- /dev/null
++++ b/packages/libgit2/patches/0001-emscripten-transport-fs.patch
+@@ -0,0 +1,2584 @@
++diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
++index 8e38c7d4e..ac44f03c1 100644
++--- a/examples/CMakeLists.txt
+++++ b/examples/CMakeLists.txt
++@@ -2,7 +2,7 @@
++ 
++ file(GLOB SRC_EXAMPLES *.c *.h)
++ 
++-add_executable(lg2 ${SRC_EXAMPLES})
+++add_library(lg2 SHARED ${SRC_EXAMPLES})
++ set_target_properties(lg2 PROPERTIES C_STANDARD 90)
++ 
++ # Ensure that we do not use deprecated functions internally
++@@ -16,3 +16,4 @@ if(WIN32 OR ANDROID)
++ else()
++ 	target_link_libraries(lg2 libgit2package pthread)
++ endif()
+++set(CMAKE_C90_STANDARD_COMPILE_OPTION "-std=gnu90")
++diff --git a/examples/add.c b/examples/add.c
++index 1c93b1140..542360ea9 100644
++--- a/examples/add.c
+++++ b/examples/add.c
++@@ -28,7 +28,7 @@
++ 
++ enum index_mode {
++ 	INDEX_NONE,
++-	INDEX_ADD
+++	INDEX_ADD,
++ };
++ 
++ struct index_options {
++@@ -110,7 +110,22 @@ int print_matched_cb(const char *path, const char *matched_pathspec, void *paylo
++ 	return ret;
++ }
++ 
++-static void print_usage(void)
+++void init_array(git_strarray *array, int argc, char **argv)
+++{
+++	unsigned int i;
+++
+++	array->count = argc;
+++	array->strings = calloc(array->count, sizeof(char *));
+++	assert(array->strings != NULL);
+++
+++	for (i = 0; i < array->count; i++) {
+++		array->strings[i] = argv[i];
+++	}
+++
+++	return;
+++}
+++
+++void print_usage(void)
++ {
++ 	fprintf(stderr, "usage: add [options] [--] file-spec [file-spec] [...]\n\n");
++ 	fprintf(stderr, "\t-n, --dry-run    dry run\n");
++diff --git a/examples/checkout.c b/examples/checkout.c
++index ac7b7422d..db4ad1c6a 100644
++--- a/examples/checkout.c
+++++ b/examples/checkout.c
++@@ -14,7 +14,7 @@
++ 
++ #include "common.h"
++ 
++-/* Define the printf format specifier to use for size_t output */
+++/* Define the printf format specifer to use for size_t output */
++ #if defined(_MSC_VER) || defined(__MINGW32__)
++ #	define PRIuZ "Iu"
++ #	define PRIxZ "Ix"
++@@ -29,6 +29,7 @@
++  * The following example demonstrates how to do checkouts with libgit2.
++  *
++  * Recognized options are :
+++ *  -b: create new branch
++  *  --force: force the checkout to happen.
++  *  --[no-]progress: show checkout progress, on by default.
++  *  --perf: show performance data.
++@@ -43,11 +44,12 @@ typedef struct {
++ static void print_usage(void)
++ {
++ 	fprintf(stderr, "usage: checkout [options] <branch>\n"
++-		"Options are :\n"
++-		"  --git-dir: use the following git repository.\n"
++-		"  --force: force the checkout.\n"
++-		"  --[no-]progress: show checkout progress.\n"
++-		"  --perf: show performance data.\n");
+++					"Options are :\n"
+++					"  -b: create new branch"
+++					"  --git-dir: use the following git repository.\n"
+++					"  --force: force the checkout.\n"
+++					"  --[no-]progress: show checkout progress.\n"
+++					"  --perf: show performance data.\n");
++ 	exit(1);
++ }
++ 
++@@ -104,7 +106,7 @@ static void print_perf_data(const git_checkout_perfdata *perfdata, void *payload
++ {
++ 	(void)payload;
++ 	printf("perf: stat: %" PRIuZ " mkdir: %" PRIuZ " chmod: %" PRIuZ "\n",
++-	       perfdata->stat_calls, perfdata->mkdir_calls, perfdata->chmod_calls);
+++		   perfdata->stat_calls, perfdata->mkdir_calls, perfdata->chmod_calls);
++ }
++ 
++ /**
++@@ -223,7 +225,7 @@ static int guess_refish(git_annotated_commit **out, git_repository *repo, const
++ 			goto next;
++ 
++ 		break;
++-next:
+++	next:
++ 		free(refname);
++ 		if (error < 0 && error != GIT_ENOTFOUND)
++ 			break;
++@@ -250,6 +252,14 @@ int lg2_checkout(git_repository *repo, int argc, char **argv)
++ 	checkout_options opts;
++ 	git_repository_state_t state;
++ 	git_annotated_commit *checkout_target = NULL;
+++	git_reference *new_branch_ref = NULL;
+++	git_object *target_obj = NULL;
+++	git_commit *target_commit = NULL;
+++	git_reference *branch_ref = NULL;
+++	git_reference *upstream_ref = NULL;
+++
+++	const char *opt_new_branch;
+++
++ 	int err = 0;
++ 	const char *path = ".";
++ 
++@@ -263,28 +273,93 @@ int lg2_checkout(git_repository *repo, int argc, char **argv)
++ 		goto cleanup;
++ 	}
++ 
+++	if (optional_str_arg(&opt_new_branch, &args, "-b", "")) {
+++		err = git_revparse_single(&target_obj, repo, "HEAD");
+++		if (err != 0) {
+++			fprintf(stderr, "error: %s\n", git_error_last()->message);
+++			goto cleanup;
+++		}
+++		err = git_commit_lookup(&target_commit, repo, git_object_id(target_obj));
+++		if (err != 0) {
+++			fprintf(stderr, "error looking up commit: %s\n", git_error_last()->message);
+++			goto cleanup;
+++		}
+++		err = git_branch_create(&new_branch_ref, repo, opt_new_branch, target_commit, 0);
+++		if (err != 0) {
+++			fprintf(stderr, "error creating branch: %s\n", git_error_last()->message);
+++			goto cleanup;
+++		}
+++	}
+++
++ 	if (match_arg_separator(&args)) {
++ 		/**
++-		 * Try to checkout the given path
+++		 * Try to checkout the given path(s)
++ 		 */
++ 
++-		fprintf(stderr, "unhandled path-based checkout\n");
++-		err = 1;
++-		goto cleanup;
+++		git_checkout_options copts = GIT_CHECKOUT_OPTIONS_INIT;
+++		git_strarray paths;
+++
+++		copts.checkout_strategy = GIT_CHECKOUT_FORCE;
+++
+++		paths.count = args.argc - args.pos;
+++
+++		if (paths.count == 0) {
+++			fprintf(stderr, "error: no paths specified\n");
+++			return GIT_ERROR_INVALID;
+++		}
+++
+++		paths.strings = &args.argv[args.pos];
+++		copts.paths = paths;
+++
+++		err = git_checkout_head(repo, &copts);
+++		if (err != 0) {
+++			fprintf(stderr, "error: %s\n", git_error_last()->message);
+++		}
+++		return err;
++ 	} else {
++ 		/**
++ 		 * Try to resolve a "refish" argument to a target libgit2 can use
++ 		 */
+++
+++		const char *branchname;
+++		char upstreamname[1024] = "origin/";
+++
++ 		if ((err = resolve_refish(&checkout_target, repo, args.argv[args.pos])) < 0 &&
++-		    (err = guess_refish(&checkout_target, repo, args.argv[args.pos])) < 0) {
+++			(err = guess_refish(&checkout_target, repo, args.argv[args.pos])) < 0) {
++ 			fprintf(stderr, "failed to resolve %s: %s\n", args.argv[args.pos], git_error_last()->message);
++ 			goto cleanup;
++ 		}
++ 		err = perform_checkout_ref(repo, checkout_target, args.argv[args.pos], &opts);
+++		if (err != 0) {
+++			fprintf(stderr, "failed to checkout %s: %s\n", args.argv[args.pos], git_error_last()->message);
+++			goto cleanup;
+++		}
+++	    err = git_repository_head(&branch_ref, repo);
+++		if (!err && git_branch_upstream(&upstream_ref, branch_ref) == GIT_ENOTFOUND) {
+++			branchname = git_reference_shorthand(branch_ref);
+++			strcat(upstreamname, branchname);
+++
+++			err = git_branch_set_upstream(branch_ref,upstreamname);
+++			if (err == GIT_ENOTFOUND) {
+++				// no upstream exists
+++				git_error_clear();
+++				err = 0;
+++			}
+++			if (err != 0) {
+++				fprintf(stderr, "error: %s\n", git_error_last()->message);
+++				goto cleanup;
+++			}
+++			printf("Branch '%s' set up to track remote branch '%s'\n", branchname, upstreamname);
+++		}
++ 	}
++ 
++ cleanup:
++-	git_annotated_commit_free(checkout_target);
+++	git_commit_free(target_commit);
+++	git_object_free(target_obj);
++ 
+++	git_annotated_commit_free(checkout_target);
+++	git_reference_free(new_branch_ref);
+++	git_reference_free(branch_ref);
+++	git_reference_free(upstream_ref);	
++ 	return err;
++ }
++diff --git a/examples/commit.c b/examples/commit.c
++index aedc1af7e..b477e7568 100644
++--- a/examples/commit.c
+++++ b/examples/commit.c
++@@ -26,7 +26,7 @@
++  * This does have:
++  *
++  * - Example of performing a git commit with a comment
++- *
+++ * 
++  */
++ int lg2_commit(git_repository *repo, int argc, char **argv)
++ {
++@@ -36,10 +36,10 @@ int lg2_commit(git_repository *repo, int argc, char **argv)
++ 
++ 	git_oid commit_oid,tree_oid;
++ 	git_tree *tree;
++-	git_index *index;
+++	git_index *index;	
++ 	git_object *parent = NULL;
++ 	git_reference *ref = NULL;
++-	git_signature *signature;
+++	git_signature *signature;	
++ 
++ 	/* Validate args */
++ 	if (argc < 3 || strcmp(opt, "-m") != 0) {
++@@ -62,25 +62,40 @@ int lg2_commit(git_repository *repo, int argc, char **argv)
++ 	check_lg2(git_index_write(index), "Could not write index", NULL);;
++ 
++ 	check_lg2(git_tree_lookup(&tree, repo, &tree_oid), "Error looking up tree", NULL);
++-
+++	
++ 	check_lg2(git_signature_default(&signature, repo), "Error creating signature", NULL);
++-
++-	check_lg2(git_commit_create_v(
++-		&commit_oid,
++-		repo,
++-		"HEAD",
++-		signature,
++-		signature,
++-		NULL,
++-		comment,
++-		tree,
++-		parent ? 1 : 0, parent), "Error creating commit", NULL);
++-
+++	
+++	if (git_repository_state(repo) == GIT_REPOSITORY_STATE_MERGE) {
+++		git_object * mergehead = NULL;
+++		git_reference * mergeheadref = NULL;
+++	
+++		check_lg2(git_revparse_ext(&mergehead, &mergeheadref, repo, "MERGE_HEAD"), "Error looking up MERGE_HEAD", NULL);
+++		check_lg2(git_commit_create_v(
+++					&commit_oid,
+++					repo,
+++					"HEAD",
+++					signature,
+++					signature,
+++					NULL,
+++					comment,
+++					tree,
+++					2, parent, mergehead), "Error creating commit", NULL);
+++		git_repository_state_cleanup(repo);
+++	} else {
+++		check_lg2(git_commit_create_v(
+++			&commit_oid,
+++			repo,
+++			"HEAD",
+++			signature,
+++			signature,
+++			NULL,
+++			comment,
+++			tree,
+++			parent ? 1 : 0, parent), "Error creating commit", NULL);
+++	}
++ 	git_index_free(index);
++ 	git_signature_free(signature);
++-	git_tree_free(tree);
++-	git_object_free(parent);
++-	git_reference_free(ref);
+++	git_tree_free(tree);	
++ 
++ 	return error;
++ }
++diff --git a/examples/common.h b/examples/common.h
++index 901c04146..3fccf5b9c 100644
++--- a/examples/common.h
+++++ b/examples/common.h
++@@ -36,7 +36,7 @@
++ #endif
++ 
++ #ifndef PRIuZ
++-/* Define the printf format specifier to use for size_t output */
+++/* Define the printf format specifer to use for size_t output */
++ #if defined(_MSC_VER) || defined(__MINGW32__)
++ #	define PRIuZ "Iu"
++ #else
++@@ -45,7 +45,7 @@
++ #endif
++ 
++ #ifdef _MSC_VER
++-#define snprintf _snprintf
+++#define snprintf sprintf_s
++ #define strcasecmp strcmpi
++ #endif
++ 
++@@ -74,6 +74,8 @@ extern int lg2_ls_remote(git_repository *repo, int argc, char **argv);
++ extern int lg2_merge(git_repository *repo, int argc, char **argv);
++ extern int lg2_push(git_repository *repo, int argc, char **argv);
++ extern int lg2_remote(git_repository *repo, int argc, char **argv);
+++extern int lg2_reset(git_repository *repo, int argc, char **argv);
+++extern int lg2_revert(git_repository *repo, int argc, char **argv);
++ extern int lg2_rev_list(git_repository *repo, int argc, char **argv);
++ extern int lg2_rev_parse(git_repository *repo, int argc, char **argv);
++ extern int lg2_show_index(git_repository *repo, int argc, char **argv);
++diff --git a/examples/lg2.c b/examples/lg2.c
++index 7946bc215..e729355f3 100644
++--- a/examples/lg2.c
+++++ b/examples/lg2.c
++@@ -1,5 +1,13 @@
++ #include "common.h"
++ 
+++#include <setjmp.h>
+++
+++jmp_buf git_exit__jmp_buffer;
+++
+++void exit(int status) {
+++    longjmp(git_exit__jmp_buffer, status);
+++}
+++
++ /* This part is not strictly libgit2-dependent, but you can use this
++  * as a starting point for a git-like tool */
++ 
++@@ -30,6 +38,8 @@ struct {
++ 	{ "merge",        lg2_merge,        1 },
++ 	{ "push",         lg2_push,        1  },
++ 	{ "remote",       lg2_remote,       1 },
+++	{ "reset",        lg2_reset,       1 },
+++	{ "revert",        lg2_revert,       1 },
++ 	{ "rev-list",     lg2_rev_list,     1 },
++ 	{ "rev-parse",    lg2_rev_parse,    1 },
++ 	{ "show-index",   lg2_show_index,   0 },
++@@ -62,10 +72,11 @@ static int usage(const char *prog)
++ 	for (i = 0; i < ARRAY_SIZE(commands); i++)
++ 		fprintf(stderr, "\t%s\n", commands[i].name);
++ 
++-	exit(EXIT_FAILURE);
+++	longjmp(git_exit__jmp_buffer, EXIT_FAILURE);
+++	// exit(EXIT_FAILURE);
++ }
++ 
++-int main(int argc, char **argv)
+++__attribute__((visibility("default"))) int git_main(int argc, char **argv)
++ {
++ 	struct args_info args = ARGS_INFO_INIT;
++ 	git_repository *repo = NULL;
++@@ -73,6 +84,13 @@ int main(int argc, char **argv)
++ 	int return_code = 1;
++ 	size_t i;
++ 
+++	int exit_code;
+++	exit_code = setjmp(git_exit__jmp_buffer);
+++
+++	if (exit_code != 0) {
+++		return exit_code;
+++	}
+++
++ 	if (argc < 2)
++ 		usage(argv[0]);
++ 
++diff --git a/examples/push.c b/examples/push.c
++index bcf307607..3072eb0c2 100644
++--- a/examples/push.c
+++++ b/examples/push.c
++@@ -33,7 +33,12 @@
++ int lg2_push(git_repository *repo, int argc, char **argv) {
++ 	git_push_options options;
++ 	git_remote* remote = NULL;
++-	char *refspec = "refs/heads/master";
+++	char *refspec = NULL;
+++	git_reference* head_ref;
+++	
+++	git_reference_lookup(&head_ref, repo, "HEAD");
+++	refspec = git_reference_symbolic_target(head_ref);
+++
++ 	const git_strarray refspecs = {
++ 		&refspec,
++ 		1
++@@ -52,5 +57,6 @@ int lg2_push(git_repository *repo, int argc, char **argv) {
++ 	check_lg2(git_remote_push(remote, &refspecs, &options), "Error pushing", NULL);
++ 
++ 	printf("pushed\n");
+++	git_reference_free(head_ref);
++ 	return 0;
++ }
++diff --git a/examples/reset.c b/examples/reset.c
++new file mode 100644
++index 000000000..7021e137d
++--- /dev/null
+++++ b/examples/reset.c
++@@ -0,0 +1,69 @@
+++/*
+++ * libgit2 "reset" example - Reset current HEAD to the specified state
+++ *
+++ * Written by the libgit2 contributors
+++ *
+++ * To the extent possible under law, the author(s) have dedicated all copyright
+++ * and related and neighboring rights to this software to the public domain
+++ * worldwide. This software is distributed without any warranty.
+++ *
+++ * You should have received a copy of the CC0 Public Domain Dedication along
+++ * with this software. If not, see
+++ * <http://creativecommons.org/publicdomain/zero/1.0/>.
+++ */
+++
+++#include "common.h"
+++
+++/**
+++ * The following example demonstrates how to reset libgit2.
+++ *
+++ * It will use the repository in the current working directory, and reset to the specified revspec
+++ *
+++ * Recognized options are:
+++ *   --hard: reset hard
+++ * 	 --soft: reset soft
+++ */
+++
+++int lg2_reset(git_repository *repo, int argc, char **argv)
+++{
+++	git_checkout_options checkout_opts = GIT_CHECKOUT_OPTIONS_INIT;
+++	git_commit *target_commit = NULL;
+++	git_revspec revspec;
+++	git_reset_t reset_type = GIT_RESET_MIXED;
+++	int err;
+++
+++	err = git_revparse(&revspec, repo, argv[argc - 1]);
+++	if (err != 0)
+++	{
+++		fprintf(stderr, "failed to lookup rev: %s\n", git_error_last()->message);
+++		goto cleanup;
+++	}
+++	err = git_commit_lookup(&target_commit, repo, revspec.from);
+++	if (err != 0)
+++	{
+++		fprintf(stderr, "failed to lookup commit: %s\n", git_error_last()->message);
+++		goto cleanup;
+++	}
+++
+++	if (argc > 1)
+++	{
+++		if (!strcmp(argv[argc - 2], "--hard"))
+++		{
+++			reset_type = GIT_RESET_HARD;
+++		}
+++		else if (!strcmp(argv[argc - 2], "--soft"))
+++		{
+++			reset_type = GIT_RESET_SOFT;
+++		}
+++	}
+++	err = git_reset(repo, target_commit, reset_type, &checkout_opts);
+++	if (err != 0)
+++	{
+++		fprintf(stderr, "reset error: %s\n", git_error_last()->message);
+++		goto cleanup;
+++	}
+++cleanup:
+++	git_commit_free(target_commit);
+++
+++	return 0;
+++}
++diff --git a/examples/revert.c b/examples/revert.c
++new file mode 100644
++index 000000000..4c488f6b4
++--- /dev/null
+++++ b/examples/revert.c
++@@ -0,0 +1,53 @@
+++/*
+++ * libgit2 "revert" example - shows how to git revert
+++ *
+++ * Written by the libgit2 contributors
+++ *
+++ * To the extent possible under law, the author(s) have dedicated all copyright
+++ * and related and neighboring rights to this software to the public domain
+++ * worldwide. This software is distributed without any warranty.
+++ *
+++ * You should have received a copy of the CC0 Public Domain Dedication along
+++ * with this software. If not, see
+++ * <http://creativecommons.org/publicdomain/zero/1.0/>.
+++ */
+++
+++#include "common.h"
+++
+++/**
+++ * This example demonstrates the libgit2 revert APIs to roughly
+++ * simulate `git revert`.
+++ *
+++ * This does not have:
+++ *
+++ * - Robust error handling
+++ * - Most of the `git revert` options
+++ * 
+++ */
+++int lg2_revert(git_repository *repo, int argc, char **argv)
+++{
+++    git_revert_options revert_options;
+++    git_commit *target_commit = NULL;
+++	git_revspec revspec;
+++	int err = 0;
+++
+++    check_lg2(git_revert_options_init(&revert_options, GIT_REVERT_OPTIONS_VERSION), git_error_last()->message, NULL);
+++
+++    err = git_revparse(&revspec, repo, argv[argc - 1]);
+++	if (err != 0)
+++	{
+++		fprintf(stderr, "failed to lookup rev: %s\n", git_error_last()->message);
+++		goto cleanup;
+++	}
+++	err = git_commit_lookup(&target_commit, repo, revspec.from);
+++	if (err != 0)
+++	{
+++		fprintf(stderr, "failed to lookup commit: %s\n", git_error_last()->message);
+++		goto cleanup;
+++	}
+++    err = git_revert(repo, target_commit, &revert_options);
+++cleanup:
+++	git_commit_free(target_commit);
+++
+++	return err;
+++}
++diff --git a/examples/stash.c b/examples/stash.c
++index 8142439c7..71177ce63 100644
++--- a/examples/stash.c
+++++ b/examples/stash.c
++@@ -20,7 +20,8 @@ enum subcmd {
++ 	SUBCMD_APPLY,
++ 	SUBCMD_LIST,
++ 	SUBCMD_POP,
++-	SUBCMD_PUSH
+++	SUBCMD_PUSH,
+++	SUBCMD_DROP,
++ };
++ 
++ struct opts {
++@@ -34,7 +35,7 @@ static void usage(const char *fmt, ...)
++ 	va_list ap;
++ 
++ 	fputs("usage: git stash list\n", stderr);
++-	fputs("   or: git stash ( pop | apply )\n", stderr);
+++	fputs("   or: git stash ( pop | apply | drop )\n", stderr);
++ 	fputs("   or: git stash [push]\n", stderr);
++ 	fputs("\n", stderr);
++ 
++@@ -58,6 +59,8 @@ static void parse_subcommand(struct opts *opts, int argc, char *argv[])
++ 		cmd = SUBCMD_POP;
++ 	} else if (!strcmp(arg, "push")) {
++ 		cmd = SUBCMD_PUSH;
+++	} else if (!strcmp(arg, "drop")) {
+++		cmd = SUBCMD_DROP;
++ 	} else {
++ 		usage("invalid command %s", arg);
++ 		return;
++@@ -70,10 +73,9 @@ static void parse_subcommand(struct opts *opts, int argc, char *argv[])
++ 
++ static int cmd_apply(git_repository *repo, struct opts *opts)
++ {
++-	if (opts->argc)
++-		usage("apply does not accept any parameters");
++-
++-	check_lg2(git_stash_apply(repo, 0, NULL),
+++	unsigned long index = strtoul(opts->argc ? opts->argv[2] : "0", NULL, 10);
+++	printf("Applying index: %lu\n", index);
+++	check_lg2(git_stash_apply(repo, index, NULL),
++ 		  "Unable to apply stash", NULL);
++ 
++ 	return 0;
++@@ -123,6 +125,18 @@ static int cmd_push(git_repository *repo, struct opts *opts)
++ 	return 0;
++ }
++ 
+++static int cmd_drop(git_repository* repo, struct opts* opts)
+++{
+++	unsigned long index = strtoul(opts->argc ? opts->argv[2] : "0", NULL, 10);
+++	printf("Dropping index: %lu\n", index);
+++	check_lg2(git_stash_drop(repo, index),
+++		"Unable to drop stash", NULL);
+++
+++	printf("Dropped refs/stash@{%lu}\n", index);
+++
+++	return 0;
+++}
+++
++ static int cmd_pop(git_repository *repo, struct opts *opts)
++ {
++ 	if (opts->argc)
++@@ -151,6 +165,8 @@ int lg2_stash(git_repository *repo, int argc, char *argv[])
++ 			return cmd_push(repo, &opts);
++ 		case SUBCMD_POP:
++ 			return cmd_pop(repo, &opts);
+++		case SUBCMD_DROP:
+++			return cmd_drop(repo, &opts);
++ 	}
++ 
++ 	return -1;
++diff --git a/examples/status.c b/examples/status.c
++index e659efb05..4b117b235 100644
++--- a/examples/status.c
+++++ b/examples/status.c
++@@ -32,56 +32,61 @@
++  * - A sample status formatter that matches the default "long" format
++  *   from `git status`
++  * - A sample status formatter that matches the "short" format
+++ * - Count of commits ahead/behind the remote upstream
++  */
++ 
++-enum {
++-	FORMAT_DEFAULT   = 0,
++-	FORMAT_LONG      = 1,
++-	FORMAT_SHORT     = 2,
++-	FORMAT_PORCELAIN = 3
+++enum
+++{
+++    FORMAT_DEFAULT = 0,
+++    FORMAT_LONG = 1,
+++    FORMAT_SHORT = 2,
+++    FORMAT_PORCELAIN = 3,
++ };
++ 
++ #define MAX_PATHSPEC 8
++ 
++-struct status_opts {
++-	git_status_options statusopt;
++-	char *repodir;
++-	char *pathspec[MAX_PATHSPEC];
++-	int npaths;
++-	int format;
++-	int zterm;
++-	int showbranch;
++-	int showsubmod;
++-	int repeat;
+++struct status_opts
+++{
+++    git_status_options statusopt;
+++    char *repodir;
+++    char *pathspec[MAX_PATHSPEC];
+++    int npaths;
+++    int format;
+++    int zterm;
+++    int showbranch;
+++    int showsubmod;
+++    int repeat;
++ };
++ 
++ static void parse_opts(struct status_opts *o, int argc, char *argv[]);
++ static void show_branch(git_repository *repo, int format);
+++static void show_ahead_behind(git_repository *repo);
+++static void print_conflicts(git_repository *repo);
++ static void print_long(git_status_list *status);
++ static void print_short(git_repository *repo, git_status_list *status);
++ static int print_submod(git_submodule *sm, const char *name, void *payload);
++ 
++ int lg2_status(git_repository *repo, int argc, char *argv[])
++ {
++-	git_status_list *status;
++-	struct status_opts o = { GIT_STATUS_OPTIONS_INIT, "." };
+++    git_status_list *status;
+++    struct status_opts o = {GIT_STATUS_OPTIONS_INIT, "."};
++ 
++-	o.statusopt.show  = GIT_STATUS_SHOW_INDEX_AND_WORKDIR;
++-	o.statusopt.flags = GIT_STATUS_OPT_INCLUDE_UNTRACKED |
++-		GIT_STATUS_OPT_RENAMES_HEAD_TO_INDEX |
++-		GIT_STATUS_OPT_SORT_CASE_SENSITIVELY;
+++    o.statusopt.show = GIT_STATUS_SHOW_INDEX_AND_WORKDIR;
+++    o.statusopt.flags = GIT_STATUS_OPT_INCLUDE_UNTRACKED |
+++                        GIT_STATUS_OPT_RENAMES_HEAD_TO_INDEX |
+++                        GIT_STATUS_OPT_SORT_CASE_SENSITIVELY;
++ 
++-	parse_opts(&o, argc, argv);
+++    parse_opts(&o, argc, argv);
++ 
++-	if (git_repository_is_bare(repo))
++-		fatal("Cannot report status on bare repository",
++-			git_repository_path(repo));
+++    if (git_repository_is_bare(repo))
+++        fatal("Cannot report status on bare repository",
+++              git_repository_path(repo));
++ 
++ show_status:
++-	if (o.repeat)
++-		printf("\033[H\033[2J");
+++    if (o.repeat)
+++        printf("\033[H\033[2J");
++ 
++-	/**
+++    /**
++ 	 * Run status on the repository
++ 	 *
++ 	 * We use `git_status_list_new()` to generate a list of status
++@@ -94,31 +99,37 @@ show_status:
++ 	 * callback for each entry. The latter gives you more control
++ 	 * about what results are presented.
++ 	 */
++-	check_lg2(git_status_list_new(&status, repo, &o.statusopt),
++-		"Could not get status", NULL);
+++    check_lg2(git_status_list_new(&status, repo, &o.statusopt),
+++              "Could not get status", NULL);
++ 
++-	if (o.showbranch)
++-		show_branch(repo, o.format);
+++    if (o.showbranch)
+++        show_branch(repo, o.format);
++ 
++-	if (o.showsubmod) {
++-		int submod_count = 0;
++-		check_lg2(git_submodule_foreach(repo, print_submod, &submod_count),
++-			"Cannot iterate submodules", o.repodir);
++-	}
+++    show_ahead_behind(repo);
++ 
++-	if (o.format == FORMAT_LONG)
++-		print_long(status);
++-	else
++-		print_short(repo, status);
+++    if (o.showsubmod)
+++    {
+++        int submod_count = 0;
+++        check_lg2(git_submodule_foreach(repo, print_submod, &submod_count),
+++                  "Cannot iterate submodules", o.repodir);
+++    }
++ 
++-	git_status_list_free(status);
+++    if (o.format == FORMAT_LONG)
+++        print_long(status);
+++    else
+++        print_short(repo, status);
++ 
++-	if (o.repeat) {
++-		sleep(o.repeat);
++-		goto show_status;
++-	}
+++	print_conflicts(repo);
+++
+++    git_status_list_free(status);
++ 
++-	return 0;
+++    if (o.repeat)
+++    {
+++        sleep(o.repeat);
+++        goto show_status;
+++    }
+++
+++    return 0;
++ }
++ 
++ /**
++@@ -127,181 +138,261 @@ show_status:
++  */
++ static void show_branch(git_repository *repo, int format)
++ {
++-	int error = 0;
++-	const char *branch = NULL;
++-	git_reference *head = NULL;
++-
++-	error = git_repository_head(&head, repo);
++-
++-	if (error == GIT_EUNBORNBRANCH || error == GIT_ENOTFOUND)
++-		branch = NULL;
++-	else if (!error) {
++-		branch = git_reference_shorthand(head);
++-	} else
++-		check_lg2(error, "failed to get current branch", NULL);
++-
++-	if (format == FORMAT_LONG)
++-		printf("# On branch %s\n",
++-			branch ? branch : "Not currently on any branch.");
++-	else
++-		printf("## %s\n", branch ? branch : "HEAD (no branch)");
++-
++-	git_reference_free(head);
+++    int error = 0;
+++    const char *branch = NULL;
+++    git_reference *head = NULL;
+++
+++    error = git_repository_head(&head, repo);
+++
+++    if (error == GIT_EUNBORNBRANCH || error == GIT_ENOTFOUND)
+++        branch = NULL;
+++    else if (!error)
+++    {
+++        branch = git_reference_shorthand(head);
+++    }
+++    else
+++        check_lg2(error, "failed to get current branch", NULL);
+++
+++    if (format == FORMAT_LONG)
+++        printf("# On branch %s\n",
+++               branch ? branch : "Not currently on any branch.");
+++    else
+++        printf("## %s\n", branch ? branch : "HEAD (no branch)");
+++
+++    git_reference_free(head);
+++}
+++
+++static void show_ahead_behind(git_repository *repo)
+++{
+++    git_reference *upstream = NULL;
+++    git_reference *head_ref = NULL;
+++    size_t ahead;
+++    size_t behind;    
+++    int err;
+++
+++    err = git_repository_head(&head_ref, repo);
+++    if (err != 0)
+++    {
+++        fprintf(stderr, "error: %s\n", git_error_last()->message);
+++        goto cleanup;
+++    }
+++
+++    err = git_branch_upstream(&upstream, head_ref);
+++    if (err != 0)
+++    {
+++        goto cleanup;
+++    }
+++    err = git_graph_ahead_behind(&ahead, &behind, repo, git_reference_target(head_ref), git_reference_target(upstream));
+++    if (err != 0)
+++    {
+++        fprintf(stderr, "error: %s\n", git_error_last()->message);
+++        goto cleanup;
+++    }
+++    if (ahead > 0 || behind > 0) {
+++        printf("# Your branch is ahead by %d, behind by %d commits.\n", ahead, behind);
+++    }
+++cleanup:
+++    git_reference_free(head_ref);
+++    git_reference_free(upstream);
++ }
++ 
++ /**
++- * This function print out an output similar to git's status command
++- * in long form, including the command-line hints.
+++ * Simple printing of conflicts
++  */
++-static void print_long(git_status_list *status)
++-{
++-	size_t i, maxi = git_status_list_entrycount(status);
++-	const git_status_entry *s;
++-	int header = 0, changes_in_index = 0;
++-	int changed_in_workdir = 0, rm_in_workdir = 0;
++-	const char *old_path, *new_path;
++-
++-	/** Print index changes. */
++-
++-	for (i = 0; i < maxi; ++i) {
++-		char *istatus = NULL;
++-
++-		s = git_status_byindex(status, i);
++-
++-		if (s->status == GIT_STATUS_CURRENT)
++-			continue;
++-
++-		if (s->status & GIT_STATUS_WT_DELETED)
++-			rm_in_workdir = 1;
++-
++-		if (s->status & GIT_STATUS_INDEX_NEW)
++-			istatus = "new file: ";
++-		if (s->status & GIT_STATUS_INDEX_MODIFIED)
++-			istatus = "modified: ";
++-		if (s->status & GIT_STATUS_INDEX_DELETED)
++-			istatus = "deleted:  ";
++-		if (s->status & GIT_STATUS_INDEX_RENAMED)
++-			istatus = "renamed:  ";
++-		if (s->status & GIT_STATUS_INDEX_TYPECHANGE)
++-			istatus = "typechange:";
++-
++-		if (istatus == NULL)
++-			continue;
++-
++-		if (!header) {
++-			printf("# Changes to be committed:\n");
++-			printf("#   (use \"git reset HEAD <file>...\" to unstage)\n");
++-			printf("#\n");
++-			header = 1;
+++static void print_conflicts(git_repository *repo) {
+++	git_index *index = NULL;
+++	git_repository_index(&index, repo);
+++
+++	if(git_index_has_conflicts(index)) {
+++		git_index_conflict_iterator *conflicts;
+++		const git_index_entry *ancestor = NULL;
+++		const git_index_entry *our = NULL;
+++		const git_index_entry *their = NULL;
+++		int err = 0;
+++
+++		git_index_conflict_iterator_new(&conflicts, index);
+++
+++		while ((err = git_index_conflict_next(&ancestor, &our, &their, conflicts)) == 0) {
+++			printf("conflict: a:%s o:%s t:%s\n",
+++					ancestor!=NULL ? ancestor->path : "NULL",
+++					our!=NULL ? our->path : "NULL",
+++					their!=NULL ? their->path : "NULL");
++ 		}
++ 
++-		old_path = s->head_to_index->old_file.path;
++-		new_path = s->head_to_index->new_file.path;
++-
++-		if (old_path && new_path && strcmp(old_path, new_path))
++-			printf("#\t%s  %s -> %s\n", istatus, old_path, new_path);
++-		else
++-			printf("#\t%s  %s\n", istatus, old_path ? old_path : new_path);
++-	}
+++		if (err != GIT_ITEROVER) {
+++			fprintf(stderr, "error iterating conflicts\n");
+++		}
++ 
++-	if (header) {
++-		changes_in_index = 1;
++-		printf("#\n");
+++		git_index_conflict_iterator_free(conflicts);
++ 	}
++-	header = 0;
++-
++-	/** Print workdir changes to tracked files. */
++-
++-	for (i = 0; i < maxi; ++i) {
++-		char *wstatus = NULL;
++-
++-		s = git_status_byindex(status, i);
+++	git_index_free(index);
+++}
++ 
++-		/**
+++/**
+++ * This function print out an output similar to git's status command
+++ * in long form, including the command-line hints.
+++ */
+++static void print_long(git_status_list *status)
+++{
+++    size_t i, maxi = git_status_list_entrycount(status);
+++    const git_status_entry *s;
+++    int header = 0, changes_in_index = 0;
+++    int changed_in_workdir = 0, rm_in_workdir = 0;
+++    const char *old_path, *new_path;
+++
+++    /** Print index changes. */
+++
+++    for (i = 0; i < maxi; ++i)
+++    {
+++        char *istatus = NULL;
+++
+++        s = git_status_byindex(status, i);
+++
+++        if (s->status == GIT_STATUS_CURRENT)
+++            continue;
+++
+++        if (s->status & GIT_STATUS_WT_DELETED)
+++            rm_in_workdir = 1;
+++
+++        if (s->status & GIT_STATUS_INDEX_NEW)
+++            istatus = "new file: ";
+++        if (s->status & GIT_STATUS_INDEX_MODIFIED)
+++            istatus = "modified: ";
+++        if (s->status & GIT_STATUS_INDEX_DELETED)
+++            istatus = "deleted:  ";
+++        if (s->status & GIT_STATUS_INDEX_RENAMED)
+++            istatus = "renamed:  ";
+++        if (s->status & GIT_STATUS_INDEX_TYPECHANGE)
+++            istatus = "typechange:";
+++
+++        if (istatus == NULL)
+++            continue;
+++
+++        if (!header)
+++        {
+++            printf("# Changes to be committed:\n");
+++            printf("#   (use \"git reset HEAD <file>...\" to unstage)\n");
+++            printf("#\n");
+++            header = 1;
+++        }
+++
+++        old_path = s->head_to_index->old_file.path;
+++        new_path = s->head_to_index->new_file.path;
+++
+++        if (old_path && new_path && strcmp(old_path, new_path))
+++            printf("#\t%s  %s -> %s\n", istatus, old_path, new_path);
+++        else
+++            printf("#\t%s  %s\n", istatus, old_path ? old_path : new_path);
+++    }
+++
+++    if (header)
+++    {
+++        changes_in_index = 1;
+++        printf("#\n");
+++    }
+++    header = 0;
+++
+++    /** Print workdir changes to tracked files. */
+++
+++    for (i = 0; i < maxi; ++i)
+++    {
+++        char *wstatus = NULL;
+++
+++        s = git_status_byindex(status, i);
+++
+++        /**
++ 		 * With `GIT_STATUS_OPT_INCLUDE_UNMODIFIED` (not used in this example)
++ 		 * `index_to_workdir` may not be `NULL` even if there are
++ 		 * no differences, in which case it will be a `GIT_DELTA_UNMODIFIED`.
++ 		 */
++-		if (s->status == GIT_STATUS_CURRENT || s->index_to_workdir == NULL)
++-			continue;
++-
++-		/** Print out the output since we know the file has some changes */
++-		if (s->status & GIT_STATUS_WT_MODIFIED)
++-			wstatus = "modified: ";
++-		if (s->status & GIT_STATUS_WT_DELETED)
++-			wstatus = "deleted:  ";
++-		if (s->status & GIT_STATUS_WT_RENAMED)
++-			wstatus = "renamed:  ";
++-		if (s->status & GIT_STATUS_WT_TYPECHANGE)
++-			wstatus = "typechange:";
++-
++-		if (wstatus == NULL)
++-			continue;
++-
++-		if (!header) {
++-			printf("# Changes not staged for commit:\n");
++-			printf("#   (use \"git add%s <file>...\" to update what will be committed)\n", rm_in_workdir ? "/rm" : "");
++-			printf("#   (use \"git checkout -- <file>...\" to discard changes in working directory)\n");
++-			printf("#\n");
++-			header = 1;
++-		}
++-
++-		old_path = s->index_to_workdir->old_file.path;
++-		new_path = s->index_to_workdir->new_file.path;
++-
++-		if (old_path && new_path && strcmp(old_path, new_path))
++-			printf("#\t%s  %s -> %s\n", wstatus, old_path, new_path);
++-		else
++-			printf("#\t%s  %s\n", wstatus, old_path ? old_path : new_path);
++-	}
++-
++-	if (header) {
++-		changed_in_workdir = 1;
++-		printf("#\n");
++-	}
++-
++-	/** Print untracked files. */
++-
++-	header = 0;
++-
++-	for (i = 0; i < maxi; ++i) {
++-		s = git_status_byindex(status, i);
++-
++-		if (s->status == GIT_STATUS_WT_NEW) {
++-
++-			if (!header) {
++-				printf("# Untracked files:\n");
++-				printf("#   (use \"git add <file>...\" to include in what will be committed)\n");
++-				printf("#\n");
++-				header = 1;
++-			}
++-
++-			printf("#\t%s\n", s->index_to_workdir->old_file.path);
++-		}
++-	}
++-
++-	header = 0;
++-
++-	/** Print ignored files. */
++-
++-	for (i = 0; i < maxi; ++i) {
++-		s = git_status_byindex(status, i);
++-
++-		if (s->status == GIT_STATUS_IGNORED) {
++-
++-			if (!header) {
++-				printf("# Ignored files:\n");
++-				printf("#   (use \"git add -f <file>...\" to include in what will be committed)\n");
++-				printf("#\n");
++-				header = 1;
++-			}
++-
++-			printf("#\t%s\n", s->index_to_workdir->old_file.path);
++-		}
++-	}
++-
++-	if (!changes_in_index && changed_in_workdir)
++-		printf("no changes added to commit (use \"git add\" and/or \"git commit -a\")\n");
+++        if (s->status == GIT_STATUS_CURRENT || s->index_to_workdir == NULL)
+++            continue;
+++
+++        /** Print out the output since we know the file has some changes */
+++        if (s->status & GIT_STATUS_WT_MODIFIED)
+++            wstatus = "modified: ";
+++        if (s->status & GIT_STATUS_WT_DELETED)
+++            wstatus = "deleted:  ";
+++        if (s->status & GIT_STATUS_WT_RENAMED)
+++            wstatus = "renamed:  ";
+++        if (s->status & GIT_STATUS_WT_TYPECHANGE)
+++            wstatus = "typechange:";
+++
+++        if (wstatus == NULL)
+++            continue;
+++
+++        if (!header)
+++        {
+++            printf("# Changes not staged for commit:\n");
+++            printf("#   (use \"git add%s <file>...\" to update what will be committed)\n", rm_in_workdir ? "/rm" : "");
+++            printf("#   (use \"git checkout -- <file>...\" to discard changes in working directory)\n");
+++            printf("#\n");
+++            header = 1;
+++        }
+++
+++        old_path = s->index_to_workdir->old_file.path;
+++        new_path = s->index_to_workdir->new_file.path;
+++
+++        if (old_path && new_path && strcmp(old_path, new_path))
+++            printf("#\t%s  %s -> %s\n", wstatus, old_path, new_path);
+++        else
+++            printf("#\t%s  %s\n", wstatus, old_path ? old_path : new_path);
+++    }
+++
+++    if (header)
+++    {
+++        changed_in_workdir = 1;
+++        printf("#\n");
+++    }
+++
+++    /** Print untracked files. */
+++
+++    header = 0;
+++
+++    for (i = 0; i < maxi; ++i)
+++    {
+++        s = git_status_byindex(status, i);
+++
+++        if (s->status == GIT_STATUS_WT_NEW)
+++        {
+++
+++            if (!header)
+++            {
+++                printf("# Untracked files:\n");
+++                printf("#   (use \"git add <file>...\" to include in what will be committed)\n");
+++                printf("#\n");
+++                header = 1;
+++            }
+++
+++            printf("#\t%s\n", s->index_to_workdir->old_file.path);
+++        }
+++    }
+++
+++    header = 0;
+++
+++    /** Print ignored files. */
+++
+++    for (i = 0; i < maxi; ++i)
+++    {
+++        s = git_status_byindex(status, i);
+++
+++        if (s->status == GIT_STATUS_IGNORED)
+++        {
+++
+++            if (!header)
+++            {
+++                printf("# Ignored files:\n");
+++                printf("#   (use \"git add -f <file>...\" to include in what will be committed)\n");
+++                printf("#\n");
+++                header = 1;
+++            }
+++
+++            printf("#\t%s\n", s->index_to_workdir->old_file.path);
+++        }
+++    }
+++
+++    if (!changes_in_index && changed_in_workdir)
+++        printf("no changes added to commit (use \"git add\" and/or \"git commit -a\")\n");
++ }
++ 
++ /**
++@@ -310,126 +401,136 @@ static void print_long(git_status_list *status)
++  */
++ static void print_short(git_repository *repo, git_status_list *status)
++ {
++-	size_t i, maxi = git_status_list_entrycount(status);
++-	const git_status_entry *s;
++-	char istatus, wstatus;
++-	const char *extra, *a, *b, *c;
++-
++-	for (i = 0; i < maxi; ++i) {
++-		s = git_status_byindex(status, i);
++-
++-		if (s->status == GIT_STATUS_CURRENT)
++-			continue;
++-
++-		a = b = c = NULL;
++-		istatus = wstatus = ' ';
++-		extra = "";
++-
++-		if (s->status & GIT_STATUS_INDEX_NEW)
++-			istatus = 'A';
++-		if (s->status & GIT_STATUS_INDEX_MODIFIED)
++-			istatus = 'M';
++-		if (s->status & GIT_STATUS_INDEX_DELETED)
++-			istatus = 'D';
++-		if (s->status & GIT_STATUS_INDEX_RENAMED)
++-			istatus = 'R';
++-		if (s->status & GIT_STATUS_INDEX_TYPECHANGE)
++-			istatus = 'T';
++-
++-		if (s->status & GIT_STATUS_WT_NEW) {
++-			if (istatus == ' ')
++-				istatus = '?';
++-			wstatus = '?';
++-		}
++-		if (s->status & GIT_STATUS_WT_MODIFIED)
++-			wstatus = 'M';
++-		if (s->status & GIT_STATUS_WT_DELETED)
++-			wstatus = 'D';
++-		if (s->status & GIT_STATUS_WT_RENAMED)
++-			wstatus = 'R';
++-		if (s->status & GIT_STATUS_WT_TYPECHANGE)
++-			wstatus = 'T';
++-
++-		if (s->status & GIT_STATUS_IGNORED) {
++-			istatus = '!';
++-			wstatus = '!';
++-		}
++-
++-		if (istatus == '?' && wstatus == '?')
++-			continue;
++-
++-		/**
+++    size_t i, maxi = git_status_list_entrycount(status);
+++    const git_status_entry *s;
+++    char istatus, wstatus;
+++    const char *extra, *a, *b, *c;
+++
+++    for (i = 0; i < maxi; ++i)
+++    {
+++        s = git_status_byindex(status, i);
+++
+++        if (s->status == GIT_STATUS_CURRENT)
+++            continue;
+++
+++        a = b = c = NULL;
+++        istatus = wstatus = ' ';
+++        extra = "";
+++
+++        if (s->status & GIT_STATUS_INDEX_NEW)
+++            istatus = 'A';
+++        if (s->status & GIT_STATUS_INDEX_MODIFIED)
+++            istatus = 'M';
+++        if (s->status & GIT_STATUS_INDEX_DELETED)
+++            istatus = 'D';
+++        if (s->status & GIT_STATUS_INDEX_RENAMED)
+++            istatus = 'R';
+++        if (s->status & GIT_STATUS_INDEX_TYPECHANGE)
+++            istatus = 'T';
+++
+++        if (s->status & GIT_STATUS_WT_NEW)
+++        {
+++            if (istatus == ' ')
+++                istatus = '?';
+++            wstatus = '?';
+++        }
+++        if (s->status & GIT_STATUS_WT_MODIFIED)
+++            wstatus = 'M';
+++        if (s->status & GIT_STATUS_WT_DELETED)
+++            wstatus = 'D';
+++        if (s->status & GIT_STATUS_WT_RENAMED)
+++            wstatus = 'R';
+++        if (s->status & GIT_STATUS_WT_TYPECHANGE)
+++            wstatus = 'T';
+++
+++        if (s->status & GIT_STATUS_IGNORED)
+++        {
+++            istatus = '!';
+++            wstatus = '!';
+++        }
+++
+++        if (istatus == '?' && wstatus == '?')
+++            continue;
+++
+++        /**
++ 		 * A commit in a tree is how submodules are stored, so
++ 		 * let's go take a look at its status.
++ 		 */
++-		if (s->index_to_workdir &&
++-			s->index_to_workdir->new_file.mode == GIT_FILEMODE_COMMIT)
++-		{
++-			unsigned int smstatus = 0;
++-
++-			if (!git_submodule_status(&smstatus, repo, s->index_to_workdir->new_file.path,
++-						  GIT_SUBMODULE_IGNORE_UNSPECIFIED)) {
++-				if (smstatus & GIT_SUBMODULE_STATUS_WD_MODIFIED)
++-					extra = " (new commits)";
++-				else if (smstatus & GIT_SUBMODULE_STATUS_WD_INDEX_MODIFIED)
++-					extra = " (modified content)";
++-				else if (smstatus & GIT_SUBMODULE_STATUS_WD_WD_MODIFIED)
++-					extra = " (modified content)";
++-				else if (smstatus & GIT_SUBMODULE_STATUS_WD_UNTRACKED)
++-					extra = " (untracked content)";
++-			}
++-		}
++-
++-		/**
+++        if (s->index_to_workdir &&
+++            s->index_to_workdir->new_file.mode == GIT_FILEMODE_COMMIT)
+++        {
+++            unsigned int smstatus = 0;
+++
+++            if (!git_submodule_status(&smstatus, repo, s->index_to_workdir->new_file.path,
+++                                      GIT_SUBMODULE_IGNORE_UNSPECIFIED))
+++            {
+++                if (smstatus & GIT_SUBMODULE_STATUS_WD_MODIFIED)
+++                    extra = " (new commits)";
+++                else if (smstatus & GIT_SUBMODULE_STATUS_WD_INDEX_MODIFIED)
+++                    extra = " (modified content)";
+++                else if (smstatus & GIT_SUBMODULE_STATUS_WD_WD_MODIFIED)
+++                    extra = " (modified content)";
+++                else if (smstatus & GIT_SUBMODULE_STATUS_WD_UNTRACKED)
+++                    extra = " (untracked content)";
+++            }
+++        }
+++
+++        /**
++ 		 * Now that we have all the information, format the output.
++ 		 */
++ 
++-		if (s->head_to_index) {
++-			a = s->head_to_index->old_file.path;
++-			b = s->head_to_index->new_file.path;
++-		}
++-		if (s->index_to_workdir) {
++-			if (!a)
++-				a = s->index_to_workdir->old_file.path;
++-			if (!b)
++-				b = s->index_to_workdir->old_file.path;
++-			c = s->index_to_workdir->new_file.path;
++-		}
++-
++-		if (istatus == 'R') {
++-			if (wstatus == 'R')
++-				printf("%c%c %s %s %s%s\n", istatus, wstatus, a, b, c, extra);
++-			else
++-				printf("%c%c %s %s%s\n", istatus, wstatus, a, b, extra);
++-		} else {
++-			if (wstatus == 'R')
++-				printf("%c%c %s %s%s\n", istatus, wstatus, a, c, extra);
++-			else
++-				printf("%c%c %s%s\n", istatus, wstatus, a, extra);
++-		}
++-	}
++-
++-	for (i = 0; i < maxi; ++i) {
++-		s = git_status_byindex(status, i);
++-
++-		if (s->status == GIT_STATUS_WT_NEW)
++-			printf("?? %s\n", s->index_to_workdir->old_file.path);
++-	}
+++        if (s->head_to_index)
+++        {
+++            a = s->head_to_index->old_file.path;
+++            b = s->head_to_index->new_file.path;
+++        }
+++        if (s->index_to_workdir)
+++        {
+++            if (!a)
+++                a = s->index_to_workdir->old_file.path;
+++            if (!b)
+++                b = s->index_to_workdir->old_file.path;
+++            c = s->index_to_workdir->new_file.path;
+++        }
+++
+++        if (istatus == 'R')
+++        {
+++            if (wstatus == 'R')
+++                printf("%c%c %s %s %s%s\n", istatus, wstatus, a, b, c, extra);
+++            else
+++                printf("%c%c %s %s%s\n", istatus, wstatus, a, b, extra);
+++        }
+++        else
+++        {
+++            if (wstatus == 'R')
+++                printf("%c%c %s %s%s\n", istatus, wstatus, a, c, extra);
+++            else
+++                printf("%c%c %s%s\n", istatus, wstatus, a, extra);
+++        }
+++    }
+++
+++    for (i = 0; i < maxi; ++i)
+++    {
+++        s = git_status_byindex(status, i);
+++
+++        if (s->status == GIT_STATUS_WT_NEW)
+++            printf("?? %s\n", s->index_to_workdir->old_file.path);
+++    }
++ }
++ 
++ static int print_submod(git_submodule *sm, const char *name, void *payload)
++ {
++-	int *count = payload;
++-	(void)name;
+++    int *count = payload;
+++    (void)name;
++ 
++-	if (*count == 0)
++-		printf("# Submodules\n");
++-	(*count)++;
+++    if (*count == 0)
+++        printf("# Submodules\n");
+++    (*count)++;
++ 
++-	printf("# - submodule '%s' at %s\n",
++-		git_submodule_name(sm), git_submodule_path(sm));
+++    printf("# - submodule '%s' at %s\n",
+++           git_submodule_name(sm), git_submodule_path(sm));
++ 
++-	return 0;
+++    return 0;
++ }
++ 
++ /**
++@@ -437,62 +538,66 @@ static int print_submod(git_submodule *sm, const char *name, void *payload)
++  */
++ static void parse_opts(struct status_opts *o, int argc, char *argv[])
++ {
++-	struct args_info args = ARGS_INFO_INIT;
++-
++-	for (args.pos = 1; args.pos < argc; ++args.pos) {
++-		char *a = argv[args.pos];
++-
++-		if (a[0] != '-') {
++-			if (o->npaths < MAX_PATHSPEC)
++-				o->pathspec[o->npaths++] = a;
++-			else
++-				fatal("Example only supports a limited pathspec", NULL);
++-		}
++-		else if (!strcmp(a, "-s") || !strcmp(a, "--short"))
++-			o->format = FORMAT_SHORT;
++-		else if (!strcmp(a, "--long"))
++-			o->format = FORMAT_LONG;
++-		else if (!strcmp(a, "--porcelain"))
++-			o->format = FORMAT_PORCELAIN;
++-		else if (!strcmp(a, "-b") || !strcmp(a, "--branch"))
++-			o->showbranch = 1;
++-		else if (!strcmp(a, "-z")) {
++-			o->zterm = 1;
++-			if (o->format == FORMAT_DEFAULT)
++-				o->format = FORMAT_PORCELAIN;
++-		}
++-		else if (!strcmp(a, "--ignored"))
++-			o->statusopt.flags |= GIT_STATUS_OPT_INCLUDE_IGNORED;
++-		else if (!strcmp(a, "-uno") ||
++-				 !strcmp(a, "--untracked-files=no"))
++-			o->statusopt.flags &= ~GIT_STATUS_OPT_INCLUDE_UNTRACKED;
++-		else if (!strcmp(a, "-unormal") ||
++-				 !strcmp(a, "--untracked-files=normal"))
++-			o->statusopt.flags |= GIT_STATUS_OPT_INCLUDE_UNTRACKED;
++-		else if (!strcmp(a, "-uall") ||
++-				 !strcmp(a, "--untracked-files=all"))
++-			o->statusopt.flags |= GIT_STATUS_OPT_INCLUDE_UNTRACKED |
++-				GIT_STATUS_OPT_RECURSE_UNTRACKED_DIRS;
++-		else if (!strcmp(a, "--ignore-submodules=all"))
++-			o->statusopt.flags |= GIT_STATUS_OPT_EXCLUDE_SUBMODULES;
++-		else if (!strncmp(a, "--git-dir=", strlen("--git-dir=")))
++-			o->repodir = a + strlen("--git-dir=");
++-		else if (!strcmp(a, "--repeat"))
++-			o->repeat = 10;
++-		else if (match_int_arg(&o->repeat, &args, "--repeat", 0))
++-			/* okay */;
++-		else if (!strcmp(a, "--list-submodules"))
++-			o->showsubmod = 1;
++-		else
++-			check_lg2(-1, "Unsupported option", a);
++-	}
++-
++-	if (o->format == FORMAT_DEFAULT)
++-		o->format = FORMAT_LONG;
++-	if (o->format == FORMAT_LONG)
++-		o->showbranch = 1;
++-	if (o->npaths > 0) {
++-		o->statusopt.pathspec.strings = o->pathspec;
++-		o->statusopt.pathspec.count   = o->npaths;
++-	}
+++    struct args_info args = ARGS_INFO_INIT;
+++
+++    for (args.pos = 1; args.pos < argc; ++args.pos)
+++    {
+++        char *a = argv[args.pos];
+++
+++        if (a[0] != '-')
+++        {
+++            if (o->npaths < MAX_PATHSPEC)
+++                o->pathspec[o->npaths++] = a;
+++            else
+++                fatal("Example only supports a limited pathspec", NULL);
+++        }
+++        else if (!strcmp(a, "-s") || !strcmp(a, "--short"))
+++            o->format = FORMAT_SHORT;
+++        else if (!strcmp(a, "--long"))
+++            o->format = FORMAT_LONG;
+++        else if (!strcmp(a, "--porcelain"))
+++            o->format = FORMAT_PORCELAIN;
+++        else if (!strcmp(a, "-b") || !strcmp(a, "--branch"))
+++            o->showbranch = 1;
+++        else if (!strcmp(a, "-z"))
+++        {
+++            o->zterm = 1;
+++            if (o->format == FORMAT_DEFAULT)
+++                o->format = FORMAT_PORCELAIN;
+++        }
+++        else if (!strcmp(a, "--ignored"))
+++            o->statusopt.flags |= GIT_STATUS_OPT_INCLUDE_IGNORED;
+++        else if (!strcmp(a, "-uno") ||
+++                 !strcmp(a, "--untracked-files=no"))
+++            o->statusopt.flags &= ~GIT_STATUS_OPT_INCLUDE_UNTRACKED;
+++        else if (!strcmp(a, "-unormal") ||
+++                 !strcmp(a, "--untracked-files=normal"))
+++            o->statusopt.flags |= GIT_STATUS_OPT_INCLUDE_UNTRACKED;
+++        else if (!strcmp(a, "-uall") ||
+++                 !strcmp(a, "--untracked-files=all"))
+++            o->statusopt.flags |= GIT_STATUS_OPT_INCLUDE_UNTRACKED |
+++                                  GIT_STATUS_OPT_RECURSE_UNTRACKED_DIRS;
+++        else if (!strcmp(a, "--ignore-submodules=all"))
+++            o->statusopt.flags |= GIT_STATUS_OPT_EXCLUDE_SUBMODULES;
+++        else if (!strncmp(a, "--git-dir=", strlen("--git-dir=")))
+++            o->repodir = a + strlen("--git-dir=");
+++        else if (!strcmp(a, "--repeat"))
+++            o->repeat = 10;
+++        else if (match_int_arg(&o->repeat, &args, "--repeat", 0))
+++            /* okay */;
+++        else if (!strcmp(a, "--list-submodules"))
+++            o->showsubmod = 1;
+++        else
+++            check_lg2(-1, "Unsupported option", a);
+++    }
+++
+++    if (o->format == FORMAT_DEFAULT)
+++        o->format = FORMAT_LONG;
+++    if (o->format == FORMAT_LONG)
+++        o->showbranch = 1;
+++    if (o->npaths > 0)
+++    {
+++        o->statusopt.pathspec.strings = o->pathspec;
+++        o->statusopt.pathspec.count = o->npaths;
+++    }
++ }
++diff --git a/src/libgit2/CMakeLists.txt b/src/libgit2/CMakeLists.txt
++index 876a703e8..503cb8955 100644
++--- a/src/libgit2/CMakeLists.txt
+++++ b/src/libgit2/CMakeLists.txt
++@@ -120,3 +120,4 @@ install(FILES ${PROJECT_BINARY_DIR}/include/git2/experimental.h
++         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIBGIT2_FILENAME}")
++ install(FILES "${PROJECT_BINARY_DIR}/include/${LIBGIT2_FILENAME}.h"
++         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+++set(CMAKE_C90_STANDARD_COMPILE_OPTION "-std=gnu90")
++diff --git a/src/libgit2/common.h b/src/libgit2/common.h
++index bb9ec5ac1..cff41deb3 100644
++--- a/src/libgit2/common.h
+++++ b/src/libgit2/common.h
++@@ -7,6 +7,8 @@
++ #ifndef INCLUDE_common_h__
++ #define INCLUDE_common_h__
++ 
+++extern void exit(int status);
+++
++ #include "git2_util.h"
++ #include "errors.h"
++ 
++diff --git a/src/libgit2/odb.h b/src/libgit2/odb.h
++index 7a712e202..e57680a2e 100644
++--- a/src/libgit2/odb.h
+++++ b/src/libgit2/odb.h
++@@ -23,7 +23,7 @@
++ 
++ #define GIT_OBJECTS_DIR "objects/"
++ #define GIT_OBJECT_DIR_MODE 0777
++-#define GIT_OBJECT_FILE_MODE 0444
+++#define GIT_OBJECT_FILE_MODE 0644
++ 
++ #define GIT_ODB_DEFAULT_LOOSE_PRIORITY 1
++ #define GIT_ODB_DEFAULT_PACKED_PRIORITY 2
++diff --git a/src/libgit2/pack.h b/src/libgit2/pack.h
++index 1a9eb14b2..dae23c3b9 100644
++--- a/src/libgit2/pack.h
+++++ b/src/libgit2/pack.h
++@@ -29,7 +29,7 @@ typedef int git_pack_foreach_entry_offset_cb(
++ 		off64_t offset,
++ 		void *payload);
++ 
++-#define GIT_PACK_FILE_MODE 0444
+++#define GIT_PACK_FILE_MODE 0644
++ 
++ #define PACK_SIGNATURE 0x5041434b	/* "PACK" */
++ #define PACK_VERSION 2
++diff --git a/src/libgit2/transports/emscriptenhttp.c b/src/libgit2/transports/emscriptenhttp.c
++new file mode 100644
++index 000000000..ff7c94e2a
++--- /dev/null
+++++ b/src/libgit2/transports/emscriptenhttp.c
++@@ -0,0 +1,175 @@
+++#ifdef __EMSCRIPTEN__
+++
+++#include "common.h"
+++#include "emscripten.h"
+++#include "git2/transport.h"
+++#include "smart.h"
+++
+++bool git_http__expect_continue = false;
+++
+++#define DEFAULT_BUFSIZE 65536
+++
+++static const char *upload_pack_ls_service_url = "/info/refs?service=git-upload-pack";
+++static const char *upload_pack_service_url = "/git-upload-pack";
+++static const char *receive_pack_ls_service_url = "/info/refs?service=git-receive-pack";
+++static const char *receive_pack_service_url = "/git-receive-pack";
+++
+++typedef struct {
+++	git_smart_subtransport_stream parent;
+++    const char *service_url;
+++	int connectionNo;
+++} emscriptenhttp_stream;
+++
+++typedef struct {
+++	git_smart_subtransport parent;
+++	transport_smart *owner;
+++
+++} emscriptenhttp_subtransport;
+++
+++static int emscriptenhttp_stream_read(
+++	git_smart_subtransport_stream *stream,
+++	char *buffer,
+++	size_t buf_size,
+++	size_t *bytes_read)
+++{
+++    emscriptenhttp_stream *s = (emscriptenhttp_stream *)stream;
+++
+++	if(s->connectionNo == -1) {
+++		s->connectionNo = EM_ASM_INT({
+++			const url = UTF8ToString($0);
+++			return Module.emscriptenhttpconnect(url, $1);
+++		}, s->service_url, DEFAULT_BUFSIZE);
+++	}
+++
+++    *bytes_read = EM_ASM_INT({
+++		return Module.emscriptenhttpread($0, $1, $2);
+++    }, s->connectionNo, buffer, buf_size);
+++
+++    return 0;
+++}
+++
+++static int emscriptenhttp_stream_write_single(
+++	git_smart_subtransport_stream *stream,
+++	const char *buffer,
+++	size_t len)
+++{
+++    emscriptenhttp_stream *s = (emscriptenhttp_stream *)stream;
+++    
+++	if(s->connectionNo == -1) {
+++		s->connectionNo = EM_ASM_INT({
+++			const url = UTF8ToString($0);
+++			return Module.emscriptenhttpconnect(url, $1, 'POST', {
+++				'Content-Type': url.indexOf('git-upload-pack') > 0 ? 
+++					'application/x-git-upload-pack-request' :
+++					'application/x-git-receive-pack-request'
+++			});
+++		}, s->service_url, DEFAULT_BUFSIZE);
+++	}
+++
+++   EM_ASM({
+++		return Module.emscriptenhttpwrite($0, $1, $2);
+++    }, s->connectionNo, buffer, len);
+++
+++    return 0;
+++}
+++
+++static void emscriptenhttp_stream_free(git_smart_subtransport_stream *stream)
+++{
+++	emscriptenhttp_stream *s = (emscriptenhttp_stream *)stream;
+++
+++	git__free(s);
+++}
+++
+++static int emscriptenhttp_stream_alloc(emscriptenhttp_subtransport *t, emscriptenhttp_stream **stream)
+++{
+++	emscriptenhttp_stream *s;
+++
+++	if (!stream)
+++		return -1;
+++
+++	s = git__calloc(1, sizeof(emscriptenhttp_stream));
+++	GIT_ERROR_CHECK_ALLOC(s);
+++
+++	s->parent.subtransport = &t->parent;
+++	s->parent.read = emscriptenhttp_stream_read;
+++	s->parent.write = emscriptenhttp_stream_write_single;
+++	s->parent.free = emscriptenhttp_stream_free;
+++	s->connectionNo = -1;
+++
+++	*stream = s;
+++
+++	return 0;
+++}
+++
+++static int emscriptenhttp_action(
+++	git_smart_subtransport_stream **stream,
+++	git_smart_subtransport *subtransport,
+++	const char *url,
+++	git_smart_service_t action)
+++{
+++    emscriptenhttp_subtransport *t = (emscriptenhttp_subtransport *)subtransport;
+++	emscriptenhttp_stream *s;
+++	
+++    if (emscriptenhttp_stream_alloc(t, &s) < 0)
+++		return -1;
+++
+++    git_str buf = GIT_STR_INIT;
+++    
+++    switch(action) {
+++        case GIT_SERVICE_UPLOADPACK_LS:
+++            git_str_printf(&buf, "%s%s", url, upload_pack_ls_service_url);   
+++
+++            break;
+++        case GIT_SERVICE_UPLOADPACK:
+++            git_str_printf(&buf, "%s%s", url, upload_pack_service_url);
+++            break;
+++        case GIT_SERVICE_RECEIVEPACK_LS:
+++            git_str_printf(&buf, "%s%s", url, receive_pack_ls_service_url);
+++            break;
+++        case GIT_SERVICE_RECEIVEPACK:
+++            git_str_printf(&buf, "%s%s", url, receive_pack_service_url);
+++            break;            
+++    }
+++
+++    s->service_url = git_str_cstr(&buf);
+++    *stream = &s->parent;
+++
+++    return 0;
+++}
+++
+++static int emscriptenhttp_close(git_smart_subtransport *subtransport)
+++{	
+++	return 0;
+++}
+++
+++static void emscriptenhttp_free(git_smart_subtransport *subtransport)
+++{
+++	emscriptenhttp_subtransport *t = (emscriptenhttp_subtransport *)subtransport;
+++
+++	emscriptenhttp_close(subtransport);
+++
+++	git__free(t);
+++}
+++
+++int git_smart_subtransport_http(git_smart_subtransport **out, git_transport *owner, void *param) {
+++    emscriptenhttp_subtransport *t;
+++
+++	GIT_UNUSED(param);
+++
+++	if (!out)
+++		return -1;
+++
+++	t = git__calloc(1, sizeof(emscriptenhttp_subtransport));
+++	GIT_ERROR_CHECK_ALLOC(t);
+++
+++	t->owner = (transport_smart *)owner;
+++	t->parent.action = emscriptenhttp_action;
+++	t->parent.close = emscriptenhttp_close;
+++	t->parent.free = emscriptenhttp_free;
+++
+++	*out = (git_smart_subtransport *) t;
+++
+++    return 0;
+++}
+++
+++#endif /* __EMSCRIPTEN__ */
++\ No newline at end of file
++diff --git a/src/libgit2/transports/http.c b/src/libgit2/transports/http.c
++deleted file mode 100644
++index 8437674fc..000000000
++--- a/src/libgit2/transports/http.c
+++++ /dev/null
++@@ -1,766 +0,0 @@
++-/*
++- * Copyright (C) the libgit2 contributors. All rights reserved.
++- *
++- * This file is part of libgit2, distributed under the GNU GPL v2 with
++- * a Linking Exception. For full terms see the included COPYING file.
++- */
++-
++-#include "common.h"
++-
++-#ifndef GIT_WINHTTP
++-
++-#include "http_parser.h"
++-#include "net.h"
++-#include "remote.h"
++-#include "smart.h"
++-#include "auth.h"
++-#include "http.h"
++-#include "auth_negotiate.h"
++-#include "auth_ntlm.h"
++-#include "trace.h"
++-#include "streams/tls.h"
++-#include "streams/socket.h"
++-#include "httpclient.h"
++-#include "git2/sys/credential.h"
++-
++-bool git_http__expect_continue = false;
++-
++-typedef enum {
++-	HTTP_STATE_NONE = 0,
++-	HTTP_STATE_SENDING_REQUEST,
++-	HTTP_STATE_RECEIVING_RESPONSE,
++-	HTTP_STATE_DONE
++-} http_state;
++-
++-typedef struct {
++-	git_http_method method;
++-	const char *url;
++-	const char *request_type;
++-	const char *response_type;
++-	unsigned int initial : 1,
++-	             chunked : 1;
++-} http_service;
++-
++-typedef struct {
++-	git_smart_subtransport_stream parent;
++-	const http_service *service;
++-	http_state state;
++-	unsigned replay_count;
++-} http_stream;
++-
++-typedef struct {
++-	git_net_url url;
++-
++-	git_credential *cred;
++-	unsigned auth_schemetypes;
++-	unsigned url_cred_presented : 1;
++-} http_server;
++-
++-typedef struct {
++-	git_smart_subtransport parent;
++-	transport_smart *owner;
++-
++-	http_server server;
++-	http_server proxy;
++-
++-	git_http_client *http_client;
++-} http_subtransport;
++-
++-static const http_service upload_pack_ls_service = {
++-	GIT_HTTP_METHOD_GET, "/info/refs?service=git-upload-pack",
++-	NULL,
++-	"application/x-git-upload-pack-advertisement",
++-	1,
++-	0
++-};
++-static const http_service upload_pack_service = {
++-	GIT_HTTP_METHOD_POST, "/git-upload-pack",
++-	"application/x-git-upload-pack-request",
++-	"application/x-git-upload-pack-result",
++-	0,
++-	0
++-};
++-static const http_service receive_pack_ls_service = {
++-	GIT_HTTP_METHOD_GET, "/info/refs?service=git-receive-pack",
++-	NULL,
++-	"application/x-git-receive-pack-advertisement",
++-	1,
++-	0
++-};
++-static const http_service receive_pack_service = {
++-	GIT_HTTP_METHOD_POST, "/git-receive-pack",
++-	"application/x-git-receive-pack-request",
++-	"application/x-git-receive-pack-result",
++-	0,
++-	1
++-};
++-
++-#define SERVER_TYPE_REMOTE "remote"
++-#define SERVER_TYPE_PROXY  "proxy"
++-
++-#define OWNING_SUBTRANSPORT(s) ((http_subtransport *)(s)->parent.subtransport)
++-
++-static int apply_url_credentials(
++-	git_credential **cred,
++-	unsigned int allowed_types,
++-	const char *username,
++-	const char *password)
++-{
++-	GIT_ASSERT_ARG(username);
++-
++-	if (!password)
++-		password = "";
++-
++-	if (allowed_types & GIT_CREDENTIAL_USERPASS_PLAINTEXT)
++-		return git_credential_userpass_plaintext_new(cred, username, password);
++-
++-	if ((allowed_types & GIT_CREDENTIAL_DEFAULT) && *username == '\0' && *password == '\0')
++-		return git_credential_default_new(cred);
++-
++-	return GIT_PASSTHROUGH;
++-}
++-
++-GIT_INLINE(void) free_cred(git_credential **cred)
++-{
++-	if (*cred) {
++-		git_credential_free(*cred);
++-		(*cred) = NULL;
++-	}
++-}
++-
++-static int handle_auth(
++-	http_server *server,
++-	const char *server_type,
++-	const char *url,
++-	unsigned int allowed_schemetypes,
++-	unsigned int allowed_credtypes,
++-	git_credential_acquire_cb callback,
++-	void *callback_payload)
++-{
++-	int error = 1;
++-
++-	if (server->cred)
++-		free_cred(&server->cred);
++-
++-	/* Start with URL-specified credentials, if there were any. */
++-	if ((allowed_credtypes & GIT_CREDENTIAL_USERPASS_PLAINTEXT) &&
++-	    !server->url_cred_presented &&
++-	    server->url.username) {
++-		error = apply_url_credentials(&server->cred, allowed_credtypes, server->url.username, server->url.password);
++-		server->url_cred_presented = 1;
++-
++-		/* treat GIT_PASSTHROUGH as if callback isn't set */
++-		if (error == GIT_PASSTHROUGH)
++-			error = 1;
++-	}
++-
++-	if (error > 0 && callback) {
++-		error = callback(&server->cred, url, server->url.username, allowed_credtypes, callback_payload);
++-
++-		/* treat GIT_PASSTHROUGH as if callback isn't set */
++-		if (error == GIT_PASSTHROUGH)
++-			error = 1;
++-	}
++-
++-	if (error > 0) {
++-		git_error_set(GIT_ERROR_HTTP, "%s authentication required but no callback set", server_type);
++-		error = GIT_EAUTH;
++-	}
++-
++-	if (!error)
++-		server->auth_schemetypes = allowed_schemetypes;
++-
++-	return error;
++-}
++-
++-GIT_INLINE(int) handle_remote_auth(
++-	http_stream *stream,
++-	git_http_response *response)
++-{
++-	http_subtransport *transport = OWNING_SUBTRANSPORT(stream);
++-	git_remote_connect_options *connect_opts = &transport->owner->connect_opts;
++-
++-	if (response->server_auth_credtypes == 0) {
++-		git_error_set(GIT_ERROR_HTTP, "server requires authentication that we do not support");
++-		return GIT_EAUTH;
++-	}
++-
++-	/* Otherwise, prompt for credentials. */
++-	return handle_auth(
++-		&transport->server,
++-		SERVER_TYPE_REMOTE,
++-		transport->owner->url,
++-		response->server_auth_schemetypes,
++-		response->server_auth_credtypes,
++-		connect_opts->callbacks.credentials,
++-		connect_opts->callbacks.payload);
++-}
++-
++-GIT_INLINE(int) handle_proxy_auth(
++-	http_stream *stream,
++-	git_http_response *response)
++-{
++-	http_subtransport *transport = OWNING_SUBTRANSPORT(stream);
++-	git_remote_connect_options *connect_opts = &transport->owner->connect_opts;
++-
++-	if (response->proxy_auth_credtypes == 0) {
++-		git_error_set(GIT_ERROR_HTTP, "proxy requires authentication that we do not support");
++-		return GIT_EAUTH;
++-	}
++-
++-	/* Otherwise, prompt for credentials. */
++-	return handle_auth(
++-		&transport->proxy,
++-		SERVER_TYPE_PROXY,
++-		connect_opts->proxy_opts.url,
++-		response->server_auth_schemetypes,
++-		response->proxy_auth_credtypes,
++-		connect_opts->proxy_opts.credentials,
++-		connect_opts->proxy_opts.payload);
++-}
++-
++-static bool allow_redirect(http_stream *stream)
++-{
++-	http_subtransport *transport = OWNING_SUBTRANSPORT(stream);
++-
++-	switch (transport->owner->connect_opts.follow_redirects) {
++-	case GIT_REMOTE_REDIRECT_INITIAL:
++-		return (stream->service->initial == 1);
++-	case GIT_REMOTE_REDIRECT_ALL:
++-		return true;
++-	default:
++-		return false;
++-	}
++-}
++-
++-static int handle_response(
++-	bool *complete,
++-	http_stream *stream,
++-	git_http_response *response,
++-	bool allow_replay)
++-{
++-	http_subtransport *transport = OWNING_SUBTRANSPORT(stream);
++-	int error;
++-
++-	*complete = false;
++-
++-	if (allow_replay && git_http_response_is_redirect(response)) {
++-		if (!response->location) {
++-			git_error_set(GIT_ERROR_HTTP, "redirect without location");
++-			return -1;
++-		}
++-
++-		if (git_net_url_apply_redirect(&transport->server.url, response->location, allow_redirect(stream), stream->service->url) < 0) {
++-			return -1;
++-		}
++-
++-		return 0;
++-	} else if (git_http_response_is_redirect(response)) {
++-		git_error_set(GIT_ERROR_HTTP, "unexpected redirect");
++-		return -1;
++-	}
++-
++-	/* If we're in the middle of challenge/response auth, continue. */
++-	if (allow_replay && response->resend_credentials) {
++-		return 0;
++-	} else if (allow_replay && response->status == GIT_HTTP_STATUS_UNAUTHORIZED) {
++-		if ((error = handle_remote_auth(stream, response)) < 0)
++-			return error;
++-
++-		return git_http_client_skip_body(transport->http_client);
++-	} else if (allow_replay && response->status == GIT_HTTP_STATUS_PROXY_AUTHENTICATION_REQUIRED) {
++-		if ((error = handle_proxy_auth(stream, response)) < 0)
++-			return error;
++-
++-		return git_http_client_skip_body(transport->http_client);
++-	} else if (response->status == GIT_HTTP_STATUS_UNAUTHORIZED ||
++-	           response->status == GIT_HTTP_STATUS_PROXY_AUTHENTICATION_REQUIRED) {
++-		git_error_set(GIT_ERROR_HTTP, "unexpected authentication failure");
++-		return GIT_EAUTH;
++-	}
++-
++-	if (response->status != GIT_HTTP_STATUS_OK) {
++-		git_error_set(GIT_ERROR_HTTP, "unexpected http status code: %d", response->status);
++-		return -1;
++-	}
++-
++-	/* The response must contain a Content-Type header. */
++-	if (!response->content_type) {
++-		git_error_set(GIT_ERROR_HTTP, "no content-type header in response");
++-		return -1;
++-	}
++-
++-	/* The Content-Type header must match our expectation. */
++-	if (strcmp(response->content_type, stream->service->response_type) != 0) {
++-		git_error_set(GIT_ERROR_HTTP, "invalid content-type: '%s'", response->content_type);
++-		return -1;
++-	}
++-
++-	*complete = true;
++-	stream->state = HTTP_STATE_RECEIVING_RESPONSE;
++-	return 0;
++-}
++-
++-static int lookup_proxy(
++-	bool *out_use,
++-	http_subtransport *transport)
++-{
++-	git_remote_connect_options *connect_opts = &transport->owner->connect_opts;
++-	const char *proxy;
++-	git_remote *remote;
++-	char *config = NULL;
++-	int error = 0;
++-
++-	*out_use = false;
++-	git_net_url_dispose(&transport->proxy.url);
++-
++-	switch (connect_opts->proxy_opts.type) {
++-	case GIT_PROXY_SPECIFIED:
++-		proxy = connect_opts->proxy_opts.url;
++-		break;
++-
++-	case GIT_PROXY_AUTO:
++-		remote = transport->owner->owner;
++-
++-		error = git_remote__http_proxy(&config, remote, &transport->server.url);
++-
++-		if (error || !config)
++-			goto done;
++-
++-		proxy = config;
++-		break;
++-
++-	default:
++-		return 0;
++-	}
++-
++-	if (!proxy ||
++-	    (error = git_net_url_parse_http(&transport->proxy.url, proxy)) < 0)
++-		goto done;
++-
++-	if (!git_net_url_valid(&transport->proxy.url)) {
++-		git_error_set(GIT_ERROR_HTTP, "invalid URL: '%s'", proxy);
++-		error = -1;
++-		goto done;
++-	}
++-
++-	*out_use = true;
++-
++-done:
++-	git__free(config);
++-	return error;
++-}
++-
++-static int generate_request(
++-	git_net_url *url,
++-	git_http_request *request,
++-	http_stream *stream,
++-	size_t len)
++-{
++-	http_subtransport *transport = OWNING_SUBTRANSPORT(stream);
++-	bool use_proxy = false;
++-	int error;
++-
++-	if ((error = git_net_url_joinpath(url,
++-		&transport->server.url, stream->service->url)) < 0 ||
++-	    (error = lookup_proxy(&use_proxy, transport)) < 0)
++-		return error;
++-
++-	request->method = stream->service->method;
++-	request->url = url;
++-	request->credentials = transport->server.cred;
++-	request->proxy = use_proxy ? &transport->proxy.url : NULL;
++-	request->proxy_credentials = transport->proxy.cred;
++-	request->custom_headers = &transport->owner->connect_opts.custom_headers;
++-
++-	if (stream->service->method == GIT_HTTP_METHOD_POST) {
++-		request->chunked = stream->service->chunked;
++-		request->content_length = stream->service->chunked ? 0 : len;
++-		request->content_type = stream->service->request_type;
++-		request->accept = stream->service->response_type;
++-		request->expect_continue = git_http__expect_continue;
++-	}
++-
++-	return 0;
++-}
++-
++-/*
++- * Read from an HTTP transport - for the first invocation of this function
++- * (ie, when stream->state == HTTP_STATE_NONE), we'll send a GET request
++- * to the remote host.  We will stream that data back on all subsequent
++- * calls.
++- */
++-static int http_stream_read(
++-	git_smart_subtransport_stream *s,
++-	char *buffer,
++-	size_t buffer_size,
++-	size_t *out_len)
++-{
++-	http_stream *stream = (http_stream *)s;
++-	http_subtransport *transport = OWNING_SUBTRANSPORT(stream);
++-	git_net_url url = GIT_NET_URL_INIT;
++-	git_net_url proxy_url = GIT_NET_URL_INIT;
++-	git_http_request request = {0};
++-	git_http_response response = {0};
++-	bool complete;
++-	int error;
++-
++-	*out_len = 0;
++-
++-	if (stream->state == HTTP_STATE_NONE) {
++-		stream->state = HTTP_STATE_SENDING_REQUEST;
++-		stream->replay_count = 0;
++-	}
++-
++-	/*
++-	 * Formulate the URL, send the request and read the response
++-	 * headers.  Some of the request body may also be read.
++-	 */
++-	while (stream->state == HTTP_STATE_SENDING_REQUEST &&
++-	       stream->replay_count < GIT_HTTP_REPLAY_MAX) {
++-		git_net_url_dispose(&url);
++-		git_net_url_dispose(&proxy_url);
++-		git_http_response_dispose(&response);
++-
++-		if ((error = generate_request(&url, &request, stream, 0)) < 0 ||
++-		    (error = git_http_client_send_request(
++-			transport->http_client, &request)) < 0 ||
++-		    (error = git_http_client_read_response(
++-			    &response, transport->http_client)) < 0 ||
++-		    (error = handle_response(&complete, stream, &response, true)) < 0)
++-			goto done;
++-
++-		if (complete)
++-			break;
++-
++-		stream->replay_count++;
++-	}
++-
++-	if (stream->state == HTTP_STATE_SENDING_REQUEST) {
++-		git_error_set(GIT_ERROR_HTTP, "too many redirects or authentication replays");
++-		error = GIT_ERROR; /* not GIT_EAUTH, because the exact cause is unclear */
++-		goto done;
++-	}
++-
++-	GIT_ASSERT(stream->state == HTTP_STATE_RECEIVING_RESPONSE);
++-
++-	error = git_http_client_read_body(transport->http_client, buffer, buffer_size);
++-
++-	if (error > 0) {
++-		*out_len = error;
++-		error = 0;
++-	}
++-
++-done:
++-	git_net_url_dispose(&url);
++-	git_net_url_dispose(&proxy_url);
++-	git_http_response_dispose(&response);
++-
++-	return error;
++-}
++-
++-static bool needs_probe(http_stream *stream)
++-{
++-	http_subtransport *transport = OWNING_SUBTRANSPORT(stream);
++-
++-	return (transport->server.auth_schemetypes == GIT_HTTP_AUTH_NTLM ||
++-	        transport->server.auth_schemetypes == GIT_HTTP_AUTH_NEGOTIATE);
++-}
++-
++-static int send_probe(http_stream *stream)
++-{
++-	http_subtransport *transport = OWNING_SUBTRANSPORT(stream);
++-	git_http_client *client = transport->http_client;
++-	const char *probe = "0000";
++-	size_t len = 4;
++-	git_net_url url = GIT_NET_URL_INIT;
++-	git_http_request request = {0};
++-	git_http_response response = {0};
++-	bool complete = false;
++-	size_t step, steps = 1;
++-	int error;
++-
++-	/* NTLM requires a full challenge/response */
++-	if (transport->server.auth_schemetypes == GIT_HTTP_AUTH_NTLM)
++-		steps = GIT_AUTH_STEPS_NTLM;
++-
++-	/*
++-	 * Send at most two requests: one without any authentication to see
++-	 * if we get prompted to authenticate.  If we do, send a second one
++-	 * with the first authentication message.  The final authentication
++-	 * message with the response will occur with the *actual* POST data.
++-	 */
++-	for (step = 0; step < steps && !complete; step++) {
++-		git_net_url_dispose(&url);
++-		git_http_response_dispose(&response);
++-
++-		if ((error = generate_request(&url, &request, stream, len)) < 0 ||
++-		    (error = git_http_client_send_request(client, &request)) < 0 ||
++-		    (error = git_http_client_send_body(client, probe, len)) < 0 ||
++-		    (error = git_http_client_read_response(&response, client)) < 0 ||
++-		    (error = git_http_client_skip_body(client)) < 0 ||
++-		    (error = handle_response(&complete, stream, &response, true)) < 0)
++-			goto done;
++-	}
++-
++-done:
++-	git_http_response_dispose(&response);
++-	git_net_url_dispose(&url);
++-	return error;
++-}
++-
++-/*
++-* Write to an HTTP transport - for the first invocation of this function
++-* (ie, when stream->state == HTTP_STATE_NONE), we'll send a POST request
++-* to the remote host.  If we're sending chunked data, then subsequent calls
++-* will write the additional data given in the buffer.  If we're not chunking,
++-* then the caller should have given us all the data in the original call.
++-* The caller should call http_stream_read_response to get the result.
++-*/
++-static int http_stream_write(
++-	git_smart_subtransport_stream *s,
++-	const char *buffer,
++-	size_t len)
++-{
++-	http_stream *stream = GIT_CONTAINER_OF(s, http_stream, parent);
++-	http_subtransport *transport = OWNING_SUBTRANSPORT(stream);
++-	git_net_url url = GIT_NET_URL_INIT;
++-	git_http_request request = {0};
++-	git_http_response response = {0};
++-	int error;
++-
++-	while (stream->state == HTTP_STATE_NONE &&
++-	       stream->replay_count < GIT_HTTP_REPLAY_MAX) {
++-
++-		git_net_url_dispose(&url);
++-		git_http_response_dispose(&response);
++-
++-		/*
++-		 * If we're authenticating with a connection-based mechanism
++-		 * (NTLM, Kerberos), send a "probe" packet.  Servers SHOULD
++-		 * authenticate an entire keep-alive connection, so ideally
++-		 * we should not need to authenticate but some servers do
++-		 * not support this.  By sending a probe packet, we'll be
++-		 * able to follow up with a second POST using the actual
++-		 * data (and, in the degenerate case, the authentication
++-		 * header as well).
++-		 */
++-		if (needs_probe(stream) && (error = send_probe(stream)) < 0)
++-			goto done;
++-
++-		/* Send the regular POST request. */
++-		if ((error = generate_request(&url, &request, stream, len)) < 0 ||
++-		    (error = git_http_client_send_request(
++-			transport->http_client, &request)) < 0)
++-			goto done;
++-
++-		if (request.expect_continue &&
++-		    git_http_client_has_response(transport->http_client)) {
++-			bool complete;
++-
++-			/*
++-			 * If we got a response to an expect/continue, then
++-			 * it's something other than a 100 and we should
++-			 * deal with the response somehow.
++-			 */
++-			if ((error = git_http_client_read_response(&response, transport->http_client)) < 0 ||
++-			    (error = handle_response(&complete, stream, &response, true)) < 0)
++-			    goto done;
++-		} else {
++-			stream->state = HTTP_STATE_SENDING_REQUEST;
++-		}
++-
++-		stream->replay_count++;
++-	}
++-
++-	if (stream->state == HTTP_STATE_NONE) {
++-		git_error_set(GIT_ERROR_HTTP,
++-		              "too many redirects or authentication replays");
++-		error = GIT_ERROR; /* not GIT_EAUTH because the exact cause is unclear */
++-		goto done;
++-	}
++-
++-	GIT_ASSERT(stream->state == HTTP_STATE_SENDING_REQUEST);
++-
++-	error = git_http_client_send_body(transport->http_client, buffer, len);
++-
++-done:
++-	git_http_response_dispose(&response);
++-	git_net_url_dispose(&url);
++-	return error;
++-}
++-
++-/*
++-* Read from an HTTP transport after it has been written to.  This is the
++-* response from a POST request made by http_stream_write.
++-*/
++-static int http_stream_read_response(
++-	git_smart_subtransport_stream *s,
++-	char *buffer,
++-	size_t buffer_size,
++-	size_t *out_len)
++-{
++-	http_stream *stream = (http_stream *)s;
++-	http_subtransport *transport = OWNING_SUBTRANSPORT(stream);
++-	git_http_client *client = transport->http_client;
++-	git_http_response response = {0};
++-	bool complete;
++-	int error;
++-
++-	*out_len = 0;
++-
++-	if (stream->state == HTTP_STATE_SENDING_REQUEST) {
++-		if ((error = git_http_client_read_response(&response, client)) < 0 ||
++-		    (error = handle_response(&complete, stream, &response, false)) < 0)
++-		    goto done;
++-
++-		GIT_ASSERT(complete);
++-		stream->state = HTTP_STATE_RECEIVING_RESPONSE;
++-	}
++-
++-	error = git_http_client_read_body(client, buffer, buffer_size);
++-
++-	if (error > 0) {
++-		*out_len = error;
++-		error = 0;
++-	}
++-
++-done:
++-	git_http_response_dispose(&response);
++-	return error;
++-}
++-
++-static void http_stream_free(git_smart_subtransport_stream *stream)
++-{
++-	http_stream *s = GIT_CONTAINER_OF(stream, http_stream, parent);
++-	git__free(s);
++-}
++-
++-static const http_service *select_service(git_smart_service_t action)
++-{
++-	switch (action) {
++-	case GIT_SERVICE_UPLOADPACK_LS:
++-		return &upload_pack_ls_service;
++-	case GIT_SERVICE_UPLOADPACK:
++-		return &upload_pack_service;
++-	case GIT_SERVICE_RECEIVEPACK_LS:
++-		return &receive_pack_ls_service;
++-	case GIT_SERVICE_RECEIVEPACK:
++-		return &receive_pack_service;
++-	}
++-
++-	return NULL;
++-}
++-
++-static int http_action(
++-	git_smart_subtransport_stream **out,
++-	git_smart_subtransport *t,
++-	const char *url,
++-	git_smart_service_t action)
++-{
++-	http_subtransport *transport = GIT_CONTAINER_OF(t, http_subtransport, parent);
++-	git_remote_connect_options *connect_opts = &transport->owner->connect_opts;
++-	git_http_client_options opts = {0};
++-	http_stream *stream;
++-	const http_service *service;
++-	int error;
++-
++-	GIT_ASSERT_ARG(out);
++-	GIT_ASSERT_ARG(t);
++-
++-	*out = NULL;
++-
++-	/*
++-	 * If we've seen a redirect then preserve the location that we've
++-	 * been given.  This is important to continue authorization against
++-	 * the redirect target, not the user-given source; the endpoint may
++-	 * have redirected us from HTTP->HTTPS and is using an auth mechanism
++-	 * that would be insecure in plaintext (eg, HTTP Basic).
++-	 */
++-	if (!git_net_url_valid(&transport->server.url) &&
++-	    (error = git_net_url_parse(&transport->server.url, url)) < 0)
++-		return error;
++-
++-	if ((service = select_service(action)) == NULL) {
++-		git_error_set(GIT_ERROR_HTTP, "invalid action");
++-		return -1;
++-	}
++-
++-	stream = git__calloc(sizeof(http_stream), 1);
++-	GIT_ERROR_CHECK_ALLOC(stream);
++-
++-	opts.server_certificate_check_cb = connect_opts->callbacks.certificate_check;
++-	opts.server_certificate_check_payload = connect_opts->callbacks.payload;
++-	opts.proxy_certificate_check_cb = connect_opts->proxy_opts.certificate_check;
++-	opts.proxy_certificate_check_payload = connect_opts->proxy_opts.payload;
++-
++-	if (transport->http_client) {
++-		git_http_client_set_options(transport->http_client, &opts);
++-	} else {
++-		if (git_http_client_new(&transport->http_client, &opts) < 0)
++-			return -1;
++-	}
++-
++-	stream->service = service;
++-	stream->parent.subtransport = &transport->parent;
++-
++-	if (service->method == GIT_HTTP_METHOD_GET) {
++-		stream->parent.read = http_stream_read;
++-	} else {
++-		stream->parent.write = http_stream_write;
++-		stream->parent.read = http_stream_read_response;
++-	}
++-
++-	stream->parent.free = http_stream_free;
++-
++-	*out = (git_smart_subtransport_stream *)stream;
++-	return 0;
++-}
++-
++-static int http_close(git_smart_subtransport *t)
++-{
++-	http_subtransport *transport = GIT_CONTAINER_OF(t, http_subtransport, parent);
++-
++-	free_cred(&transport->server.cred);
++-	free_cred(&transport->proxy.cred);
++-
++-	transport->server.url_cred_presented = false;
++-	transport->proxy.url_cred_presented = false;
++-
++-	git_net_url_dispose(&transport->server.url);
++-	git_net_url_dispose(&transport->proxy.url);
++-
++-	return 0;
++-}
++-
++-static void http_free(git_smart_subtransport *t)
++-{
++-	http_subtransport *transport = GIT_CONTAINER_OF(t, http_subtransport, parent);
++-
++-	git_http_client_free(transport->http_client);
++-
++-	http_close(t);
++-	git__free(transport);
++-}
++-
++-int git_smart_subtransport_http(git_smart_subtransport **out, git_transport *owner, void *param)
++-{
++-	http_subtransport *transport;
++-
++-	GIT_UNUSED(param);
++-
++-	GIT_ASSERT_ARG(out);
++-
++-	transport = git__calloc(sizeof(http_subtransport), 1);
++-	GIT_ERROR_CHECK_ALLOC(transport);
++-
++-	transport->owner = (transport_smart *)owner;
++-	transport->parent.action = http_action;
++-	transport->parent.close = http_close;
++-	transport->parent.free = http_free;
++-
++-	*out = (git_smart_subtransport *) transport;
++-	return 0;
++-}
++-
++-#endif /* !GIT_WINHTTP */
++diff --git a/src/util/CMakeLists.txt b/src/util/CMakeLists.txt
++index ee35eb961..a4a78628b 100644
++--- a/src/util/CMakeLists.txt
+++++ b/src/util/CMakeLists.txt
++@@ -77,3 +77,4 @@ ide_split_sources(util)
++ 
++ target_include_directories(util PRIVATE ${UTIL_INCLUDES} ${LIBGIT2_DEPENDENCY_INCLUDES} PUBLIC ${libgit2_SOURCE_DIR}/include)
++ target_include_directories(util SYSTEM PRIVATE ${LIBGIT2_SYSTEM_INCLUDES})
+++set(CMAKE_C90_STANDARD_COMPILE_OPTION "-std=gnu90")
+diff --git a/packages/libgit2/patches/0002-pre-post.patch b/packages/libgit2/patches/0002-pre-post.patch
+new file mode 100644
+index 00000000..82195c7d
+--- /dev/null
++++ b/packages/libgit2/patches/0002-pre-post.patch
+@@ -0,0 +1,429 @@
++diff --git a/emscriptenbuild/post-async.js b/emscriptenbuild/post-async.js
++new file mode 100644
++index 000000000..87a23bdba
++--- /dev/null
+++++ b/emscriptenbuild/post-async.js
++@@ -0,0 +1,202 @@
+++/**
+++ * Javascript functions for emscripten http transport for nodejs and the browser NOT using a webworker
+++ * 
+++ * If you can't use a webworker, you can build Release-async or Debug-async versions of wasm-git
+++ * which use async transports, and can be run without a webworker. The lg2 release files are about
+++ * twice the size with this option, and your UI may be affected by doing git operations in the
+++ * main JavaScript thread.
+++ * 
+++ * This the non-webworker version (see also post.js)
+++ */
+++
+++const emscriptenhttpconnections = {};
+++let httpConnectionNo = 0;
+++
+++const chmod = FS.chmod;
+++    
+++FS.chmod = function(path, mode, dontFollow) { 
+++    if (mode === 0o100000 > 0) {
+++        // workaround for libgit2 calling chmod with only S_IFREG set (permisions 0000)
+++        // reason currently not known
+++        return chmod(path, mode, dontFollow);
+++    } else {
+++        return 0;
+++    }
+++};
+++
+++if(ENVIRONMENT_IS_WEB) {
+++    Module.origCallMain = Module.callMain;
+++    Module.callMain = async (args) => {
+++        await Module.origCallMain(args);
+++        if (typeof Asyncify === 'object' && Asyncify.currData) {            
+++            await Asyncify.whenDone();
+++        }
+++    };
+++
+++    Object.assign(Module, {
+++        emscriptenhttpconnect: async function(url, buffersize, method, headers) {
+++          let result = new Promise((resolve, reject) => {
+++            if(!method) {
+++              method = 'GET';
+++            }
+++
+++            const xhr = new XMLHttpRequest();
+++            xhr.open(method, url, true);
+++            xhr.responseType = 'arraybuffer';
+++
+++            if (headers) {
+++                Object.keys(headers).forEach(header => xhr.setRequestHeader(header, headers[header]));
+++            }
+++
+++            emscriptenhttpconnections[httpConnectionNo] = {
+++                xhr: xhr,
+++                resultbufferpointer: 0,
+++                buffersize: buffersize
+++            };
+++            
+++            if(method === 'GET') {
+++              xhr.onload = function () {
+++                resolve(httpConnectionNo++);
+++              };
+++              xhr.send();
+++            } else {
+++              resolve(httpConnectionNo++);
+++            }
+++          });
+++          return result;
+++        },
+++        emscriptenhttpwrite: function(connectionNo, buffer, length) {
+++            const connection = emscriptenhttpconnections[connectionNo];
+++            const buf = new Uint8Array(Module.HEAPU8.buffer,buffer,length).slice(0);
+++            if(!connection.content) {
+++                connection.content = buf;
+++            } else {
+++                const content = new Uint8Array(connection.content.length + buf.length);
+++                content.set(connection.content);
+++                content.set(buf, connection.content.length);
+++                connection.content = content;
+++            }            
+++        },
+++        emscriptenhttpread: async function(connectionNo, buffer, buffersize) {
+++          const connection = emscriptenhttpconnections[connectionNo];
+++
+++          function handleResponse(connection, buffer, buffersize) {
+++            let bytes_read = connection.xhr.response.byteLength - connection.resultbufferpointer;
+++            if (bytes_read > buffersize) {
+++              bytes_read = buffersize;
+++            }
+++            const responseChunk = new Uint8Array(connection.xhr.response, connection.resultbufferpointer, bytes_read);
+++            writeArrayToMemory(responseChunk, buffer);
+++            connection.resultbufferpointer += bytes_read;
+++            return bytes_read;
+++          }
+++
+++          let result = new Promise((resolve) => {
+++              if(connection.content) {
+++                    connection.xhr.onload = function () {
+++                    resolve(handleResponse(connection, buffer, buffersize));
+++                };
+++                connection.xhr.send(connection.content.buffer);
+++                connection.content = null;
+++              } else {
+++                resolve(handleResponse(connection, buffer, buffersize));
+++              }
+++          });
+++
+++          return result;
+++        },
+++        emscriptenhttpfree: function(connectionNo) {
+++            delete emscriptenhttpconnections[connectionNo];
+++        }
+++    });
+++} else if(ENVIRONMENT_IS_NODE) {
+++    const { Worker } = require('worker_threads');
+++
+++    Object.assign(Module, {
+++        emscriptenhttpconnect: function(url, buffersize, method, headers) {
+++            const statusArray = new Int32Array(new SharedArrayBuffer(4));
+++            Atomics.store(statusArray, 0, method === 'POST' ? -1 : 0);
+++        
+++            const resultBuffer = new SharedArrayBuffer(buffersize);
+++            const resultArray = new Uint8Array(resultBuffer);
+++            const workerData =  {
+++                    statusArray: statusArray,
+++                    resultArray: resultArray,
+++                    url: url,
+++                    method: method ? method: 'GET',
+++                    headers: headers
+++            };  
+++
+++            new Worker('(' + (function requestWorker() {
+++                const { workerData } = require('worker_threads');
+++                const req = require(workerData.url.indexOf('https') === 0 ? 'https' : 'http')
+++                              .request(workerData.url, {
+++                    headers: workerData.headers,
+++                    method: workerData.method
+++                }, (res) => {
+++                    res.on('data', chunk => {
+++                        const previousStatus = workerData.statusArray[0];
+++                        if(previousStatus !== 0) {
+++                            Atomics.wait(workerData.statusArray, 0, previousStatus);
+++                        }                    
+++                        workerData.resultArray.set(chunk);                    
+++                        Atomics.store(workerData.statusArray, 0, chunk.length);
+++                        Atomics.notify(workerData.statusArray, 0, 1);
+++                    });
+++                });        
+++
+++                if(workerData.method === 'POST') {
+++                    while(workerData.statusArray[0] !== 0) {
+++                        Atomics.wait(workerData.statusArray, 0, -1);
+++                        const length = workerData.statusArray[0];
+++                        if(length === 0) {
+++                            break;
+++                        }
+++                        req.write(Buffer.from(workerData.resultArray.slice(0, length)));
+++                        Atomics.store(workerData.statusArray, 0, -1);
+++                        Atomics.notify(workerData.statusArray, 0, 1);
+++                    }
+++                }
+++                
+++                req.end();
+++            }).toString()+')()' , {
+++                eval: true,
+++                workerData: workerData
+++            }); 
+++            emscriptenhttpconnections[httpConnectionNo] = workerData;
+++            console.log('connected with method', workerData.method, 'to', workerData.url);
+++            return httpConnectionNo++;
+++        },
+++        emscriptenhttpwrite: function(connectionNo, buffer, length) {
+++            const connection = emscriptenhttpconnections[connectionNo];
+++            connection.resultArray.set(new Uint8Array(Module.HEAPU8.buffer,buffer,length));
+++            Atomics.store(connection.statusArray, 0, length);
+++            Atomics.notify(connection.statusArray, 0, 1);
+++            // Wait for write to finish
+++            Atomics.wait(connection.statusArray, 0, length);
+++        },
+++        emscriptenhttpread: function(connectionNo, buffer) { 
+++            const connection = emscriptenhttpconnections[connectionNo];
+++
+++            if(connection.statusArray[0] === -1 && connection.method === 'POST') {
+++                // Stop writing
+++                Atomics.store(connection.statusArray, 0, 0);
+++                Atomics.notify(connection.statusArray, 0, 1);
+++            }
+++            Atomics.wait(connection.statusArray, 0, 0);
+++            const bytes_read = connection.statusArray[0];
+++
+++            writeArrayToMemory(connection.resultArray.slice(0, bytes_read), buffer);
+++
+++            //console.log('read with connectionNo', connectionNo, 'length', bytes_read, 'content',
+++            //        new TextDecoder('utf-8').decode(connection.resultArray.slice(0, bytes_read)));
+++            Atomics.store(connection.statusArray, 0, 0);
+++            Atomics.notify(connection.statusArray, 0, 1);
+++
+++            return bytes_read;
+++        },
+++        emscriptenhttpfree: function(connectionNo) {
+++            delete emscriptenhttpconnections[connectionNo];
+++        }
+++    });
+++}
++\ No newline at end of file
++diff --git a/emscriptenbuild/post.js b/emscriptenbuild/post.js
++new file mode 100644
++index 000000000..f05bdff36
++--- /dev/null
+++++ b/emscriptenbuild/post.js
++@@ -0,0 +1,163 @@
+++/**
+++ * Javascript functions for emscripten http transport for nodejs and the browser using a webworker
+++ * 
+++ * If you can't use a webworker, you can build Release-async or Debug-async versions of wasm-git
+++ * which use async transports, and can be run without a webworker. The lg2 release files are about
+++ * twice the size with this option, and your UI may be affected by doing git operations in the
+++ * main JavaScript thread.
+++ * 
+++ * This the non-webworker version (see also post-async.js)
+++ */
+++
+++const emscriptenhttpconnections = {};
+++let httpConnectionNo = 0;
+++
+++if(ENVIRONMENT_IS_WORKER) {
+++    Object.assign(Module, {
+++        emscriptenhttpconnect: function(url, buffersize, method, headers) {
+++            if(!method) {
+++                method = 'GET';
+++            }
+++
+++            const xhr = new XMLHttpRequest();
+++            xhr.open(method, url, false);
+++            xhr.responseType = 'arraybuffer';
+++
+++            if (headers) {
+++                Object.keys(headers).forEach(header => xhr.setRequestHeader(header, headers[header]));
+++            }
+++
+++            emscriptenhttpconnections[httpConnectionNo] = {
+++                xhr: xhr,
+++                resultbufferpointer: 0,
+++                buffersize: buffersize
+++            };
+++            
+++            if(method === 'GET') {
+++                xhr.send();
+++            }
+++
+++            return httpConnectionNo++;
+++        },
+++        emscriptenhttpwrite: function(connectionNo, buffer, length) {
+++            const connection = emscriptenhttpconnections[connectionNo];
+++            const buf = new Uint8Array(Module.HEAPU8.buffer,buffer,length).slice(0);
+++            if(!connection.content) {
+++                connection.content = buf;
+++            } else {
+++                const content = new Uint8Array(connection.content.length + buf.length);
+++                content.set(connection.content);
+++                content.set(buf, connection.content.length);
+++                connection.content = content;
+++            }            
+++        },
+++        emscriptenhttpread: function(connectionNo, buffer, buffersize) { 
+++            const connection = emscriptenhttpconnections[connectionNo];
+++            if(connection.content) {
+++                connection.xhr.send(connection.content.buffer);
+++                connection.content = null;
+++            }
+++            let bytes_read = connection.xhr.response.byteLength - connection.resultbufferpointer;
+++            if (bytes_read > buffersize) {
+++                bytes_read = buffersize;
+++            }
+++            const responseChunk = new Uint8Array(connection.xhr.response, connection.resultbufferpointer, bytes_read);
+++            writeArrayToMemory(responseChunk, buffer);
+++            connection.resultbufferpointer += bytes_read;
+++            return bytes_read;
+++        },
+++        emscriptenhttpfree: function(connectionNo) {
+++            delete emscriptenhttpconnections[connectionNo];
+++        }
+++    });
+++} else if(ENVIRONMENT_IS_NODE) {
+++    const { Worker } = require('worker_threads');
+++
+++    Object.assign(Module, {
+++        emscriptenhttpconnect: function(url, buffersize, method, headers) {
+++            const statusArray = new Int32Array(new SharedArrayBuffer(4));
+++            Atomics.store(statusArray, 0, method === 'POST' ? -1 : 0);
+++        
+++            const resultBuffer = new SharedArrayBuffer(buffersize);
+++            const resultArray = new Uint8Array(resultBuffer);
+++            const workerData =  {
+++                    statusArray: statusArray,
+++                    resultArray: resultArray,
+++                    url: url,
+++                    method: method ? method: 'GET',
+++                    headers: headers
+++            };  
+++
+++            new Worker('(' + (function requestWorker() {
+++                const { workerData } = require('worker_threads');
+++                const req = require(workerData.url.indexOf('https') === 0 ? 'https' : 'http')
+++                              .request(workerData.url, {
+++                    headers: workerData.headers,
+++                    method: workerData.method
+++                }, (res) => {
+++                    res.on('data', chunk => {
+++                        const previousStatus = workerData.statusArray[0];
+++                        if(previousStatus !== 0) {
+++                            Atomics.wait(workerData.statusArray, 0, previousStatus);
+++                        }                    
+++                        workerData.resultArray.set(chunk);                    
+++                        Atomics.store(workerData.statusArray, 0, chunk.length);
+++                        Atomics.notify(workerData.statusArray, 0, 1);
+++                    });
+++                });        
+++
+++                if(workerData.method === 'POST') {
+++                    while(workerData.statusArray[0] !== 0) {
+++                        Atomics.wait(workerData.statusArray, 0, -1);
+++                        const length = workerData.statusArray[0];
+++                        if(length === 0) {
+++                            break;
+++                        }
+++                        req.write(Buffer.from(workerData.resultArray.slice(0, length)));
+++                        Atomics.store(workerData.statusArray, 0, -1);
+++                        Atomics.notify(workerData.statusArray, 0, 1);
+++                    }
+++                }
+++                
+++                req.end();
+++            }).toString()+')()' , {
+++                eval: true,
+++                workerData: workerData
+++            }); 
+++            emscriptenhttpconnections[httpConnectionNo] = workerData;
+++            console.log('connected with method', workerData.method, 'to', workerData.url);
+++            return httpConnectionNo++;
+++        },
+++        emscriptenhttpwrite: function(connectionNo, buffer, length) {
+++            const connection = emscriptenhttpconnections[connectionNo];
+++            connection.resultArray.set(new Uint8Array(Module.HEAPU8.buffer,buffer,length));
+++            Atomics.store(connection.statusArray, 0, length);
+++            Atomics.notify(connection.statusArray, 0, 1);
+++            // Wait for write to finish
+++            Atomics.wait(connection.statusArray, 0, length);
+++        },
+++        emscriptenhttpread: function(connectionNo, buffer) { 
+++            const connection = emscriptenhttpconnections[connectionNo];
+++
+++            if(connection.statusArray[0] === -1 && connection.method === 'POST') {
+++                // Stop writing
+++                Atomics.store(connection.statusArray, 0, 0);
+++                Atomics.notify(connection.statusArray, 0, 1);
+++            }
+++            Atomics.wait(connection.statusArray, 0, 0);
+++            const bytes_read = connection.statusArray[0];
+++
+++            writeArrayToMemory(connection.resultArray.slice(0, bytes_read), buffer);
+++
+++            //console.log('read with connectionNo', connectionNo, 'length', bytes_read, 'content',
+++            //        new TextDecoder('utf-8').decode(connection.resultArray.slice(0, bytes_read)));
+++            Atomics.store(connection.statusArray, 0, 0);
+++            Atomics.notify(connection.statusArray, 0, 1);
+++
+++            return bytes_read;
+++        },
+++        emscriptenhttpfree: function(connectionNo) {
+++            delete emscriptenhttpconnections[connectionNo];
+++        }
+++    });
+++}
++\ No newline at end of file
++diff --git a/emscriptenbuild/pre.js b/emscriptenbuild/pre.js
++new file mode 100644
++index 000000000..846f5cbfb
++--- /dev/null
+++++ b/emscriptenbuild/pre.js
++@@ -0,0 +1,44 @@
+++Object.assign(Module, globalThis.wasmGitModuleOverrides);
+++
+++if (!Module.print && !Module.printErr) {
+++    let capturedOutput = null;
+++    let capturedError = null;
+++    let quitStatus;
+++
+++    Module.print = (msg) => {
+++        if (capturedOutput !== null) {
+++            capturedOutput.push(msg);
+++        }
+++        console.log(msg);
+++    }
+++
+++    Module.printErr = (msg) => {
+++        if (capturedError !== null) {
+++            capturedError.push(msg);
+++        }
+++        console.error(msg);
+++    }
+++
+++    Module.quit = (status) => {
+++        quitStatus = status;
+++    };
+++
+++    Module.callWithOutput = (args) => {
+++        capturedOutput = [];
+++        capturedError = [];
+++        quitStatus = null;
+++        
+++        Module.callMain(args);
+++        
+++        const ret = capturedOutput.join('\n');
+++        const err = capturedError.join('\n');
+++        capturedOutput = null;
+++        capturedError = null;
+++
+++        if (!quitStatus) {
+++            return ret;
+++        } else {
+++            throw(quitStatus + ': ' + err);
+++        }
+++    }
+++}
 diff --git a/packages/libhdf5/meta.yaml b/packages/libhdf5/meta.yaml
 index 0bdbf223..f7914e3e 100644
 --- a/packages/libhdf5/meta.yaml
