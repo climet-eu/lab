@@ -1316,13 +1316,15 @@ index 3572b48d..fa6c9b9c 100644
    PyPI: https://pypi.org/project/fsspec
 diff --git a/packages/git2/git2/git2/__init__.py b/packages/git2/git2/git2/__init__.py
 new file mode 100644
-index 00000000..4e57d6ad
+index 00000000..2c43cc0e
 --- /dev/null
 +++ b/packages/git2/git2/git2/__init__.py
-@@ -0,0 +1,21 @@
+@@ -0,0 +1,25 @@
 +import ctypes as _ctypes
++import sys as _sys
 +
 +from pathlib import Path as _Path
++from tempfile import TemporaryFile as _TemporaryFile
 +
 +
 +_dll = _ctypes.CDLL(_Path(__file__).parent / "libgit2.so")
@@ -1335,12 +1337,14 @@ index 00000000..4e57d6ad
 +    argv[0] = "git".encode("utf-8")
 +    argv[1:] = [a.encode("utf-8") for a in args]
 +
-+    status = _dll.git_main(argc, argv)
++    with _TemporaryFile() as out, _TemporaryFile() as err:
++        status = _dll.git_main(argc, argv, out.fileno(), err.fileno())
 +
-+    if status == 0:
-+        return
-+
-+    raise RuntimeError(status)
++        out.seek(0); out = out.read().decode("utf-8").rstrip()
++        err.seek(0); err = err.read().decode("utf-8").rstrip()
++    
++    print(out, end="", file=_sys.stdout, flush=True)
++    print(err, end="", file=_sys.stderr, flush=True)
 diff --git a/packages/git2/git2/pyproject.toml b/packages/git2/git2/pyproject.toml
 new file mode 100644
 index 00000000..537ce3ca
@@ -2349,10 +2353,10 @@ index 00000000..5ca9773e
 +    - zlib
 diff --git a/packages/libgit2/patches/0001-emscripten-transport-fs.patch b/packages/libgit2/patches/0001-emscripten-transport-fs.patch
 new file mode 100644
-index 00000000..24f0a60c
+index 00000000..5d644e7a
 --- /dev/null
 +++ b/packages/libgit2/patches/0001-emscripten-transport-fs.patch
-@@ -0,0 +1,2584 @@
+@@ -0,0 +1,2605 @@
 +diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
 +index 8e38c7d4e..ac44f03c1 100644
 +--- a/examples/CMakeLists.txt
@@ -2695,7 +2699,7 @@ index 00000000..24f0a60c
 + extern int lg2_rev_parse(git_repository *repo, int argc, char **argv);
 + extern int lg2_show_index(git_repository *repo, int argc, char **argv);
 +diff --git a/examples/lg2.c b/examples/lg2.c
-+index 7946bc215..e729355f3 100644
++index 7946bc215..cf198cf8b 100644
 +--- a/examples/lg2.c
 ++++ b/examples/lg2.c
 +@@ -1,5 +1,13 @@
@@ -2721,34 +2725,55 @@ index 00000000..24f0a60c
 + 	{ "rev-list",     lg2_rev_list,     1 },
 + 	{ "rev-parse",    lg2_rev_parse,    1 },
 + 	{ "show-index",   lg2_show_index,   0 },
-+@@ -62,10 +72,11 @@ static int usage(const char *prog)
-+ 	for (i = 0; i < ARRAY_SIZE(commands); i++)
-+ 		fprintf(stderr, "\t%s\n", commands[i].name);
-+ 
-+-	exit(EXIT_FAILURE);
-++	longjmp(git_exit__jmp_buffer, EXIT_FAILURE);
-++	// exit(EXIT_FAILURE);
++@@ -65,7 +75,7 @@ static int usage(const char *prog)
++ 	exit(EXIT_FAILURE);
 + }
 + 
 +-int main(int argc, char **argv)
-++__attribute__((visibility("default"))) int git_main(int argc, char **argv)
+++__attribute__((visibility("default"))) int git_main(int argc, char **argv, int out, int err)
 + {
 + 	struct args_info args = ARGS_INFO_INIT;
 + 	git_repository *repo = NULL;
-+@@ -73,6 +84,13 @@ int main(int argc, char **argv)
++@@ -73,6 +83,23 @@ int main(int argc, char **argv)
 + 	int return_code = 1;
 + 	size_t i;
 + 
+++	fflush(stdout);
+++	fflush(stderr);
+++
+++    int save_out = dup(fileno(stdout));
+++    int save_err = dup(fileno(stderr));
+++
+++	dup2(out, fileno(stdout));
+++	dup2(err, fileno(stderr));
+++
 ++	int exit_code;
 ++	exit_code = setjmp(git_exit__jmp_buffer);
 ++
 ++	if (exit_code != 0) {
-++		return exit_code;
+++		return_code = exit_code;
+++		goto post_shutdown;
 ++	}
 ++
 + 	if (argc < 2)
 + 		usage(argv[0]);
 + 
++@@ -120,5 +147,15 @@ shutdown:
++ 	git_repository_free(repo);
++ 	git_libgit2_shutdown();
++ 
+++post_shutdown:
+++	fflush(stdout);
+++    fflush(stderr);
+++
+++    dup2(save_out, fileno(stdout));
+++    dup2(save_err, fileno(stderr));
+++
+++    close(save_out);
+++    close(save_err);
+++
++ 	return return_code;
++ }
 +diff --git a/examples/push.c b/examples/push.c
 +index bcf307607..3072eb0c2 100644
 +--- a/examples/push.c
