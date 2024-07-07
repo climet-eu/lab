@@ -1316,11 +1316,12 @@ index 3572b48d..fa6c9b9c 100644
    PyPI: https://pypi.org/project/fsspec
 diff --git a/packages/git2/git2/git2/__init__.py b/packages/git2/git2/git2/__init__.py
 new file mode 100644
-index 00000000..2c43cc0e
+index 00000000..30068c6a
 --- /dev/null
 +++ b/packages/git2/git2/git2/__init__.py
-@@ -0,0 +1,25 @@
+@@ -0,0 +1,38 @@
 +import ctypes as _ctypes
++import shlex as _shlex
 +import sys as _sys
 +
 +from pathlib import Path as _Path
@@ -1343,8 +1344,20 @@ index 00000000..2c43cc0e
 +        out.seek(0); out = out.read().decode("utf-8").rstrip()
 +        err.seek(0); err = err.read().decode("utf-8").rstrip()
 +    
-+    print(out, end="", file=_sys.stdout, flush=True)
-+    print(err, end="", file=_sys.stderr, flush=True)
++    if len(out) > 0:
++        print(out, end="", file=_sys.stdout, flush=True)
++    if len(err) > 0:
++        print(err, end="", file=_sys.stderr, flush=True)
++
++
++try:
++    from IPython.core.magic import register_line_magic as _register_line_magic
++except ModuleNotFoundError:
++    pass
++else:
++    @_register_line_magic("git")
++    def _git_magic(line):
++        git(*_shlex.split(line))
 diff --git a/packages/git2/git2/pyproject.toml b/packages/git2/git2/pyproject.toml
 new file mode 100644
 index 00000000..537ce3ca
