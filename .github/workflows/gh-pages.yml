@@ -70,7 +70,7 @@ jobs:
           PYODIDE_DOCKER_IMAGE=$(docker build . -q) \
             ./run_docker \
             --non-interactive \
-            PYODIDE_PACKAGES="basemap,fcpy,field-compression-benchmark,ipyfilite,ipython,earthkit,proplot" \
+            PYODIDE_PACKAGES="basemap,fcpy,field-compression-benchmark,ipyfilite,ipython,earthkit,proplot,git2" \
             make
       - name: Clean up the pyodide build
         run: |
