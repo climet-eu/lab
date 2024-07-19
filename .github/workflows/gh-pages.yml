@@ -86,7 +86,7 @@ jobs:
           rm -f static/pyodide/tsconfig.tsbuildinfo
       - name: Build the JupyterLite site
         run: |
-          cp ./README.md files/
+          rm -f files/README.md && cp ./README.md files/
           jupyter lite build --output-dir dist
           cp ./_headers dist/
           cp -r data dist/
