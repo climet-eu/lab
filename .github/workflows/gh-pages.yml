@@ -45,7 +45,6 @@ jobs:
         run: |
           cd pyodide
           git apply --whitespace=nowarn ../patches/pyodide.patch
-          cp -r ../fcpy packages/fcpy/fcpy
           git clone git@github.com:juntyr/field-compression-benchmark.git \
             packages/field-compression-benchmark/field-compression-benchmark
           cd packages/field-compression-benchmark/field-compression-benchmark
@@ -70,13 +69,12 @@ jobs:
           PYODIDE_DOCKER_IMAGE=$(docker build . -q) \
             ./run_docker \
             --non-interactive \
-            PYODIDE_PACKAGES="basemap,fcpy,field-compression-benchmark,ipyfilite,ipython,earthkit,proplot,git2" \
+            PYODIDE_PACKAGES="basemap,cfgrib,cmcrameri,dask,earthkit,field-compression-benchmark,git2,ipyfilite,ipython,lzma,matplotlib,MetPy,netcdf4,numcodecs,numpy,pandas,pint,proplot,scipy,xarray,xeofs,zarr" \
             make
       - name: Clean up the pyodide build
         run: |
           cd pyodide
           git apply --whitespace=nowarn --reverse ../patches/pyodide.patch
-          rm -rf packages/fcpy/fcpy
           rm -rf packages/field-compression-benchmark/field-compression-benchmark
           rm -rf .docker_home
           find . -name jupyter-lite.json -delete

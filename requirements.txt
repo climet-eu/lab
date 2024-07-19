@@ -20,7 +20,8 @@ jupyterlab-open-url-parameter~=0.3.0
 # JupyterLite: import a GitHub repo from its URL
 litegitpuller~=0.1.1
 # JupyterLab: read-only access to GitHub repos through an additional file browser
-jupyterlab-github~=4.0.0
+# FIXME: makes creating new notebooks difficult, as the read-only repo gets priority
+# jupyterlab-github~=4.0.0
 
 # Python: ipywidget library for Jupyter notebooks
 ipywidgets>=8.0.0,<9
