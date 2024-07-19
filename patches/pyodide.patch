@@ -1012,13 +1012,13 @@ index 00000000..b8d8fae1
 +  license: MIT
 diff --git a/packages/field-compression-benchmark/meta.yaml b/packages/field-compression-benchmark/meta.yaml
 new file mode 100644
-index 00000000..b7008a09
+index 00000000..c188f71a
 --- /dev/null
 +++ b/packages/field-compression-benchmark/meta.yaml
 @@ -0,0 +1,40 @@
 +package:
 +  name: field-compression-benchmark
-+  version: 0.0.3
++  version: 0.0.4
 +  top-level:
 +    - fcbench
 +source:
