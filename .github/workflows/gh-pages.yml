@@ -69,7 +69,7 @@ jobs:
           PYODIDE_DOCKER_IMAGE=$(docker build . -q) \
             ./run_docker \
             --non-interactive \
-            PYODIDE_PACKAGES="basemap,cfgrib,cmcrameri,dask,earthkit,field-compression-benchmark,git2,ipyfilite,ipython,lzma,matplotlib,MetPy,netcdf4,numcodecs,numpy,pandas,pint,proplot,scipy,xarray,xeofs,zarr" \
+            PYODIDE_PACKAGES="aiohttp,basemap,cfgrib,cmcrameri,dask,earthkit,field-compression-benchmark,fsspec,git2,ipyfilite,ipython,lzma,matplotlib,MetPy,netcdf4,numcodecs,numpy,pandas,pint,proplot,requests,scipy,xarray,xeofs,zarr" \
             make
       - name: Clean up the pyodide build
         run: |
