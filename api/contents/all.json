@@ -1,0 +1,29 @@
+{
+  "content": [
+    {
+      "content": null,
+      "created": "2024-07-25T14:46:51.980210Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2024-07-25T14:46:43.628206Z",
+      "mimetype": "text/markdown",
+      "name": "README.md",
+      "path": "README.md",
+      "size": 2709,
+      "type": "file",
+      "writable": true
+    }
+  ],
+  "created": "2024-07-25T14:46:51.980210Z",
+  "format": "json",
+  "hash": null,
+  "hash_algorithm": null,
+  "last_modified": "2024-07-25T14:46:51.980210Z",
+  "mimetype": null,
+  "name": "",
+  "path": "",
+  "size": null,
+  "type": "directory",
+  "writable": true
+}
