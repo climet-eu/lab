@@ -1012,7 +1012,7 @@ index 00000000..b8d8fae1
 +  license: MIT
 diff --git a/packages/field-compression-benchmark/meta.yaml b/packages/field-compression-benchmark/meta.yaml
 new file mode 100644
-index 00000000..379fff57
+index 00000000..802b8274
 --- /dev/null
 +++ b/packages/field-compression-benchmark/meta.yaml
 @@ -0,0 +1,40 @@
@@ -1029,7 +1029,7 @@ index 00000000..379fff57
 +build:
 +  script: |
 +    # Set up a more modern nightly toolchain with support for emscripten and wasm
-+    export RUSTUP_TOOLCHAIN="nightly-2024-04-28"
++    export RUSTUP_TOOLCHAIN="nightly-2024-06-08"
 +    rustup toolchain install ${RUSTUP_TOOLCHAIN}
 +    rustup target add wasm32-unknown-emscripten --toolchain ${RUSTUP_TOOLCHAIN}
 +    rustup target add wasm32-unknown-unknown --toolchain ${RUSTUP_TOOLCHAIN}
