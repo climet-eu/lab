@@ -1012,13 +1012,13 @@ index 00000000..b8d8fae1
 +  license: MIT
 diff --git a/packages/field-compression-benchmark/meta.yaml b/packages/field-compression-benchmark/meta.yaml
 new file mode 100644
-index 00000000..802b8274
+index 00000000..515805da
 --- /dev/null
 +++ b/packages/field-compression-benchmark/meta.yaml
 @@ -0,0 +1,40 @@
 +package:
 +  name: field-compression-benchmark
-+  version: 0.0.5
++  version: 0.0.6
 +  top-level:
 +    - fcbench
 +source:
@@ -1058,19 +1058,20 @@ index 00000000..802b8274
 +  license: MIT OR Apache-2.0
 diff --git a/packages/field-compression-benchmark/patches/0001-codecs-build.patch b/packages/field-compression-benchmark/patches/0001-codecs-build.patch
 new file mode 100644
-index 00000000..ce26357b
+index 00000000..ca680ff9
 --- /dev/null
 +++ b/packages/field-compression-benchmark/patches/0001-codecs-build.patch
-@@ -0,0 +1,127 @@
+@@ -0,0 +1,129 @@
 +diff --git a/codecs/build/Cargo.toml b/codecs/build/Cargo.toml
-+index 6bbc7f9a..65df6589 100644
++index b1ef4ff4..d0fd241f 100644
 +--- a/codecs/build/Cargo.toml
 ++++ b/codecs/build/Cargo.toml
-+@@ -16,19 +16,19 @@ wasi-preview1-component-adapter-provider = { workspace = true }
++@@ -16,20 +16,20 @@ wasi-preview1-component-adapter-provider = { workspace = true }
 + wit-component = { workspace = true }
 + 
 + # list of all codecs we build
 +-bit-round-codec = { workspace = true }
++-fixed-offset-scale-codec = { workspace = true }
 +-identity-codec = { workspace = true }
 +-linear-quantize-codec = { workspace = true }
 +-log-codec = { workspace = true }
@@ -1081,6 +1082,7 @@ index 00000000..ce26357b
 +-zlib-codec = { workspace = true }
 +-zstd-codec = { workspace = true }
 ++# bit-round-codec = { workspace = true }
+++# fixed-offset-scale-codec = { workspace = true }
 ++# identity-codec = { workspace = true }
 ++# linear-quantize-codec = { workspace = true }
 ++# log-codec = { workspace = true }
@@ -1099,7 +1101,7 @@ index 00000000..ce26357b
 + [lints]
 + workspace = true
 +diff --git a/codecs/build/build.rs b/codecs/build/build.rs
-+index 8503a7cd..b13c2e8e 100644
++index 0da07c62..b72bd059 100644
 +--- a/codecs/build/build.rs
 ++++ b/codecs/build/build.rs
 +@@ -5,13 +5,13 @@ use std::{
@@ -1109,22 +1111,22 @@ index 00000000..ce26357b
 +-#[cfg(not(target_arch = "wasm32"))]
 +-use sz3_codec as _;
 +-use ::{
-+-    bit_round_codec as _, identity_codec as _, linear_quantize_codec as _, log_codec as _,
-+-    reinterpret_codec as _, round_codec as _, uniform_noise_codec as _, zfp_codec as _,
-+-    zlib_codec as _, zstd_codec as _,
++-    bit_round_codec as _, fixed_offset_scale_codec as _, identity_codec as _,
++-    linear_quantize_codec as _, log_codec as _, reinterpret_codec as _, round_codec as _,
++-    uniform_noise_codec as _, zfp_codec as _, zlib_codec as _, zstd_codec as _,
 +-};
 ++// #[cfg(not(target_arch = "wasm32"))]
 ++// use sz3_codec as _;
 ++// use ::{
-++//     bit_round_codec as _, identity_codec as _, linear_quantize_codec as _, log_codec as _,
-++//     reinterpret_codec as _, round_codec as _, uniform_noise_codec as _, zfp_codec as _,
-++//     zlib_codec as _, zstd_codec as _,
+++//     bit_round_codec as _, fixed_offset_scale_codec as _, identity_codec as _,
+++//     linear_quantize_codec as _, log_codec as _, reinterpret_codec as _, round_codec as _,
+++//     uniform_noise_codec as _, zfp_codec as _, zlib_codec as _, zstd_codec as _,
 ++// };
 + 
 + fn main() -> io::Result<()> {
 +     // Check for `clippy` and return early in this case
 +diff --git a/fcbench/Cargo.toml b/fcbench/Cargo.toml
-+index 485d8f21..caaefd8d 100644
++index bdef9744..7731fed8 100644
 +--- a/fcbench/Cargo.toml
 ++++ b/fcbench/Cargo.toml
 +@@ -14,7 +14,7 @@ name = "fcbench"
