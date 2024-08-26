@@ -1499,18 +1499,18 @@ index 00000000..2618f15a
 +  license: BSD 3-Clause License
 diff --git a/packages/ipyloglite/meta.yaml b/packages/ipyloglite/meta.yaml
 new file mode 100644
-index 00000000..fd69089a
+index 00000000..1b52b7a3
 --- /dev/null
 +++ b/packages/ipyloglite/meta.yaml
 @@ -0,0 +1,13 @@
 +package:
 +  name: ipyloglite
-+  version: 0.1.1
++  version: 0.1.2
 +  top-level:
 +    - ipyloglite
 +source:
-+  url: https://files.pythonhosted.org/packages/74/b8/de36aedaf21fc1ea41ef7b7046668e9b990535626b93e982bb5948424ac2/ipyloglite-0.1.1-py3-none-any.whl
-+  sha256: 4de77ee714430035bbd2f6ea12e86011e0d32b24d7173a1642638089142c5794
++  url: https://files.pythonhosted.org/packages/1f/00/69dfe374606d8b1c13b8df6e96fb2ad455cbec4fa281c56ab2f373ea13ca/ipyloglite-0.1.2-py3-none-any.whl
++  sha256: dbfdccbb93a7e981574448fa2496330648e57d0aec64be50694e830776bab8a8
 +about:
 +  home: https://github.com/juntyr/ipyloglite
 +  PyPI: https://pypi.org/project/ipyloglite
