@@ -5172,10 +5172,10 @@ index f8b42f01..1124e104 100644
    PyPI: https://pypi.org/project/pyodide-http
 diff --git a/packages/pyodide-http/patches/0001-cors-proxy.patch b/packages/pyodide-http/patches/0001-cors-proxy.patch
 new file mode 100644
-index 00000000..c1589fc6
+index 00000000..e771f776
 --- /dev/null
 +++ b/packages/pyodide-http/patches/0001-cors-proxy.patch
-@@ -0,0 +1,91 @@
+@@ -0,0 +1,93 @@
 +diff --git a/README.md b/README.md
 +index 409d511..5a43b4f 100644
 +--- a/README.md
@@ -5188,7 +5188,7 @@ index 00000000..c1589fc6
 +\ No newline at end of file
 ++- [Panel](https://github.com/holoviz/panel) - included since 0.14.1 (can be disabled) when running Panel in the Browser using WASM. [Read more](https://panel.holoviz.org/user_guide/Running_in_Webassembly.html#handling-http-requests)
 +diff --git a/pyodide_http/_core.py b/pyodide_http/_core.py
-+index 1cb711d..64f0167 100644
++index 1cb711d..cc4eb41 100644
 +--- a/pyodide_http/_core.py
 ++++ b/pyodide_http/_core.py
 +@@ -72,7 +72,7 @@ def show_streaming_warning():
@@ -5200,13 +5200,15 @@ index 00000000..c1589fc6
 +     if request.params:
 +         from js import URLSearchParams
 + 
-+@@ -128,3 +128,21 @@ def send(request: Request, stream: bool = False) -> Response:
++@@ -128,3 +128,23 @@ def send(request: Request, stream: bool = False) -> Response:
 +         body = xhr.response.encode("ISO-8859-15")
 + 
 +     return Response(status_code=xhr.status, headers=headers, body=body)
 ++
 ++
 ++def send(request: Request, stream: bool = False) -> Response:
+++    import js
+++
 ++    # allow same-origin requests without change
 ++    if js.URL.new(request.url).origin == js.location.origin:
 ++        return _send(request, stream)
