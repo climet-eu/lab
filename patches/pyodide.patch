@@ -972,6 +972,25 @@ index 00000000..671f423a
 +     install_requires=install_requires,
 +     tests_require=[
 +         "pytest",
+diff --git a/packages/ecmwf-api-client/meta.yaml b/packages/ecmwf-api-client/meta.yaml
+new file mode 100644
+index 00000000..5d95d8f6
+--- /dev/null
++++ b/packages/ecmwf-api-client/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: ecmwf-api-client
++  version: 1.6.3
++  top-level:
++    - ecmwfapi
++source:
++  url: https://files.pythonhosted.org/packages/5b/44/ddeb18174b1cce4fe2c714c1968cd0e4272c6869c5073a3b270f071e5549/ecmwf-api-client-1.6.3.tar.gz
++  sha256: 3a00bda34a72e2d5198c97399a4750b42a6633efdb5e1b3a5fd2b2bbaa5db0d6
++about:
++  home: https://github.com/ecmwf/ecmwf-api-client
++  PyPI: https://pypi.org/project/ecmwf-api-client
++  summary: Python client for ECMWF web services API.
++  license: Apache License Version 2.0
 diff --git a/packages/entrypoints/meta.yaml b/packages/entrypoints/meta.yaml
 new file mode 100644
 index 00000000..45d496cf
@@ -1012,13 +1031,13 @@ index 00000000..b8d8fae1
 +  license: MIT
 diff --git a/packages/field-compression-benchmark/meta.yaml b/packages/field-compression-benchmark/meta.yaml
 new file mode 100644
-index 00000000..515805da
+index 00000000..c36a7474
 --- /dev/null
 +++ b/packages/field-compression-benchmark/meta.yaml
 @@ -0,0 +1,40 @@
 +package:
 +  name: field-compression-benchmark
-+  version: 0.0.6
++  version: 0.0.7
 +  top-level:
 +    - fcbench
 +source:
@@ -1058,7 +1077,7 @@ index 00000000..515805da
 +  license: MIT OR Apache-2.0
 diff --git a/packages/field-compression-benchmark/patches/0001-codecs-build.patch b/packages/field-compression-benchmark/patches/0001-codecs-build.patch
 new file mode 100644
-index 00000000..ca680ff9
+index 00000000..34d89c43
 --- /dev/null
 +++ b/packages/field-compression-benchmark/patches/0001-codecs-build.patch
 @@ -0,0 +1,129 @@
@@ -1101,7 +1120,7 @@ index 00000000..ca680ff9
 + [lints]
 + workspace = true
 +diff --git a/codecs/build/build.rs b/codecs/build/build.rs
-+index 0da07c62..b72bd059 100644
++index 13bde297..400a5b78 100644
 +--- a/codecs/build/build.rs
 ++++ b/codecs/build/build.rs
 +@@ -5,13 +5,13 @@ use std::{
@@ -1126,7 +1145,7 @@ index 00000000..ca680ff9
 + fn main() -> io::Result<()> {
 +     // Check for `clippy` and return early in this case
 +diff --git a/fcbench/Cargo.toml b/fcbench/Cargo.toml
-+index bdef9744..7731fed8 100644
++index 55d1c2f3..666c2344 100644
 +--- a/fcbench/Cargo.toml
 ++++ b/fcbench/Cargo.toml
 +@@ -14,7 +14,7 @@ name = "fcbench"
@@ -1139,12 +1158,12 @@ index 00000000..ca680ff9
 + core-benchmark = { workspace = true }
 + core-compressor = { workspace = true }
 +diff --git a/fcbench/src/lib.rs b/fcbench/src/lib.rs
-+index a17dbfac..ec0171c4 100644
++index af8660b7..76dc2bd5 100644
 +--- a/fcbench/src/lib.rs
 ++++ b/fcbench/src/lib.rs
 +@@ -3,7 +3,7 @@
 + 
-+ use pyo3::{exceptions::PyRuntimeError, prelude::*};
++ use pyo3::prelude::*;
 + 
 +-use codecs_build as _;
 ++// use codecs_build as _;
@@ -1173,7 +1192,7 @@ index 00000000..ca680ff9
 + [lints]
 + workspace = true
 +diff --git a/wasi/build/build.rs b/wasi/build/build.rs
-+index c6150452..d04b6554 100644
++index 7a5032cb..40e01431 100644
 +--- a/wasi/build/build.rs
 ++++ b/wasi/build/build.rs
 +@@ -5,10 +5,10 @@ use std::{
@@ -5134,6 +5153,120 @@ index 00000000..692b3f0e
 +  PyPI: https://pypi.org/project/pure_eval
 +  summary: Safely evaluate AST nodes without side effects
 +  license: MIT
+diff --git a/packages/pyodide-http/meta.yaml b/packages/pyodide-http/meta.yaml
+index f8b42f01..1124e104 100644
+--- a/packages/pyodide-http/meta.yaml
++++ b/packages/pyodide-http/meta.yaml
+@@ -4,8 +4,10 @@ package:
+   top-level:
+     - pyodide_http
+ source:
+-  url: https://files.pythonhosted.org/packages/2d/14/d1bf3b7141ad5a42c26e4173a69e3e6529bd92b05bc587c570d28b6a3ce8/pyodide_http-0.2.1-py3-none-any.whl
+-  sha256: 504f62904536a91049c12d0b9162ebaa187a84a3dd877e17c04fd9bf6ec3b68e
++  url: https://files.pythonhosted.org/packages/7b/ac/9c2134bdc4e2a4176f77a32f15afa4a064e8ea9d9b6ce88c16477e2c64cd/pyodide_http-0.2.1.tar.gz
++  sha256: 96afea01716c434025d70c45e255e28ac68ecddc196ddc2eafe8741c91661354
++  patches:
++    - patches/0001-cors-proxy.patch
+ about:
+   home: https://github.com/koenvo/pyodide-http
+   PyPI: https://pypi.org/project/pyodide-http
+diff --git a/packages/pyodide-http/patches/0001-cors-proxy.patch b/packages/pyodide-http/patches/0001-cors-proxy.patch
+new file mode 100644
+index 00000000..c1589fc6
+--- /dev/null
++++ b/packages/pyodide-http/patches/0001-cors-proxy.patch
+@@ -0,0 +1,91 @@
++diff --git a/README.md b/README.md
++index 409d511..5a43b4f 100644
++--- a/README.md
+++++ b/README.md
++@@ -55,4 +55,4 @@ Currently the following packages can be patched:
++ 
++ `pyodide-http` is used by a some awesome projects:
++ - [Pyodide](https://github.com/pyodide/pyodide) - included as a standard package
++-- [Panel](https://github.com/holoviz/panel) - included since 0.14.1 (can be disabled) when running Panel in the Browser using WASM. [Read more](https://github.com/holoviz/panel/blob/master/doc/user_guide/Running_in_Webassembly.md)
++\ No newline at end of file
+++- [Panel](https://github.com/holoviz/panel) - included since 0.14.1 (can be disabled) when running Panel in the Browser using WASM. [Read more](https://panel.holoviz.org/user_guide/Running_in_Webassembly.html#handling-http-requests)
++diff --git a/pyodide_http/_core.py b/pyodide_http/_core.py
++index 1cb711d..64f0167 100644
++--- a/pyodide_http/_core.py
+++++ b/pyodide_http/_core.py
++@@ -72,7 +72,7 @@ def show_streaming_warning():
++         )
++ 
++ 
++-def send(request: Request, stream: bool = False) -> Response:
+++def _send(request: Request, stream: bool = False) -> Response:
++     if request.params:
++         from js import URLSearchParams
++ 
++@@ -128,3 +128,21 @@ def send(request: Request, stream: bool = False) -> Response:
++         body = xhr.response.encode("ISO-8859-15")
++ 
++     return Response(status_code=xhr.status, headers=headers, body=body)
+++
+++
+++def send(request: Request, stream: bool = False) -> Response:
+++    # allow same-origin requests without change
+++    if js.URL.new(request.url).origin == js.location.origin:
+++        return _send(request, stream)
+++
+++    # proxy cross-origin requests
+++    request.url = "https://proxy.climet.eu/" + request.url
+++
+++    resp = _send(request, stream)
+++
+++    # redirect codes 301, 302, 303, 307, and 308 are hidden in 2xx codes by the
+++    #  proxy since browsers follow redirects automatically
+++    if resp.status_code in [251, 252, 253, 257, 258]:
+++        resp.status_code += 50
+++
+++    return resp
++diff --git a/pyodide_http/_requests.py b/pyodide_http/_requests.py
++index daa2fa8..a3980cc 100644
++--- a/pyodide_http/_requests.py
+++++ b/pyodide_http/_requests.py
++@@ -32,6 +32,13 @@ class PyodideHTTPAdapter(BaseAdapter):
++         stream = kwargs.get("stream", False)
++         pyodide_request = Request(request.method, request.url)
++         pyodide_request.timeout = kwargs.get("timeout", 0)
+++        if isinstance(pyodide_request.timeout, tuple):
+++            if len(pyodide_request.timeout) > 1:
+++                pyodide_request.timeout = (pyodide_request.timeout[0] or 0) + (
+++                    pyodide_request.timeout[1] or 0
+++                )
+++            elif len(pyodide_request.timeout) > 0:
+++                pyodide_request.timeout = pyodide_request.timeout[0] or 0
++         if not pyodide_request.timeout:
++             pyodide_request.timeout = 0
++         pyodide_request.params = None  # this is done in preparing request now
++diff --git a/pyodide_http/_urllib.py b/pyodide_http/_urllib.py
++index d1fa9c3..d6ebc8e 100644
++--- a/pyodide_http/_urllib.py
+++++ b/pyodide_http/_urllib.py
++@@ -35,15 +35,18 @@ def urlopen(url, *args, **kwargs):
++     # compressed format) the 'Content-Length' is the compressed length, while the
++     # data itself is uncompressed. This will cause problems while decoding our
++     # fake response.
++-    headers_without_content_length = {
++-        k: v for k, v in resp.headers.items() if k != "content-length"
++-    }
+++    headers_without_content_length = (
+++        {k: v for k, v in resp.headers.items() if k != "content-length"}
+++        if "content-encoding" in resp.headers.keys()
+++        else resp.headers
+++    )
++     response_data = (
++         b"HTTP/1.1 "
++         + str(resp.status_code).encode("ascii")
++         + b"\n"
++         + "\n".join(
++-            f"{key}: {value}" for key, value in headers_without_content_length.items()
+++            f"{'_'.join(k.title() for k in key.split('_'))}: {value}"
+++            for key, value in headers_without_content_length.items()
++         ).encode("ascii")
++         + b"\n\n"
++         + resp.body
 diff --git a/packages/pyproj/meta.yaml b/packages/pyproj/meta.yaml
 index 5a5ee080..aee2c27c 100644
 --- a/packages/pyproj/meta.yaml
