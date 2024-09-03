@@ -251,6 +251,56 @@ index 00000000..076bfc80
 +  PyPI: https://pypi.org/project/basemap
 +  summary: Plot data on map projections with matplotlib
 +  license: MIT
+diff --git a/packages/cads-api-client/meta.yaml b/packages/cads-api-client/meta.yaml
+new file mode 100644
+index 00000000..d79b482b
+--- /dev/null
++++ b/packages/cads-api-client/meta.yaml
+@@ -0,0 +1,19 @@
++package:
++  name: cads-api-client
++  version: 1.3.0
++  top-level:
++    - cads_api_client
++source:
++  url: https://files.pythonhosted.org/packages/fc/e5/33922dadc2f241ffb1878211df992776c949f027885caeb23fd804a442a5/cads_api_client-1.3.0-py3-none-any.whl
++  sha256: e6934046e63f6f1cdf3be77cdd48f4085a5b485aa45b35ce499912de6ddf9188
++requirements:
++  run:
++    - attrs
++    - multiurl
++    - requests
++    - typing-extensions
++about:
++  home: https://github.com/ecmwf-projects/cads-api-client
++  PyPI: https://pypi.org/project/cads-api-client
++  summary: CADS API Python client
++  license: Apache 2.0
+diff --git a/packages/cdsapi/meta.yaml b/packages/cdsapi/meta.yaml
+new file mode 100644
+index 00000000..240935da
+--- /dev/null
++++ b/packages/cdsapi/meta.yaml
+@@ -0,0 +1,19 @@
++package:
++  name: cdsapi
++  version: 0.7.2
++  top-level:
++    - cdsapi
++source:
++  url: https://files.pythonhosted.org/packages/41/00/2a9bf86503651d82c004f63f23a01fe12ec1ae6cd9b6640b0aed5b97ba11/cdsapi-0.7.2-py2.py3-none-any.whl
++  sha256: fc79f6a88ea3506d5557dc83a9fdb27c7a6a9aeed6da16dbd7a9f37fbe1d898e
++requirements:
++  run:
++    - cads-api-client
++    - requests
++    - setuptools
++    - tqdm
++about:
++  home: https://github.com/ecmwf/cdsapi
++  PyPI: https://pypi.org/project/cdsapi
++  summary: Climate Data Store API
++  license: Apache 2.0
 diff --git a/packages/certifi/meta.yaml b/packages/certifi/meta.yaml
 index 1ce1d74c..6472705a 100644
 --- a/packages/certifi/meta.yaml
