@@ -5507,10 +5507,10 @@ index 05936dbe..3ba7a7c7 100644
    PyPI: https://pypi.org/project/pytz
 diff --git a/packages/rasterio/meta.yaml b/packages/rasterio/meta.yaml
 new file mode 100644
-index 00000000..4c6f95a1
+index 00000000..eb1a30a0
 --- /dev/null
 +++ b/packages/rasterio/meta.yaml
-@@ -0,0 +1,26 @@
+@@ -0,0 +1,28 @@
 +package:
 +  name: rasterio
 +  version: 1.3.10
@@ -5520,6 +5520,8 @@ index 00000000..4c6f95a1
 +  url: https://files.pythonhosted.org/packages/26/05/f7c3ee93f270fbd77f7a2d58f2333a21fdf3ef9526a8f0b2a4d5d3d83184/rasterio-1.3.10.tar.gz
 +  sha256: ce182c735b4f9e8735d90600607ecab15ef895eb8aa660bf665751529477e326
 +requirements:
++  host:
++    - gdal
 +  run:
 +    - affine
 +    - attrs
