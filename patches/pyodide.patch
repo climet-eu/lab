@@ -5641,10 +5641,10 @@ index 00000000..692b3f0e
 +  summary: Safely evaluate AST nodes without side effects
 +  license: MIT
 diff --git a/packages/pyodide-http/meta.yaml b/packages/pyodide-http/meta.yaml
-index f8b42f01..1124e104 100644
+index f8b42f01..4a86bf81 100644
 --- a/packages/pyodide-http/meta.yaml
 +++ b/packages/pyodide-http/meta.yaml
-@@ -4,8 +4,10 @@ package:
+@@ -4,8 +4,13 @@ package:
    top-level:
      - pyodide_http
  source:
@@ -5654,6 +5654,9 @@ index f8b42f01..1124e104 100644
 +  sha256: 96afea01716c434025d70c45e255e28ac68ecddc196ddc2eafe8741c91661354
 +  patches:
 +    - patches/0001-cors-proxy.patch
++requirements:
++  run:
++    - requests
  about:
    home: https://github.com/koenvo/pyodide-http
    PyPI: https://pypi.org/project/pyodide-http
