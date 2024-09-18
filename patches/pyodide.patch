@@ -1809,12 +1809,12 @@ index 3572b48d..027d42fe 100644
    PyPI: https://pypi.org/project/fsspec
 diff --git a/packages/fsspec/patches/0001-syncify-awaitable.patch b/packages/fsspec/patches/0001-syncify-awaitable.patch
 new file mode 100644
-index 00000000..c22ecbce
+index 00000000..c1ce5c84
 --- /dev/null
 +++ b/packages/fsspec/patches/0001-syncify-awaitable.patch
-@@ -0,0 +1,124 @@
+@@ -0,0 +1,177 @@
 +diff --git a/fsspec/asyn.py b/fsspec/asyn.py
-+index fb4e05e..a36e423 100644
++index fb4e05e..45b060e 100644
 +--- a/fsspec/asyn.py
 ++++ b/fsspec/asyn.py
 +@@ -18,7 +18,7 @@ from .spec import AbstractBufferedFile, AbstractFileSystem
@@ -1937,6 +1937,59 @@ index 00000000..c22ecbce
 +     return loop[0]
 + 
 + 
++@@ -232,28 +246,30 @@ async def _run_coros_in_chunks(
++         If yes, you normally expect smaller batches.
++     """
++ 
++-    if batch_size is None:
++-        batch_size = _get_batch_size(nofiles=nofiles)
++-
++-    if batch_size == -1:
++-        batch_size = len(coros)
++-
++-    assert batch_size > 0
++-    results = []
++-    for start in range(0, len(coros), batch_size):
++-        chunk = [
++-            asyncio.Task(asyncio.wait_for(c, timeout=timeout))
++-            for c in coros[start : start + batch_size]
++-        ]
++-        if callback is not DEFAULT_CALLBACK:
++-            [
++-                t.add_done_callback(lambda *_, **__: callback.relative_update(1))
++-                for t in chunk
++-            ]
++-        results.extend(
++-            await asyncio.gather(*chunk, return_exceptions=return_exceptions),
++-        )
++-    return results
+++    return [await c for c in coros]
+++
+++    # if batch_size is None:
+++    #     batch_size = _get_batch_size(nofiles=nofiles)
+++
+++    # if batch_size == -1:
+++    #     batch_size = len(coros)
+++
+++    # assert batch_size > 0
+++    # results = []
+++    # for start in range(0, len(coros), batch_size):
+++    #     chunk = [
+++    #         asyncio.Task(asyncio.wait_for(c, timeout=timeout))
+++    #         for c in coros[start : start + batch_size]
+++    #     ]
+++    #     if callback is not DEFAULT_CALLBACK:
+++    #         [
+++    #             t.add_done_callback(lambda *_, **__: callback.relative_update(1))
+++    #             for t in chunk
+++    #         ]
+++    #     results.extend(
+++    #         await asyncio.gather(*chunk, return_exceptions=return_exceptions),
+++    #     )
+++    # return results
++ 
++ 
++ # these methods should be implemented as async by any async-able backend
 diff --git a/packages/git2/git2/git2/__init__.py b/packages/git2/git2/git2/__init__.py
 new file mode 100644
 index 00000000..30068c6a
