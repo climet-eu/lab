@@ -218,10 +218,10 @@ index 9a3c91ae..0632c904 100644
    run:
 diff --git a/packages/aiohttp/patches/0001-pyodide-connection.patch b/packages/aiohttp/patches/0001-pyodide-connection.patch
 new file mode 100644
-index 00000000..c467f617
+index 00000000..451da1f3
 --- /dev/null
 +++ b/packages/aiohttp/patches/0001-pyodide-connection.patch
-@@ -0,0 +1,306 @@
+@@ -0,0 +1,310 @@
 +diff --git a/aiohttp/__init__.py b/aiohttp/__init__.py
 +index 8bc7a4aa..b6debab6 100644
 +--- a/aiohttp/__init__.py
@@ -234,10 +234,10 @@ index 00000000..c467f617
 ++from . import patch
 +diff --git a/aiohttp/patch.py b/aiohttp/patch.py
 +new file mode 100644
-+index 00000000..1797e846
++index 00000000..0dc2f26e
 +--- /dev/null
 ++++ b/aiohttp/patch.py
-+@@ -0,0 +1,290 @@
++@@ -0,0 +1,294 @@
 ++from collections.abc import Iterable
 ++from contextlib import suppress
 ++from io import BytesIO
@@ -433,7 +433,8 @@ index 00000000..c467f617
 ++
 ++            xhr = js.XMLHttpRequest.new()
 ++            xhr.responseType = "arraybuffer"
-++            xhr.timeout = int(real_timeout.total * 1000)
+++            if real_timeout.total is not None:
+++                xhr.timeout = int(real_timeout.total * 1000)
 ++
 ++            url = str(req.url)
 ++            same_origin = js.URL.new(url).origin == js.location.origin
@@ -444,7 +445,7 @@ index 00000000..c467f617
 ++
 ++            xhr.open(req.method, url, False)
 ++            for name, value in headers.items():
-++                if name.lower() not in ("user-agent",):
+++                if name.lower() not in ("user-agent", "accept-encoding"):
 ++                    xhr.setRequestHeader(name, value)
 ++
 ++            xhr.send(to_js(req.body) if req.body is not None else None)
@@ -464,7 +465,10 @@ index 00000000..c467f617
 ++            resp.reason = xhr.statusText
 ++            # This is not quite correct in handling of repeated headers
 ++            resp._headers = CIMultiDict(headers)
-++            resp._raw_headers = tuple(tuple(e) for e in headers)
+++            resp._raw_headers = tuple(
+++                (k.encode('utf-8'), v.encode('utf-8')) for k, v in headers.items()
+++            )
+++
 ++            resp.content = Content(body)
 ++
 ++            # from js import Headers, fetch
@@ -2367,14 +2371,43 @@ index 00000000..f8920c6c
 +  license: BSD-3-Clause
 diff --git a/packages/jupyterlite-preload/jupyterlite-preload/jupyterlite_preload.py b/packages/jupyterlite-preload/jupyterlite-preload/jupyterlite_preload.py
 new file mode 100644
-index 00000000..bb926791
+index 00000000..f87d59aa
 --- /dev/null
 +++ b/packages/jupyterlite-preload/jupyterlite-preload/jupyterlite_preload.py
-@@ -0,0 +1,4 @@
+@@ -0,0 +1,33 @@
++import asyncio
++
 +import ipyloglite
 +
 +import pyodide_http
 +pyodide_http.patch_all()
++
++
++async def asyncio_gather(*coros_or_futures, return_exceptions=False):
++    results = []
++
++    for coro in coros_or_futures:
++        try:
++            results.append(await coro)
++        except Exception as err:
++            if return_exceptions:
++                results.append(err)
++            else:
++                raise
++
++    return results
++
++
++# FIXME: somehow detect if we're actually running on a loop and use the actual
++#        async sleep in that case
++async def asyncio_sleep(delay, result=None):
++    import time
++    time.sleep(delay)
++    return result
++
++
++asyncio.gather = asyncio_gather
++asyncio.sleep = asyncio_sleep
 diff --git a/packages/jupyterlite-preload/jupyterlite-preload/pyproject.toml b/packages/jupyterlite-preload/jupyterlite-preload/pyproject.toml
 new file mode 100644
 index 00000000..44219eaa
