@@ -218,7 +218,7 @@ index 9a3c91ae..0632c904 100644
    run:
 diff --git a/packages/aiohttp/patches/0001-pyodide-connection.patch b/packages/aiohttp/patches/0001-pyodide-connection.patch
 new file mode 100644
-index 00000000..a053c83d
+index 00000000..c9603ab2
 --- /dev/null
 +++ b/packages/aiohttp/patches/0001-pyodide-connection.patch
 @@ -0,0 +1,293 @@
@@ -234,7 +234,7 @@ index 00000000..a053c83d
 ++from . import patch
 +diff --git a/aiohttp/patch.py b/aiohttp/patch.py
 +new file mode 100644
-+index 00000000..9ac98439
++index 00000000..fc6e65d1
 +--- /dev/null
 ++++ b/aiohttp/patch.py
 +@@ -0,0 +1,277 @@
@@ -355,7 +355,7 @@ index 00000000..a053c83d
 ++    # timeout is cumulative for all request operations
 ++    # (request, redirects, responses, data consuming)
 ++    tm = TimeoutHandle(self._loop, real_timeout.total)
-++    handle = tm.start()
+++    # handle = tm.start()
 ++
 ++    if read_bufsize is None:
 ++        read_bufsize = self._read_bufsize
@@ -364,7 +364,7 @@ index 00000000..a053c83d
 ++
 ++    timer = tm.timer()
 ++    try:
-++        with timer:
+++        if True:  # with timer:
 ++            url, auth_from_url = strip_auth_from_url(url)
 ++            if auth and auth_from_url:
 ++                raise ValueError(
@@ -486,11 +486,11 @@ index 00000000..a053c83d
 ++            resp.raise_for_status()
 ++
 ++        # register connection
-++        if handle is not None:
-++            if resp.connection is not None:
-++                resp.connection.add_callback(handle.cancel)
-++            else:
-++                handle.cancel()
+++        # if handle is not None:
+++        #     if resp.connection is not None:
+++        #         resp.connection.add_callback(handle.cancel)
+++        #     else:
+++        #         handle.cancel()
 ++
 ++        resp._history = tuple(history)
 ++
@@ -502,10 +502,10 @@ index 00000000..a053c83d
 ++
 ++    except BaseException as e:
 ++        # cleanup timer
-++        tm.close()
-++        if handle:
-++            handle.cancel()
-++            handle = None
+++        # tm.close()
+++        # if handle:
+++        #     handle.cancel()
+++        #     handle = None
 ++
 ++        for trace in traces:
 ++            await trace.send_request_exception(
