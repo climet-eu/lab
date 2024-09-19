@@ -218,10 +218,10 @@ index 9a3c91ae..0632c904 100644
    run:
 diff --git a/packages/aiohttp/patches/0001-pyodide-connection.patch b/packages/aiohttp/patches/0001-pyodide-connection.patch
 new file mode 100644
-index 00000000..c9603ab2
+index 00000000..c467f617
 --- /dev/null
 +++ b/packages/aiohttp/patches/0001-pyodide-connection.patch
-@@ -0,0 +1,293 @@
+@@ -0,0 +1,306 @@
 +diff --git a/aiohttp/__init__.py b/aiohttp/__init__.py
 +index 8bc7a4aa..b6debab6 100644
 +--- a/aiohttp/__init__.py
@@ -234,10 +234,10 @@ index 00000000..c9603ab2
 ++from . import patch
 +diff --git a/aiohttp/patch.py b/aiohttp/patch.py
 +new file mode 100644
-+index 00000000..fc6e65d1
++index 00000000..1797e846
 +--- /dev/null
 ++++ b/aiohttp/patch.py
-+@@ -0,0 +1,277 @@
++@@ -0,0 +1,290 @@
 ++from collections.abc import Iterable
 ++from contextlib import suppress
 ++from io import BytesIO
@@ -428,14 +428,21 @@ index 00000000..c9603ab2
 ++                session=req._session,
 ++            )
 ++
-++            from js import XMLHttpRequest
+++            import js
 ++            from pyodide.ffi import to_js
 ++
-++            xhr = XMLHttpRequest.new()
+++            xhr = js.XMLHttpRequest.new()
 ++            xhr.responseType = "arraybuffer"
 ++            xhr.timeout = int(real_timeout.total * 1000)
 ++
-++            xhr.open(req.method, str(req.url), False)
+++            url = str(req.url)
+++            same_origin = js.URL.new(url).origin == js.location.origin
+++
+++            # use a CORS proxy for cross-origin requests
+++            if not same_origin:
+++                url = f"https://proxy.climet.eu/{url}"
+++
+++            xhr.open(req.method, url, False)
 ++            for name, value in headers.items():
 ++                if name.lower() not in ("user-agent",):
 ++                    xhr.setRequestHeader(name, value)
@@ -445,9 +452,15 @@ index 00000000..c9603ab2
 ++            from email.parser import Parser
 ++            headers = dict(Parser().parsestr(xhr.getAllResponseHeaders()))
 ++            body = xhr.response.to_py().tobytes()
+++            status = xhr.status
+++
+++            # redirect codes 301, 302, 303, 307, and 308 are hidden in 2xx codes
+++            #  by the proxy since browsers follow redirects automatically
+++            if (not same_origin) and (status in [251, 252, 253, 257, 258]):
+++                status += 50
 ++
 ++            resp.version = version
-++            resp.status = xhr.status
+++            resp.status = status
 ++            resp.reason = xhr.statusText
 ++            # This is not quite correct in handling of repeated headers
 ++            resp._headers = CIMultiDict(headers)
@@ -2072,8 +2085,31 @@ index 00000000..98de1e7b
 +  vendor-sharedlib: true
 +  script: |
 +    cp ${WASM_LIBRARY_DIR}/lib/libgit2.so git2/
+diff --git a/packages/h5netcdf/meta.yaml b/packages/h5netcdf/meta.yaml
+new file mode 100644
+index 00000000..59d3abbf
+--- /dev/null
++++ b/packages/h5netcdf/meta.yaml
+@@ -0,0 +1,17 @@
++package:
++  name: h5netcdf
++  version: 1.3.0
++  top-level:
++    - h5netcdf
++requirements:
++  run:
++    - h5py
++    - packaging
++source:
++  url: https://files.pythonhosted.org/packages/68/2d/63851081b19d1ccf245091255797cb358c53c886609b5056da5457f7dbbf/h5netcdf-1.3.0-py3-none-any.whl
++  sha256: f2df69dcd3665dc9c4d43eb6529dedd113b2508090d12ac973573305a8406465
++about:
++  home: "https://github.com/h5netcdf/h5netcdf"
++  PyPI: https://pypi.org/project/h5netcdf
++  summary: netCDF4 via h5py
++  license: BSD-3-Clause
 diff --git a/packages/h5py/meta.yaml b/packages/h5py/meta.yaml
-index 3e67ba26..0e4c7b3c 100644
+index 3e67ba26..e3b3e76f 100644
 --- a/packages/h5py/meta.yaml
 +++ b/packages/h5py/meta.yaml
 @@ -1,14 +1,19 @@
@@ -2092,7 +2128,7 @@ index 3e67ba26..0e4c7b3c 100644
      - patches/0001-Fix-incompatible-pointer-type.patch
      - patches/configure.patch
 +about:
-+  home: ""
++  home: https://github.com/h5py/h5py
 +  PyPI: https://pypi.org/project/h5py
 +  summary: Read and write HDF5 files from Python
 +  license: BSD-3-Clause
