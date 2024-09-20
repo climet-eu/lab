@@ -172,6 +172,31 @@ index 00000000..8226d6ae
 +  PyPI: https://pypi.org/project/affine
 +  summary: Matrices describing affine transformation of the plane
 +  license: BSD-3-Clause License
+diff --git a/packages/aiobotocore/meta.yaml b/packages/aiobotocore/meta.yaml
+new file mode 100644
+index 00000000..629902d3
+--- /dev/null
++++ b/packages/aiobotocore/meta.yaml
+@@ -0,0 +1,19 @@
++package:
++  name: aiobotocore
++  version: 2.15.1
++  top-level:
++    - aiobotocore
++source:
++  url: https://files.pythonhosted.org/packages/df/b8/a0fc9cf540d15f4962448c7ec097e99196b4ddd2a988d98b3d4236cbc89e/aiobotocore-2.15.1-py3-none-any.whl
++  sha256: 0f738cde74108553b753b24655094289a3c7ea0f0f179ed1c0f8cea488999a35
++requirements:
++  run:
++    - botocore
++    - aiohttp
++    - wrapt
++    - aioitertools
++about:
++  home: https://github.com/aio-libs/aiobotocore
++  PyPI: https://pypi.org/project/aiobotocore
++  summary: Async client for aws services using botocore and aiohttp
++  license: Apache License 2.0
 diff --git a/packages/aiohttp/aiohttp_patch.py b/packages/aiohttp/aiohttp_patch.py
 index a1a7e4d7..f9d32345 100644
 --- a/packages/aiohttp/aiohttp_patch.py
@@ -532,6 +557,25 @@ index 00000000..451da1f3
 ++
 ++
 ++ClientSession._request = _request
+diff --git a/packages/aioitertools/meta.yaml b/packages/aioitertools/meta.yaml
+new file mode 100644
+index 00000000..0960b741
+--- /dev/null
++++ b/packages/aioitertools/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: aioitertools
++  version: 0.12.0
++  top-level:
++    - aioitertools
++source:
++  url: https://files.pythonhosted.org/packages/85/13/58b70a580de00893223d61de8fea167877a3aed97d4a5e1405c9159ef925/aioitertools-0.12.0-py3-none-any.whl
++  sha256: fc1f5fac3d737354de8831cbba3eb04f79dd649d8f3afb4c5b114925e662a796
++about:
++  home: https://github.com/omnilib/aioitertools
++  PyPI: https://pypi.org/project/aioitertools
++  summary: itertools and builtins for AsyncIO and mixed iterables
++  license: MIT License
 diff --git a/packages/asttokens/meta.yaml b/packages/asttokens/meta.yaml
 new file mode 100644
 index 00000000..fcefde3d
@@ -630,6 +674,31 @@ index 00000000..076bfc80
 +  PyPI: https://pypi.org/project/basemap
 +  summary: Plot data on map projections with matplotlib
 +  license: MIT
+diff --git a/packages/botocore/meta.yaml b/packages/botocore/meta.yaml
+new file mode 100644
+index 00000000..0a8a921a
+--- /dev/null
++++ b/packages/botocore/meta.yaml
+@@ -0,0 +1,19 @@
++package:
++  name: botocore
++  version: 1.35.23
++  top-level:
++    - botocore
++source:
++  url: https://files.pythonhosted.org/packages/f8/81/90e1b82697d849e4a5e7e6dcf21ef7ba9fa902b98324849bd2956e6efac3/botocore-1.35.23-py3-none-any.whl
++  sha256: cab9ec4e0367b9f33f0bc02c5a29f587b0119ecffd6d125bacee085dcbc8817d
++requirements:
++  run:
++    - jmespath
++    - python-dateutil
++    - ssl
++    - urllib3
++about:
++  home: https://github.com/boto/botocore
++  PyPI: https://pypi.org/project/botocore
++  summary: Low-level, data-driven core of boto 3.
++  license: Apache License 2.0
 diff --git a/packages/cads-api-client/meta.yaml b/packages/cads-api-client/meta.yaml
 new file mode 100644
 index 00000000..d79b482b
@@ -2350,6 +2419,25 @@ index 00000000..f4e47d07
 +  PyPI: https://pypi.org/project/ipywidgets
 +  summary: Jupyter interactive widgets
 +  license: BSD 3-Clause License
+diff --git a/packages/jmespath/meta.yaml b/packages/jmespath/meta.yaml
+new file mode 100644
+index 00000000..37df9349
+--- /dev/null
++++ b/packages/jmespath/meta.yaml
+@@ -0,0 +1,13 @@
++package:
++  name: jmespath
++  version: 1.0.1
++  top-level:
++    - jmespath
++source:
++  url: https://files.pythonhosted.org/packages/31/b4/b9b800c45527aadd64d5b442f9b932b00648617eb5d63d2c7a6587b7cafc/jmespath-1.0.1-py3-none-any.whl
++  sha256: 02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980
++about:
++  home: https://github.com/jmespath/jmespath.py
++  PyPI: https://pypi.org/project/jmespath
++  summary: JSON Matching Expressions
++  license: MIT
 diff --git a/packages/jupyterlab_widgets/meta.yaml b/packages/jupyterlab_widgets/meta.yaml
 new file mode 100644
 index 00000000..f8920c6c
@@ -6154,6 +6242,30 @@ index 00000000..3c5c2bb3
 +  home: https://github.com/rasterio/rasterio
 +  PyPI: https://pypi.org/project/rasterio
 +  summary: Fast and direct raster I/O for use with Numpy and SciPy
++  license: BSD
+diff --git a/packages/s3fs/meta.yaml b/packages/s3fs/meta.yaml
+new file mode 100644
+index 00000000..0bc62d8a
+--- /dev/null
++++ b/packages/s3fs/meta.yaml
+@@ -0,0 +1,18 @@
++package:
++  name: s3fs
++  version: 2024.2.0
++  top-level:
++    - s3fs
++source:
++  url: https://files.pythonhosted.org/packages/7c/76/efa5f84237620d5aa38e58285945b47449d8a94bf7037cae06f680b34c41/s3fs-2024.2.0-py3-none-any.whl
++  sha256: c140de37175c157cb662aa6ad7423365df732ac5f10ef5bf7b76078c6333a942
++requirements:
++  run:
++    - aiobotocore
++    - fsspec
++    - aiohttp # FIXME: requires >=3.9.2
++about:
++  home: http://github.com/fsspec/s3fs/
++  PyPI: https://pypi.org/project/s3fs
++  summary: Convenient Filesystem interface over S3
 +  license: BSD
 diff --git a/packages/scikit-learn/meta.yaml b/packages/scikit-learn/meta.yaml
 index cd2ec343..32d2a079 100644
