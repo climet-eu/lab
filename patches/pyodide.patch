@@ -2531,6 +2531,37 @@ index 00000000..d34d2d36
 +  run:
 +    - ipyloglite  # 0.0.0
 +    - pyodide-http  # 0.2.1
+diff --git a/packages/kerchunk/meta.yaml b/packages/kerchunk/meta.yaml
+new file mode 100644
+index 00000000..0e6dad88
+--- /dev/null
++++ b/packages/kerchunk/meta.yaml
+@@ -0,0 +1,25 @@
++package:
++  name: kerchunk
++  version: 0.2.6
++  top-level:
++    - kerchunk
++source:
++  url: https://files.pythonhosted.org/packages/82/8c/117feba86c75d42b8434f8e65085165df4cd415c754bcde3df007f036293/kerchunk-0.2.6-py3-none-any.whl
++  sha256: dc55fcea6560688ffc2390ff5882847fdf736982c1817553632a2bd7eb59de73
++requirements:
++  run:
++    - fsspec
++    - numcodecs
++    - numpy
++    - ujson
++    - zarr
++    - cftime
++    - xarray
++    - h5py
++    - cfgrib
++    - scipy
++about:
++  home: https://github.com/fsspec/kerchunk
++  PyPI: https://pypi.org/project/kerchunk
++  summary: Functions to make reference descriptions for ReferenceFileSystem
++  license: MIT
 diff --git a/packages/kiwisolver/meta.yaml b/packages/kiwisolver/meta.yaml
 index 7069d169..f05036af 100644
 --- a/packages/kiwisolver/meta.yaml
@@ -6900,6 +6931,24 @@ index 00000000..c19b3160
 +  PyPI: https://pypi.org/project/tzdata
 +  summary: Provider of IANA time zone data
 +  license: Apache-2.0
+diff --git a/packages/ujson/meta.yaml b/packages/ujson/meta.yaml
+new file mode 100644
+index 00000000..a1e5ef0a
+--- /dev/null
++++ b/packages/ujson/meta.yaml
+@@ -0,0 +1,12 @@
++package:
++  name: ujson
++  version: 5.10.0
++  top-level:
++    - ujson
++source:
++  url: https://files.pythonhosted.org/packages/f0/00/3110fd566786bfa542adb7932d62035e0c0ef662a8ff6544b6643b3d6fd7/ujson-5.10.0.tar.gz
++  sha256: b3cd8f3c5d8c7738257f1018880444f7b7d9b66232c64649f562d7ba86ad4bc1
++about:
++  home: https://github.com/ultrajson/ultrajson
++  PyPI: https://pypi.org/project/ujson
++  summary: Ultra fast JSON encoder and decoder for Python
 diff --git a/packages/urllib3/meta.yaml b/packages/urllib3/meta.yaml
 index 95074693..9aff20b2 100644
 --- a/packages/urllib3/meta.yaml
