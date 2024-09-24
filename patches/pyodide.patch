@@ -2459,11 +2459,18 @@ index 00000000..f8920c6c
 +  license: BSD-3-Clause
 diff --git a/packages/jupyterlite-preload/jupyterlite-preload/jupyterlite_preload.py b/packages/jupyterlite-preload/jupyterlite-preload/jupyterlite_preload.py
 new file mode 100644
-index 00000000..f87d59aa
+index 00000000..d9dfde0b
 --- /dev/null
 +++ b/packages/jupyterlite-preload/jupyterlite-preload/jupyterlite_preload.py
-@@ -0,0 +1,33 @@
+@@ -0,0 +1,67 @@
 +import asyncio
++import importlib
++import sys
++from pathlib import Path
++
++import pyodide
++import pyodide_js
++import pyodide_kernel
 +
 +import ipyloglite
 +
@@ -2496,6 +2503,33 @@ index 00000000..f87d59aa
 +
 +asyncio.gather = asyncio_gather
 +asyncio.sleep = asyncio_sleep
++
++
++async def load_packages_from_imports(
++    code: str, options=dict(checkIntegrity=True),
++):
++    imports = set()
++
++    for name in pyodide.code.find_imports(code):
++        if name in sys.modules:
++            continue
++
++        spec = importlib.util.find_spec(name)
++        if spec is not None and Path(spec.origin).parts[:2] == (
++            "/", "drive",
++        ):
++            with open(spec.origin, "r") as f:
++                await pyodide_js.loadPackagesFromImports(f.read())
++
++        if name in pyodide_js._api._import_name_to_package_name:
++            imports.add(
++                pyodide_js._api._import_name_to_package_name[name]
++            )
++
++    return await pyodide_js.loadPackage(list(imports))
++
++
++pyodide_kernel.kernel._load_packages_from_imports = load_packages_from_imports
 diff --git a/packages/jupyterlite-preload/jupyterlite-preload/pyproject.toml b/packages/jupyterlite-preload/jupyterlite-preload/pyproject.toml
 new file mode 100644
 index 00000000..44219eaa
