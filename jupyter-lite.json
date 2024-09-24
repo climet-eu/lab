@@ -10,6 +10,14 @@
             "@jupyterlite/pyodide-kernel-extension:kernel": {
                 "pyodideUrl": "/static/pyodide/pyodide.js"
             }
+        },
+        "fileTypes": {
+            "plain": {
+                "extensions": [".txt", ""],
+                "fileFormat": "text",
+                "mimeTypes": ["text/plain"],
+                "name": "plain"
+            }
         }
     }
 }
