@@ -243,7 +243,7 @@ index 9a3c91ae..0632c904 100644
    run:
 diff --git a/packages/aiohttp/patches/0001-pyodide-connection.patch b/packages/aiohttp/patches/0001-pyodide-connection.patch
 new file mode 100644
-index 00000000..451da1f3
+index 00000000..acd70e48
 --- /dev/null
 +++ b/packages/aiohttp/patches/0001-pyodide-connection.patch
 @@ -0,0 +1,310 @@
@@ -259,7 +259,7 @@ index 00000000..451da1f3
 ++from . import patch
 +diff --git a/aiohttp/patch.py b/aiohttp/patch.py
 +new file mode 100644
-+index 00000000..0dc2f26e
++index 00000000..25647f84
 +--- /dev/null
 ++++ b/aiohttp/patch.py
 +@@ -0,0 +1,294 @@
@@ -466,7 +466,7 @@ index 00000000..451da1f3
 ++
 ++            # use a CORS proxy for cross-origin requests
 ++            if not same_origin:
-++                url = f"https://proxy.climet.eu/{url}"
+++                url = f"https://cors.climet.eu/{url}"
 ++
 ++            xhr.open(req.method, url, False)
 ++            for name, value in headers.items():
@@ -6097,7 +6097,7 @@ index f8b42f01..4a86bf81 100644
    PyPI: https://pypi.org/project/pyodide-http
 diff --git a/packages/pyodide-http/patches/0001-cors-proxy.patch b/packages/pyodide-http/patches/0001-cors-proxy.patch
 new file mode 100644
-index 00000000..e771f776
+index 00000000..d179cce6
 --- /dev/null
 +++ b/packages/pyodide-http/patches/0001-cors-proxy.patch
 @@ -0,0 +1,93 @@
@@ -6113,7 +6113,7 @@ index 00000000..e771f776
 +\ No newline at end of file
 ++- [Panel](https://github.com/holoviz/panel) - included since 0.14.1 (can be disabled) when running Panel in the Browser using WASM. [Read more](https://panel.holoviz.org/user_guide/Running_in_Webassembly.html#handling-http-requests)
 +diff --git a/pyodide_http/_core.py b/pyodide_http/_core.py
-+index 1cb711d..cc4eb41 100644
++index 1cb711d..b8eebcd 100644
 +--- a/pyodide_http/_core.py
 ++++ b/pyodide_http/_core.py
 +@@ -72,7 +72,7 @@ def show_streaming_warning():
@@ -6139,7 +6139,7 @@ index 00000000..e771f776
 ++        return _send(request, stream)
 ++
 ++    # proxy cross-origin requests
-++    request.url = "https://proxy.climet.eu/" + request.url
+++    request.url = "https://cors.climet.eu/" + request.url
 ++
 ++    resp = _send(request, stream)
 ++
