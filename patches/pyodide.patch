@@ -2607,10 +2607,10 @@ index 7069d169..f05036af 100644
 +  url: https://files.pythonhosted.org/packages/b9/2d/226779e405724344fc678fcc025b812587617ea1a48b9442628b688e85ea/kiwisolver-1.4.5.tar.gz
 diff --git a/packages/libaec/meta.yaml b/packages/libaec/meta.yaml
 new file mode 100644
-index 00000000..1f84d691
+index 00000000..4342d7a4
 --- /dev/null
 +++ b/packages/libaec/meta.yaml
-@@ -0,0 +1,25 @@
+@@ -0,0 +1,26 @@
 +package:
 +  name: libaec
 +  version: 1.1.2
@@ -2618,8 +2618,8 @@ index 00000000..1f84d691
 +source:
 +  url: https://gitlab.dkrz.de/k202009/libaec/-/archive/v1.1.2/libaec-v1.1.2.tar.gz
 +  sha256: cde2097c6e0f18dbc4771930cebe907dfbdfcb7921f74d2594d46221581b6ef1
-+  patches:
-+    - patches/0001-build-only-static-library.patch
++  # patches:
++  #   - patches/0001-build-only-static-library.patch
 +
 +build:
 +  type: static_library
@@ -2636,6 +2636,7 @@ index 00000000..1f84d691
 +    emmake make -j ${PYODIDE_JOBS:-3} install;
 +
 +    cp -P ${WASM_LIBRARY_DIR}/lib/libaec.a ${DISTDIR}
++    rm ${WASM_LIBRARY_DIR}/lib/libaec.so
 diff --git a/packages/libaec/patches/0001-build-only-static-library.patch b/packages/libaec/patches/0001-build-only-static-library.patch
 new file mode 100644
 index 00000000..4e87e31b
