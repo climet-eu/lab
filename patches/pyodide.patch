@@ -1484,10 +1484,10 @@ index 00000000..28361f70
 +  license: Apache License 2.0
 diff --git a/packages/eccodes/meta.yaml b/packages/eccodes/meta.yaml
 new file mode 100644
-index 00000000..2d13cf3a
+index 00000000..e9d35356
 --- /dev/null
 +++ b/packages/eccodes/meta.yaml
-@@ -0,0 +1,29 @@
+@@ -0,0 +1,28 @@
 +package:
 +  name: eccodes
 +  version: 1.7.0
@@ -1511,7 +1511,6 @@ index 00000000..2d13cf3a
 +  vendor-sharedlib: true
 +  script: |
 +    cp ${WASM_LIBRARY_DIR}/lib/libeccodes.so gribapi/
-+    cp -r ${WASM_LIBRARY_DIR}/share/eccodes/definitions gribapi/
 +about:
 +  home: https://github.com/ecmwf/eccodes-python
 +  PyPI: https://pypi.org/project/eccodes
@@ -1519,26 +1518,23 @@ index 00000000..2d13cf3a
 +  license: Apache License Version 2.0
 diff --git a/packages/eccodes/patches/0001-shared-library-include.patch b/packages/eccodes/patches/0001-shared-library-include.patch
 new file mode 100644
-index 00000000..671f423a
+index 00000000..d7b58869
 --- /dev/null
 +++ b/packages/eccodes/patches/0001-shared-library-include.patch
-@@ -0,0 +1,45 @@
+@@ -0,0 +1,40 @@
 +diff --git a/gribapi/bindings.py b/gribapi/bindings.py
-+index 91f6d6a..2504873 100644
++index 32fdc34..c65c4c2 100644
 +--- a/gribapi/bindings.py
 ++++ b/gribapi/bindings.py
-+@@ -15,8 +15,10 @@
++@@ -15,6 +15,7 @@
 + #
 + 
 + from __future__ import absolute_import, division, print_function, unicode_literals
 ++from pathlib import Path
 + 
 + import logging
-++import os
 + import pkgutil
-+ 
-+ import cffi
-+@@ -25,14 +27,10 @@ __version__ = "1.6.0"
++@@ -25,14 +26,7 @@ __version__ = "1.7.0"
 + 
 + LOG = logging.getLogger(__name__)
 + 
@@ -1546,9 +1542,7 @@ index 00000000..671f423a
 +-    import ecmwflibs as findlibs
 +-except ImportError:
 +-    import findlibs
-++definitions_path = str(Path(__file__).parent / "definitions")
-++os.environ["ECCODES_DEFINITION_PATH"] = definitions_path
-+ 
++-
 +-library_path = findlibs.find("eccodes")
 +-if library_path is None:
 +-    raise RuntimeError("Cannot find the ecCodes library")
@@ -1557,14 +1551,14 @@ index 00000000..671f423a
 + # default encoding for ecCodes strings
 + ENC = "ascii"
 +diff --git a/setup.py b/setup.py
-+index 5df68df..d58dd3a 100644
++index 3e4050e..e26b91a 100644
 +--- a/setup.py
 ++++ b/setup.py
-+@@ -55,6 +55,7 @@ setuptools.setup(
++@@ -57,6 +57,7 @@ setuptools.setup(
 +     url="https://github.com/ecmwf/eccodes-python",
 +     packages=setuptools.find_packages(),
 +     include_package_data=True,
-++    package_data={'gribapi': ['libeccodes.so', "definitions/*", "definitions/**/*"]},
+++    package_data={'gribapi': ["libeccodes.so"]},
 +     install_requires=install_requires,
 +     tests_require=[
 +         "pytest",
@@ -2611,12 +2605,104 @@ index 7069d169..f05036af 100644
 -  url: https://files.pythonhosted.org/packages/5f/5c/272a7dd49a1914f35cd8d6d9f386defa8b047f6fbd06badd6b77b3ba24e7/kiwisolver-1.4.4.tar.gz
 +  sha256: e57e563a57fb22a142da34f38acc2fc1a5c864bc29ca1517a88abc963e60d6ec
 +  url: https://files.pythonhosted.org/packages/b9/2d/226779e405724344fc678fcc025b812587617ea1a48b9442628b688e85ea/kiwisolver-1.4.5.tar.gz
+diff --git a/packages/libaec/meta.yaml b/packages/libaec/meta.yaml
+new file mode 100644
+index 00000000..1f84d691
+--- /dev/null
++++ b/packages/libaec/meta.yaml
+@@ -0,0 +1,25 @@
++package:
++  name: libaec
++  version: 1.1.2
++
++source:
++  url: https://gitlab.dkrz.de/k202009/libaec/-/archive/v1.1.2/libaec-v1.1.2.tar.gz
++  sha256: cde2097c6e0f18dbc4771930cebe907dfbdfcb7921f74d2594d46221581b6ef1
++  patches:
++    - patches/0001-build-only-static-library.patch
++
++build:
++  type: static_library
++  script: |
++    mkdir -p build;
++
++    cd build \
++        && emcmake cmake ../ \
++        -DCMAKE_INSTALL_PREFIX=${WASM_LIBRARY_DIR} \
++        -DCMAKE_INSTALL_LIBDIR=lib \
++        -DCMAKE_INSTALL_INCLUDEDIR=include;
++
++    emmake make -j ${PYODIDE_JOBS:-3};
++    emmake make -j ${PYODIDE_JOBS:-3} install;
++
++    cp -P ${WASM_LIBRARY_DIR}/lib/libaec.a ${DISTDIR}
+diff --git a/packages/libaec/patches/0001-build-only-static-library.patch b/packages/libaec/patches/0001-build-only-static-library.patch
+new file mode 100644
+index 00000000..4e87e31b
+--- /dev/null
++++ b/packages/libaec/patches/0001-build-only-static-library.patch
+@@ -0,0 +1,55 @@
++diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
++index 7abf455..3314942 100644
++--- a/src/CMakeLists.txt
+++++ b/src/CMakeLists.txt
++@@ -11,42 +11,24 @@ target_include_directories(aec
++   "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>"
++   "$<INSTALL_INTERFACE:include>")
++ 
++-# Create both static and shared aec library.
+++# Create the static aec library.
++ add_library(aec_static STATIC "$<TARGET_OBJECTS:aec>")
++ target_link_libraries(aec_static PUBLIC aec)
++ set_target_properties(aec_static
++   PROPERTIES
++   OUTPUT_NAME $<IF:$<BOOL:${MSVC}>,aec-static,aec>)
++ 
++-add_library(aec_shared SHARED "$<TARGET_OBJECTS:aec>")
++-target_link_libraries(aec_shared PUBLIC aec)
++-set_target_properties(aec_shared
++-  PROPERTIES
++-  VERSION 0.1.2
++-  SOVERSION 0
++-  OUTPUT_NAME aec
++-  PUBLIC_HEADER ${CMAKE_CURRENT_BINARY_DIR}/../include/libaec.h)
++-
++ # Wrapper for compatibility with szip
++ add_library(sz OBJECT sz_compat.c)
++ target_link_libraries(sz PUBLIC aec)
++ 
++-# Create both static and shared szip library.
+++# Create the static szip library.
++ add_library(sz_static STATIC "$<TARGET_OBJECTS:sz>" "$<TARGET_OBJECTS:aec>")
++ set_target_properties(sz_static
++   PROPERTIES
++   OUTPUT_NAME $<IF:$<BOOL:${MSVC}>,szip-static,sz>)
++ target_link_libraries(sz_static PUBLIC sz)
++ 
++-add_library(sz_shared SHARED "$<TARGET_OBJECTS:sz>" "$<TARGET_OBJECTS:aec>")
++-target_link_libraries(sz_shared PUBLIC sz)
++-set_target_properties(sz_shared
++-  PROPERTIES
++-  VERSION 2.0.1
++-  SOVERSION 2
++-  OUTPUT_NAME $<IF:$<BOOL:${MSVC}>,szip,sz>
++-  PUBLIC_HEADER ../include/szlib.h)
++-
++ # Simple executable for testing and benchmarking.
++ add_executable(graec graec.c)
++ target_link_libraries(graec aec)
++@@ -71,4 +53,4 @@ if(UNIX)
++     DEPENDS graec utime)
++ endif()
++ 
++-install(TARGETS aec_static aec_shared sz_static sz_shared)
+++install(TARGETS aec_static sz_static)
 diff --git a/packages/libeccodes/meta.yaml b/packages/libeccodes/meta.yaml
 new file mode 100644
-index 00000000..0d50c4a6
+index 00000000..d358382b
 --- /dev/null
 +++ b/packages/libeccodes/meta.yaml
-@@ -0,0 +1,41 @@
+@@ -0,0 +1,46 @@
 +package:
 +  name: libeccodes
 +  version: 2.34.1
@@ -2626,6 +2712,10 @@ index 00000000..0d50c4a6
 +  sha256: 256665de709d59a41f38f69513343b7895d4c325ab1fb775e6ac5becbc8a52e7
 +  patches:
 +    - patches/0001-32bit-support-hack.patch
++
++requirements:
++  host:
++    - libaec
 +
 +build:
 +  type: shared_library
@@ -2639,10 +2729,13 @@ index 00000000..0d50c4a6
 +        -DCMAKE_INSTALL_PREFIX=${WASM_LIBRARY_DIR} \
 +        -DBUILD_SHARED_LIBS=ON \
 +        -DENABLE_NETCDF=OFF \
-+        -DENABLE_JPG=OFF \
-+        -DENABLE_PNG=OFF \
-+        -DENABLE_AEC=OFF \
++        -DENABLE_JPG=ON \
++        -DENABLE_JPG_LIBOPENJPEG=OFF \
++        -DENABLE_JPG_LIBJASPER=OFF \
++        -DENABLE_PNG=ON \
++        -DENABLE_AEC=ON \
 +        -DENABLE_FORTRAN=OFF \
++        -DENABLE_MEMFS=ON \
 +        -DDISABLE_OS_CHECK=ON \
 +        -DENABLE_TESTS=OFF \
 +        -DENABLE_PRODUCT_GRIB=ON \
@@ -2651,8 +2744,6 @@ index 00000000..0d50c4a6
 +        -DENABLE_BUILD_TOOLS=OFF \
 +        -DENABLE_INSTALL_ECCODES_DEFINITIONS=ON \
 +        -DENABLE_INSTALL_ECCODES_SAMPLES=OFF;
-+        #-DCMAKE_C_FLAGS="-s TOTAL_MEMORY=50790400" \
-+        #-DCMAKE_CXX_FLAGS="-s TOTAL_MEMORY=50790400";
 +
 +    emmake make -j ${PYODIDE_JOBS:-3};
 +    emmake make -j ${PYODIDE_JOBS:-3} install;
