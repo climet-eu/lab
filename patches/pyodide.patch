@@ -1627,13 +1627,13 @@ index 00000000..b8d8fae1
 +  license: MIT
 diff --git a/packages/field-compression-benchmark/meta.yaml b/packages/field-compression-benchmark/meta.yaml
 new file mode 100644
-index 00000000..04dc5311
+index 00000000..d38d2460
 --- /dev/null
 +++ b/packages/field-compression-benchmark/meta.yaml
 @@ -0,0 +1,40 @@
 +package:
 +  name: field-compression-benchmark
-+  version: 0.0.8
++  version: 0.0.9
 +  top-level:
 +    - fcbench
 +source:
@@ -1644,7 +1644,7 @@ index 00000000..04dc5311
 +build:
 +  script: |
 +    # Set up a more modern nightly toolchain with support for emscripten and wasm
-+    export RUSTUP_TOOLCHAIN="nightly-2024-06-08"
++    export RUSTUP_TOOLCHAIN="nightly-2024-07-21"  # last 1.81 nightly
 +    rustup toolchain install ${RUSTUP_TOOLCHAIN}
 +    rustup target add wasm32-unknown-emscripten --toolchain ${RUSTUP_TOOLCHAIN}
 +    rustup target add wasm32-unknown-unknown --toolchain ${RUSTUP_TOOLCHAIN}
@@ -1673,7 +1673,7 @@ index 00000000..04dc5311
 +  license: MIT OR Apache-2.0
 diff --git a/packages/field-compression-benchmark/patches/0001-codecs-build.patch b/packages/field-compression-benchmark/patches/0001-codecs-build.patch
 new file mode 100644
-index 00000000..2a94eccf
+index 00000000..324b322c
 --- /dev/null
 +++ b/packages/field-compression-benchmark/patches/0001-codecs-build.patch
 @@ -0,0 +1,135 @@
@@ -1720,7 +1720,7 @@ index 00000000..2a94eccf
 + [lints]
 + workspace = true
 +diff --git a/codecs/build/build.rs b/codecs/build/build.rs
-+index adb99cc1..5e3c2a8b 100644
++index 0c4865f3..fa9d5738 100644
 +--- a/codecs/build/build.rs
 ++++ b/codecs/build/build.rs
 +@@ -5,14 +5,14 @@ use std::{
@@ -1747,7 +1747,7 @@ index 00000000..2a94eccf
 + fn main() -> io::Result<()> {
 +     // Check for `clippy` and return early in this case
 +diff --git a/fcbench/Cargo.toml b/fcbench/Cargo.toml
-+index b4f44047..871275f4 100644
++index a0329180..856c21a9 100644
 +--- a/fcbench/Cargo.toml
 ++++ b/fcbench/Cargo.toml
 +@@ -14,7 +14,7 @@ name = "fcbench"
