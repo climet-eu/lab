@@ -34,6 +34,8 @@ jobs:
             pyodide-${{ github.ref }}-${{ env.PYODIDE_SHA_SHORT }}
             pyodide-${{ github.ref }}
             pyodide-refs/heads/main
+      - name: Refresh pyodide from checkout
+        run: cd pyodide && git checkout -- . && git status
       - name: Build Pyodide and all required packages
         run: |
           cd pyodide
