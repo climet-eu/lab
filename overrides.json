@@ -19,5 +19,9 @@
         "defaultViewers": {
             "markdown": "Markdown Preview"
         }
+    },
+    "@jupyterlab/notebook-extension:tracker": {
+        "autoStartDefaultKernel": true,
+        "kernelShutdown": true
     }
 }
