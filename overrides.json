@@ -8,6 +8,10 @@
                 "command": "docmanager:download",
                 "icon": "ui-components:download",
                 "rank": 50
+            },
+            {
+                "name": "interrupt",
+                "disabled": true
             }
         ]
     },
