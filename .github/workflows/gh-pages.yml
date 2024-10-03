@@ -71,4 +71,6 @@ jobs:
           publish_dir: ./dist
           force_orphan: true
       - name: Remove repository files from the cache
-        run: git ls-tree -r climet-lab --name-only | xargs rm
+        run: |
+          cd pyodide
+          git ls-tree -r climet-lab --name-only | xargs rm
