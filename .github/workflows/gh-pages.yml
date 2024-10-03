@@ -73,4 +73,4 @@ jobs:
       - name: Remove repository files from the cache
         run: |
           cd pyodide
-          git ls-tree -r climet-lab --name-only | xargs rm
+          git ls-files | xargs rm
