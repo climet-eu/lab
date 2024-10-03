@@ -15,8 +15,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
-      - name: Install nix
-        uses: cachix/install-nix-action@v29
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -24,12 +22,18 @@ jobs:
       - name: Install the dependencies
         run: |
           python -m pip install -r requirements.txt
+      - name: Check the Pyodide version
+        run: |
+          echo "PYODIDE_SHA_SHORT=$(git submodule status pyodide | cut -c 2-8)" >> $GITHUB_ENV
       - name: Cache the Pyodide build
         uses: actions/cache@v4
         with:
           path: ./pyodide
-          key: pyodide-${{ github.ref }}
-          restore-keys: pyodide-refs/heads/main
+          key: pyodide-${{ github.ref }}-${{ env.PYODIDE_SHA_SHORT }}
+          restore-keys: |
+            pyodide-${{ github.ref }}-${{ env.PYODIDE_SHA_SHORT }}
+            pyodide-${{ github.ref }}
+            pyodide-refs/heads/main
       - name: Build Pyodide and all required packages
         run: |
           cd pyodide
@@ -41,7 +45,6 @@ jobs:
       - name: Clean up the pyodide build
         run: |
           cd pyodide
-          rm -rf .docker_home
           find . -name jupyter-lite.json -delete
           find . -name jupyter_lite_config.json -delete
           cd ..
