@@ -35,7 +35,10 @@ jobs:
             pyodide-${{ github.ref }}
             pyodide-refs/heads/main
       - name: Ensure Pyodide source files are fresh
-        run: cd pyodide && git diff --exit-code
+        run: |
+          cd pyodide
+          git status
+          git diff --name-only | xargs git checkout --
       - name: Build Pyodide and all required packages
         run: |
           cd pyodide
@@ -70,7 +73,3 @@ jobs:
           publish_branch: dist
           publish_dir: ./dist
           force_orphan: true
-      - name: Remove repository files from the cache
-        run: |
-          cd pyodide
-          git ls-files | xargs rm
