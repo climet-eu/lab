@@ -45,7 +45,7 @@ jobs:
           PYODIDE_DOCKER_IMAGE=$(docker build . -q) \
             ./run_docker \
             --non-interactive \
-            PYODIDE_PACKAGES="aiohttp,basemap,cdsapi,cfgrib,cmcrameri,dask,earthkit,ecmwf-api-client,field-compression-benchmark,fsspec,git2,h5netcdf,ipyfilite,ipython,kerchunk,lzma,matplotlib,MetPy,netcdf4,numcodecs,numpy,pandas,pint,proplot,requests,scipy,sympy,s3fs,xarray,xeofs,zarr" \
+            PYODIDE_PACKAGES="aiohttp,basemap,cdsapi,cfgrib,cf-units,cmcrameri,dask,earthkit,ecmwf-api-client,field-compression-benchmark,fsspec,git2,h5netcdf,ipyfilite,ipython,kerchunk,lzma,matplotlib,MetPy,netcdf4,numcodecs,numpy,pandas,pint,proplot,requests,scipy,sympy,s3fs,xarray,xeofs,zarr" \
             make
       - name: Clean up the pyodide build
         run: |
