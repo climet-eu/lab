@@ -1,4 +1,13 @@
 {
+    "@jupyterlab/docmanager-extension:plugin": {
+        "defaultViewers": {
+            "markdown": "Markdown Preview"
+        }
+    },
+    "@jupyterlab/filebrowser-extension:browser": {
+        "navigateToCurrentDirectory": true,
+        "showHiddenFiles": true
+    },
     "@jupyterlab/notebook-extension:panel": {
         "toolbar": [
             {
@@ -14,11 +23,6 @@
                 "disabled": true
             }
         ]
-    },
-    "@jupyterlab/docmanager-extension:plugin": {
-        "defaultViewers": {
-            "markdown": "Markdown Preview"
-        }
     },
     "@jupyterlab/notebook-extension:tracker": {
         "autoStartDefaultKernel": true,
