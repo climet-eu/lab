@@ -52,6 +52,7 @@ jobs:
           cd pyodide
           find . -name jupyter-lite.json -delete
           find . -name jupyter_lite_config.json -delete
+          ls -d packages/*/build/* | xargs rm -r
           cd ..
           mkdir -p static
           cp -r pyodide/dist static/pyodide
