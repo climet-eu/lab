@@ -39,6 +39,10 @@ jobs:
           cd pyodide
           git status
           git diff --name-only | xargs git checkout --
+      - name: Cache the Pyodide Docker image
+        uses: ScribeMD/docker-cache@0.5.0
+        with:
+          key: docker-pyodide-${{ hashFiles('pyodide/Dockerfile') }}
       - name: Build Pyodide and all required packages
         run: |
           cd pyodide
