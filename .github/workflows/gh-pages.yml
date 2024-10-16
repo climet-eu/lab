@@ -52,6 +52,8 @@ jobs:
           cd pyodide
           find . -name jupyter-lite.json -delete
           find . -name jupyter_lite_config.json -delete
+          mkdir -p packages/numpy/build
+          touch packages/numpy/build/ls-success
           ls -d packages/*/build/* | xargs rm -r
           cd ..
           mkdir -p static
