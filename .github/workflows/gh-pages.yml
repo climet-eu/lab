@@ -43,6 +43,8 @@ jobs:
         uses: ScribeMD/docker-cache@0.5.0
         with:
           key: docker-pyodide-${{ hashFiles('pyodide/Dockerfile') }}
+      - name: Build the Pyodide Docker image
+        run: cd pyodide && docker build .
       - name: Build Pyodide and all required packages
         run: |
           cd pyodide
