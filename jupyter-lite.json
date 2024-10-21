@@ -10,7 +10,10 @@
             "@jupyterlite/pyodide-kernel-extension:kernel": {
                 "pyodideUrl": "/static/pyodide/pyodide.js",
                 "loadPyodideOptions": {
-                    "packages": ["comm", "packaging", "ipython", "sqlite3", "ssl"]
+                    "packages": [
+                        "comm", "packaging", "ipython", "micropip", "sqlite3",
+                        "ssl"
+                    ]
                 }
             }
         },
