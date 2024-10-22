@@ -47,7 +47,10 @@ jobs:
         run: echo "PYODIDE_DOCKER_IMAGE=$(docker images climet-eu/pyodide --format '{{.ID}}')" >> $GITHUB_ENV
       - name: Build the Pyodide Docker image
         if: ${{ env.PYODIDE_DOCKER_IMAGE == '' }}
-        run: cd pyodide && docker build -t climet-eu/pyodide .
+        run: |
+          cd pyodide
+          docker build -t climet-eu/pyodide .
+          echo "PYODIDE_DOCKER_IMAGE=$(docker build . -q)" >> $GITHUB_ENV
       - name: Build Pyodide and all required packages
         run: |
           cd pyodide
