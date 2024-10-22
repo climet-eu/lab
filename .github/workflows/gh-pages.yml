@@ -44,14 +44,16 @@ jobs:
         with:
           key: docker-pyodide-${{ hashFiles('pyodide/Dockerfile') }}
       - name: Build the Pyodide Docker image
-        run: cd pyodide && docker build .
+        run: |
+          cd pyodide
+          docker images --format "--cache-from {{.ID}}" | xargs docker build . 
       - name: Build Pyodide and all required packages
         run: |
           cd pyodide
           PYODIDE_DOCKER_IMAGE=$(docker build . -q) \
             ./run_docker \
             --non-interactive \
-            PYODIDE_PACKAGES="aiohttp,basemap,cdsapi,cfgrib,cf-units,cmcrameri,dask,earthkit,ecmwf-api-client,ecmwf-opendata,field-compression-benchmark,fsspec,git2,h5netcdf,intake,ipyfilite,ipython,kerchunk,lzma,matplotlib,MetPy,netcdf4,numcodecs,numpy,pandas,pint,proplot,requests,scipy,sympy,s3fs,xarray,xeofs,zarr" \
+            PYODIDE_PACKAGES="aiohttp,basemap,cdsapi,cfgrib,cf-units,cmcrameri,dask,earthkit,ecmwf-api-client,ecmwf-opendata,field-compression-benchmark,fsspec,git2,gribscan,h5netcdf,intake,ipyfilite,ipython,kerchunk,lzma,matplotlib,MetPy,netcdf4,numcodecs,numpy,pandas,pint,proplot,requests,scipy,sympy,s3fs,xarray,xeofs,zarr" \
             make
       - name: Clean up the pyodide build
         run: |
