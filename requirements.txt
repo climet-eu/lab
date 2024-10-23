@@ -1,5 +1,5 @@
 # Jupyter Lite
-jupyterlite-core==0.4.3
+jupyterlite-core==0.4.2
 jupyterlab~=4.2.5
 
 # Pyodide kernel
