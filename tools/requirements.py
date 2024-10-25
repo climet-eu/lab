@@ -20,6 +20,16 @@ IGNORE_PACKAGES = [
     "pyodide-http",  # pyodide implementation detail
 ]
 
+PACKAGE_PYPI_NAME_FIXES = {
+    "fiona": "fiona",  # no-op, otherwise a false positive
+    "markdown": "Markdown",
+    "netcdf4": "netCDF4",
+    "Pillow": "pillow",
+    "pint": "Pint",
+    "pyyaml": "PyYAML",
+    "shapely": "shapely",  # no-op, otherwise a false positive
+}
+
 for package in lock["packages"].values():
     if package["package_type"] != "package":
         continue
@@ -31,10 +41,17 @@ for package in lock["packages"].values():
     if package["name"] in IGNORE_PACKAGES:
         continue
 
-    if package["name"].replace("-", "_") != package["file_name"].split("-")[0]:
-        print(package["name"], package["file_name"].split("-")[0])
+    name = PACKAGE_PYPI_NAME_FIXES.get(package["name"], package["name"])
 
-    packages[package["name"]] = package["version"]
+    # check for packages whose name guess might be wrong
+    name_guess = package["file_name"].split("-")[0]
+    if name_guess != package["name"].replace("-", "_"):
+        if package["name"] not in PACKAGE_PYPI_NAME_FIXES:
+            raise Exception(
+                f"Suspicious package name {package['name']} with filename {name_guess}"
+            )
+
+    packages[name] = package["version"]
 
 with requirements_path.open("w") as f:
     f.write(
