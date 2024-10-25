@@ -2,6 +2,7 @@
 /.cache
 /dist
 /static/pyodide
+/files/requirements.txt
 /.jupyterlite.doit.db
 
 __pycache__/
