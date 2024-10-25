@@ -12,7 +12,13 @@ pyodide = lock["info"]["version"]
 
 packages = dict()
 
-IGNORE_PACKAGES = []
+IGNORE_PACKAGES = [
+    "git2",  # not a real package, experiment-in-progress
+    "jupyterlite-preload",  # climet-eu/lab implementation detail
+    "matplotlib-pyodide",  # pyodide implementation detail
+    "micropip",  # pyodide implementation detail
+    "pyodide-http",  # pyodide implementation detail
+]
 
 for package in lock["packages"].values():
     if package["package_type"] != "package":
@@ -24,6 +30,9 @@ for package in lock["packages"].values():
 
     if package["name"] in IGNORE_PACKAGES:
         continue
+
+    if package["name"].replace("-", "_") != package["file_name"].split("-")[0]:
+        print(package["name"], package["file_name"].split("-")[0])
 
     packages[package["name"]] = package["version"]
 
