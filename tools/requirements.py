@@ -77,5 +77,5 @@ with requirements_path.open("w") as f:
     f.write(f"# pyodide == {pyodide}\n")
     f.write("\n")
 
-    for name, version in sorted(packages.items()):
+    for name, version in sorted(packages.items(), key=lambda kv: kv[0].lower()):
         f.write(f"{name} == {version}\n")
