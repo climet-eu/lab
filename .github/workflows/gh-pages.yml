@@ -59,7 +59,7 @@ jobs:
             PYODIDE_PACKAGES="aiohttp,basemap,cdsapi,cfgrib,cf-units,cmcrameri,dask,earthkit,ecmwf-api-client,ecmwf-opendata,field-compression-benchmark,fsspec,git2,gribscan,h5netcdf,intake,ipyfilite,ipython,kerchunk,lzma,matplotlib,MetPy,netcdf4,numcodecs,numpy,pandas,pint,proplot,requests,scipy,sympy,s3fs,xarray,xeofs,zarr" \
             make
       - name: Extract the requirements.txt file
-        run: python3 tools/requirements.py
+        run: python tools/requirements.py
       - name: Clean up the pyodide build
         run: |
           cd pyodide
@@ -68,14 +68,20 @@ jobs:
           mkdir -p packages/numpy/build
           touch packages/numpy/build/ls-success
           ls -d packages/*/build/* | xargs rm -r
-          cd ..
+      - name: Check the validity of the requirements.txt file
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          python -m pip install -r files/requirements.txt --dry-run --ignore-installed
+          deactivate
+          rm -rf venv
+      - name: Build the JupyterLite site
+        run: |
+          rm -f files/README.md && cp ./README.md files/
           mkdir -p static
           cp -r pyodide/dist static/pyodide
           rm -rf static/pyodide/*-tests.tar
           rm -f static/pyodide/tsconfig.tsbuildinfo
-      - name: Build the JupyterLite site
-        run: |
-          rm -f files/README.md && cp ./README.md files/
           jupyter lite build --output-dir dist
           cp ./_headers dist/
           cp -r data dist/
