@@ -29,6 +29,7 @@ PACKAGE_PYPI_NAME_FIXES = {
     "netcdf4": "netCDF4",
     "Pillow": "pillow",
     "pint": "Pint",
+    "Pygments": "Pygments",  # no-op, otherwise a false positive
     "pyyaml": "PyYAML",
     "shapely": "shapely",  # no-op, otherwise a false positive
 }
@@ -52,7 +53,7 @@ for package in lock["packages"].values():
         if package["name"] not in PACKAGE_PYPI_NAME_FIXES:
             print(
                 f"Suspicious package name {package['name']} with filename {name_guess}",
-                sys.stderr,
+                file=sys.stderr,
             )
 
     packages[name] = package["version"]
