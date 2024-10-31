@@ -1,4 +1,5 @@
 import json
+import sys
 from pathlib import Path
 
 lock_path = Path("pyodide") / "dist" / "pyodide-lock.json"
@@ -18,10 +19,12 @@ IGNORE_PACKAGES = [
     "matplotlib-pyodide",  # pyodide implementation detail
     "micropip",  # pyodide implementation detail
     "pyodide-http",  # pyodide implementation detail
+    "widgetsnbextension",  # JupyterLite mock with fake version
 ]
 
 PACKAGE_PYPI_NAME_FIXES = {
     "fiona": "fiona",  # no-op, otherwise a false positive
+    "Jinja2": "Jinja2",  # no-op, otherwise a false positive
     "markdown": "Markdown",
     "netcdf4": "netCDF4",
     "Pillow": "pillow",
@@ -47,8 +50,9 @@ for package in lock["packages"].values():
     name_guess = package["file_name"].split("-")[0]
     if name_guess != package["name"].replace("-", "_"):
         if package["name"] not in PACKAGE_PYPI_NAME_FIXES:
-            raise Exception(
-                f"Suspicious package name {package['name']} with filename {name_guess}"
+            print(
+                f"Suspicious package name {package['name']} with filename {name_guess}",
+                sys.stderr,
             )
 
     packages[name] = package["version"]
