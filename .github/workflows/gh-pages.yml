@@ -101,6 +101,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: dist
           publish_dir: ./dist
-          destination_dir: ${{ steps.branch.outputs.current_branch }}
+          destination_dir: ${{ steps.branch.outputs.current_branch || steps.branch.outputs.tag }}
           keep_files: false
           force_orphan: true
