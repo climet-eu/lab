@@ -87,20 +87,32 @@ jobs:
           cp -r pyodide/dist static/pyodide
           rm -rf static/pyodide/*-tests.tar
           rm -f static/pyodide/tsconfig.tsbuildinfo
-          jupyter lite build --output-dir dist
-          cp ./_headers dist/
-          cp static/favicons/favicon.ico dist/
-          find dist/ -name favicon.ico | xargs -L1 cp -f static/favicons/favicon.ico
+          jupyter lite build --output-dir staging
+          cp ./_headers staging/
+          cp static/favicons/favicon.ico staging/
+          find staging/ -name favicon.ico | xargs -L1 cp -f static/favicons/favicon.ico
           rm -rf static
       - name: Get the current branch name
         uses: tj-actions/branch-names@v8
         id: branch
+      - name: Compute the current version name
+        run: echo "VERSION=${{ steps.branch.outputs.current_branch || steps.branch.outputs.tag }}" >> $GITHUB_ENV
+      - name: Checkout the previous dist branch
+        uses: actions/checkout@v4
+        with:
+          ref: dist
+          path: dist
+        continue-on-error: ${{ github.event_name != 'release' }}
+      - name: Merge the different dist versions
+        run: |
+          mkdir -p dist
+          rm -rf dist/${{ env.VERSION }}
+          mv staging dist/${{ env.VERSION }}
       - name: Deploy to dist branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: dist
           publish_dir: ./dist
-          destination_dir: ${{ steps.branch.outputs.current_branch || steps.branch.outputs.tag }}
           keep_files: false
           force_orphan: true
