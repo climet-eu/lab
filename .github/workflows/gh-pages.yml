@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  release:
+    branch: main
+    types: [released]
 
 jobs:
   build:
@@ -59,6 +62,7 @@ jobs:
             PYODIDE_PACKAGES="aiohttp,basemap,cdsapi,cfgrib,cf-units,cmcrameri,dask,earthkit,ecmwf-api-client,ecmwf-opendata,field-compression-benchmark,fsspec,git2,gribscan,h5netcdf,intake,ipyfilite,ipython,kerchunk,lzma,matplotlib,MetPy,netcdf4,numcodecs,numpy,pandas,pint,requests,scipy,sympy,s3fs,xarray,xeofs,zarr" \
             make
       - name: Extract the requirements.txt file
+        continue-on-error: ${{ github.event_name != 'release' }}
         run: python tools/requirements.py
       - name: Clean up the pyodide build
         run: |
@@ -69,10 +73,11 @@ jobs:
           touch packages/numpy/build/ls-success
           ls -d packages/*/build/* | xargs rm -r
       - name: Check the validity of the requirements.txt file
+        continue-on-error: ${{ github.event_name != 'release' }}
         run: |
           python -m venv venv
           source venv/bin/activate
-          python -m pip install -r files/requirements.txt --dry-run --ignore-installed || echo "failed"
+          python -m pip install -r files/requirements.txt --dry-run --ignore-installed
           deactivate
           rm -rf venv
       - name: Build the JupyterLite site

@@ -1,5 +1,4 @@
 import json
-import sys
 from pathlib import Path
 
 lock_path = Path("pyodide") / "dist" / "pyodide-lock.json"
@@ -34,6 +33,8 @@ PACKAGE_PYPI_NAME_FIXES = {
     "shapely": "shapely",  # no-op, otherwise a false positive
 }
 
+suspicious_packages = []
+
 for package in lock["packages"].values():
     if package["package_type"] != "package":
         continue
@@ -51,10 +52,7 @@ for package in lock["packages"].values():
     name_guess = package["file_name"].split("-")[0]
     if name_guess != package["name"].replace("-", "_"):
         if package["name"] not in PACKAGE_PYPI_NAME_FIXES:
-            print(
-                f"Suspicious package name {package['name']} with filename {name_guess}",
-                file=sys.stderr,
-            )
+            suspicious_packages.append((package["name"], name_guess))
 
     packages[name] = package["version"]
 
@@ -84,3 +82,11 @@ with requirements_path.open("w") as f:
 
     for name, version in sorted(packages.items(), key=lambda kv: kv[0].lower()):
         f.write(f"{name} == {version}\n")
+
+if len(suspicious_packages) > 0:
+    raise Exception(
+        "The following package names have suspicious file names:\n"
+        + "\n".join(
+            f" - {name}: {name_guess}" for name, name_guess in suspicious_packages
+        )
+    )
