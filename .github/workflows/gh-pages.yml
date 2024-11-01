@@ -84,14 +84,18 @@ jobs:
           rm -f static/pyodide/tsconfig.tsbuildinfo
           jupyter lite build --output-dir dist
           cp ./_headers dist/
-          cp -r data dist/
           cp static/favicons/favicon.ico dist/
           find dist/ -name favicon.ico | xargs -L1 cp -f static/favicons/favicon.ico
           rm -rf static
+      - name: Get the current branch name
+        uses: tj-actions/branch-names@v8
+        id: branch
       - name: Deploy to dist branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: dist
           publish_dir: ./dist
+          destination_dir: ${{ steps.branch.outputs.current_branch }}
+          keep_files: false
           force_orphan: true
