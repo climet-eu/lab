@@ -6,6 +6,7 @@
         "disabledExtensions": ["@jupyterlite/server-extension:service-worker"],
         "enableMemoryStorage": true,
         "contentsStorageDrivers": ["memoryStorageDriver"],
+        "terminalsAvailable": true,
         "litePluginSettings": {
             "@jupyterlite/pyodide-kernel-extension:kernel": {
                 "pyodideUrl": "/static/pyodide/pyodide.js",
