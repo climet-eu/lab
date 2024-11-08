@@ -23,7 +23,7 @@ litegitpuller~=0.2.1
 #        blocked on https://github.com/jupyterlab/jupyterlab/issues/15629
 # jupyterlab-github~=4.0.0
 # JupyterLab: create a fresh session directory
-a-jupyterlab-session~=0.1.1
+a-jupyterlab-session~=0.1.2
 
 # Python: ipywidget library for Jupyter notebooks
 ipywidgets>=8.0.0,<9
