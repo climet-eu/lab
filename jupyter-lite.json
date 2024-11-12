@@ -4,8 +4,7 @@
         "faviconUrl": "/static/favicons/favicon.ico",
         "exposeAppInBrowser": false,
         "disabledExtensions": ["@jupyterlite/server-extension:service-worker"],
-        "enableMemoryStorage": true,
-        "contentsStorageDrivers": ["memoryStorageDriver"],
+        "enableMemoryStorage": false,
         "terminalsAvailable": false,
         "litePluginSettings": {
             "@jupyterlite/pyodide-kernel-extension:kernel": {
