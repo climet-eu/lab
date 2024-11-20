@@ -44,6 +44,9 @@ jobs:
           cd pyodide
           git status
           git diff --name-only | xargs git checkout --
+          git clean -df
+          echo ======
+          git status
       - name: Cache the Pyodide Docker image
         uses: ScribeMD/docker-cache@0.5.0
         with:
@@ -86,7 +89,7 @@ jobs:
         run: |
           rm -f files/README.md && cp ./README.md files/
           mkdir -p static
-          cp -r pyodide/dist static/pyodide
+          mv pyodide/dist static/pyodide
           rm -rf static/pyodide/*-tests.tar
           rm -f static/pyodide/tsconfig.tsbuildinfo
           jupyter lite build --output-dir staging
