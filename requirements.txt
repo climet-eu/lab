@@ -11,7 +11,7 @@ jupyterlite-pyodide-kernel==0.4.2
 # jupyterlite-terminal==0.1.3
 
 # JupyterLite and JupyterLab: create a fresh session directory
-a-jupyterlite-session~=0.1.10
+a-jupyterlite-session~=0.1.11
 a-jupyterlab-session~=0.1.10
 
 # JupyterLab: guided tour
@@ -21,7 +21,7 @@ jupyterlab-night~=0.4.6
 # JupyterLab: import files from URLs
 jupyterlab-open-url-parameter~=0.3.0
 # JupyterLite: import a GitHub repo from its URL
-litegitpuller~=0.2.1
+litegitpuller~=0.3.0
 # JupyterLab: read-only access to GitHub repos through an additional file browser
 # FIXME: makes creating new notebooks difficult, as the read-only repo gets priority
 #        blocked on https://github.com/jupyterlab/jupyterlab/issues/15629
