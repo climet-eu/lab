@@ -1,9 +1,9 @@
 # Jupyter Lite
-jupyterlite-core==0.4.2
+jupyterlite-core==0.4.4
 jupyterlab~=4.2.5
 
 # Pyodide kernel
-jupyterlite-pyodide-kernel==0.4.2
+jupyterlite-pyodide-kernel==0.4.4
 
 # JupyterLite terminal with /drive access
 # FIXME: currently requires the service worker
