@@ -26,6 +26,7 @@
     },
     "@jupyterlab/notebook-extension:tracker": {
         "autoStartDefaultKernel": true,
-        "kernelShutdown": true
+        "kernelShutdown": true,
+        "windowingMode": "defer"
     }
 }
