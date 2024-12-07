@@ -1,0 +1,43 @@
+{
+  "content": [
+    {
+      "content": null,
+      "created": "2024-12-07T05:18:52.616615Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2024-12-07T05:17:17.827631Z",
+      "mimetype": "text/plain",
+      "name": "requirements.txt",
+      "path": "requirements.txt",
+      "size": 3291,
+      "type": "file",
+      "writable": true
+    },
+    {
+      "content": null,
+      "created": "2024-12-07T05:18:52.616615Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2024-12-07T05:18:42.384509Z",
+      "mimetype": "text/markdown",
+      "name": "README.md",
+      "path": "README.md",
+      "size": 2709,
+      "type": "file",
+      "writable": true
+    }
+  ],
+  "created": "2024-12-07T05:18:52.616615Z",
+  "format": "json",
+  "hash": null,
+  "hash_algorithm": null,
+  "last_modified": "2024-12-07T05:18:52.616615Z",
+  "mimetype": null,
+  "name": "",
+  "path": "",
+  "size": null,
+  "type": "directory",
+  "writable": true
+}
