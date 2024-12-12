@@ -82,7 +82,17 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
-          python -m pip install -r files/requirements.txt --dry-run --ignore-installed
+          pip install --upgrade pip
+          cp files/requirements.txt files/requirements-valid.txt
+          # FIXME: earthkit -> earthkit-data[all] -> tox -> !
+          # https://github.com/ecmwf/pyfdb/issues/39
+          sed -i '/earthkit ==/d' files/requirements-valid.txt
+          # FIXME: pyicon -> ipdb and pytest
+          sed -i '/pyicon-diagnostics ==/d' files/requirements-valid.txt
+          # FIXME: update fcbench to match lab dependencies
+          sed -i '/field-compression-benchmark ==/d' files/requirements-valid.txt
+          python -m pip install -r files/requirements-valid.txt --dry-run --ignore-installed
+          rm files/requirements-valid.txt
           deactivate
           rm -rf venv
       - name: Build the JupyterLite site
