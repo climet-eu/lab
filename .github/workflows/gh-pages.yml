@@ -89,8 +89,6 @@ jobs:
           sed -i '/earthkit ==/d' files/requirements-valid.txt
           # FIXME: pyicon -> ipdb and pytest
           sed -i '/pyicon-diagnostics ==/d' files/requirements-valid.txt
-          # FIXME: update fcbench to match lab dependencies
-          sed -i '/field-compression-benchmark ==/d' files/requirements-valid.txt
           python -m pip install -r files/requirements-valid.txt --dry-run --ignore-installed
           rm files/requirements-valid.txt
           deactivate
