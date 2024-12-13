@@ -28,6 +28,8 @@ litegitpuller~=0.3.0
 # jupyterlab-github~=4.0.0
 # JupyterLab: spreadsheet editor (csv/tsv)
 jupyterlab-spreadsheet-editor~=0.7.2
+# JupyterLab: extend markdown rendering
+jupyterlab-myst~=2.4.2
 
 # Python: ipywidget library for Jupyter notebooks
 ipywidgets>=8.0.0,<9
