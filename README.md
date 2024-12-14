@@ -13,14 +13,33 @@ While Pyodide already supports an extensive list of scientific Python packages, 
 
 To get started, click the blue `+` button in the top left to open a new launcher and create a new Python notebook from there. After the Python kernel has initialised, you can execute Python code in the cells of the notebook.
 
-> [!TIP]
-> While many Python packages can be `import`ed directly, additional pure Python packages can also be loaded by executing the `%pip install <PACKAGE>` magic inside a cell, after which the package can be imported.
+```{tip}
+While many Python packages can be `import`ed directly, additional pure Python packages can also be loaded by executing the `%pip install <PACKAGE>` magic inside a cell, after which the package can be imported.
+```
 
-> [!NOTE]
-> The online laboratory has only been tested in recent Firefox and Chrome browsers. Some features may not (yet) be supported in Safari browsers.
+```{note}
+The online laboratory has only been tested in recent Firefox and Chrome browsers. Some features may not (yet) be supported in Safari browsers.
+```
 
-> [!CAUTION]
-> Any changes you make to this notebook will be lost once the page is closed or refreshed. Please download any files you would like to keep.
+```{attention}
+The online laboratory runs with the strict memory constraints of your web browser. It is therefore recommended to only open and execute one or two notebooks at a time. When a notebook is closed, the kernel will automatically shutdown to preserve resources.
+
+If the online lab runs out of memory, you can save your work, close the notebook, and try to restart it. If you are still running low on memory, you should first download a copy of your notebooks, then reload the notebook page, re-upload the notebook, and continue working on them.
+
+If you intend on executing memory intensive workloads, it is best to continue working on the notebooks locally instead. The online laboratory is primarily designed for initial exploration and for sharing codes in a reproducible environment.
+```
+
+```{caution}
+In the online laboratory, changes to notebooks and local files are only saved in your web browser's storage and not persisted to disk.
+
+Please download copies of any files that you don't want to lose.
+
+Your files from an old session will usually be kept if you close or refresh this page, unless your browser's storage for `lab.climet.eu` is cleared, e.g.
+- manually by clearing the browser's site data
+- automatically when too much data is stored
+- automatically when you close a private browsing context
+- if you have setup your browser to clear site data, e.g. when the browser is closed
+```
 
 
 ## Getting Help and Contributing
