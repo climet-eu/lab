@@ -64,7 +64,7 @@ jobs:
           cd pyodide
           ./run_docker \
             --non-interactive \
-            PYODIDE_PACKAGES="aiohttp,basemap,cdsapi,cfgrib,cf-units,cmcrameri,dask,earthkit,ecmwf-api-client,ecmwf-opendata,field-compression-benchmark,fsspec,git2,gribscan,healpy,h5netcdf,intake,intake-xarray,ipyfilite,ipython,kerchunk,lzma,matplotlib,MetPy,netcdf4,numcodecs,numpy,pandas,pint,pyarrow,pyicon-diagnostics,pystac,requests,scipy,sympy,s3fs,xarray,xeofs,zarr" \
+            PYODIDE_PACKAGES="aiohttp,basemap,cdsapi,cfgrib,cf-units,cmcrameri,dask,earthkit,ecmwf-api-client,ecmwf-opendata,field-compression-benchmark,fsspec,git2,gribscan,healpy,h5netcdf,intake,intake-xarray,ipyfilite,ipython,kerchunk,lzma,matplotlib,MetPy,netcdf4,numcodecs,numpy,pandas,pint,pyarrow,pydap,pyicon-diagnostics,pystac,requests,scipy,sympy,s3fs,xarray,xeofs,zarr" \
             make
       - name: Extract the requirements.txt file
         continue-on-error: ${{ github.event_name != 'release' }}
