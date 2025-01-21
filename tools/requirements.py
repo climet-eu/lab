@@ -32,6 +32,7 @@ PACKAGE_PYPI_NAME_FIXES = {
     "Pygments": "Pygments",  # no-op, otherwise a false positive
     "pyyaml": "PyYAML",
     "shapely": "shapely",  # no-op, otherwise a false positive
+    "Webob": "WebOb",
 }
 
 suspicious_packages = []

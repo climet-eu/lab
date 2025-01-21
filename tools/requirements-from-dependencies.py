@@ -16,6 +16,7 @@ PACKAGE_PYPI_NAME_FIXES = {
     "pillow": "Pillow",
     "Pint": "pint",
     "PyYAML": "pyyaml",
+    "WebOb": "Webob",
 }
 
 requirements = dict()
