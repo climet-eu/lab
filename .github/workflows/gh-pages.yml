@@ -69,6 +69,8 @@ jobs:
       - name: Extract the requirements.txt file
         continue-on-error: ${{ github.event_name != 'release' }}
         run: python tools/requirements.py
+      - name: Extract the PyPa simple repository API
+        run: python tools/pypa-simple.py
       - name: Clean up the pyodide build
         run: |
           cd pyodide
@@ -98,9 +100,9 @@ jobs:
           rm -rf static/pyodide/*-tests.tar
           rm -f static/pyodide/tsconfig.tsbuildinfo
           jupyter lite build --output-dir staging
-          cp ./_headers staging/
           cp static/favicons/favicon.ico staging/
           find staging/ -name favicon.ico | xargs -L1 cp -f static/favicons/favicon.ico
+          mv pypa staging/
           rm -rf static
       - name: Get the current branch name
         uses: tj-actions/branch-names@v8

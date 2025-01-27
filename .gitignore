@@ -3,6 +3,7 @@
 /dist
 /static/pyodide
 /files/requirements.txt
+/pypa
 /.jupyterlite.doit.db
 
 __pycache__/
