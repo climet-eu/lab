@@ -27,6 +27,9 @@ jobs:
       - name: Install the dependencies
         run: |
           python -m pip install -r requirements.txt
+      - name: Get the current branch name
+        uses: tj-actions/branch-names@v8
+        id: branch
       - name: Compute the current version name
         run: echo "CLIMETLAB_VERSION=${{ steps.branch.outputs.current_branch || steps.branch.outputs.tag }}" >> $GITHUB_ENV
       - name: Check the Pyodide version
@@ -106,9 +109,6 @@ jobs:
           find staging/ -name favicon.ico | xargs -L1 cp -f static/favicons/favicon.ico
           mv pypa staging/
           rm -rf static
-      - name: Get the current branch name
-        uses: tj-actions/branch-names@v8
-        id: branch
       - name: Checkout the previous dist branch
         uses: actions/checkout@v4
         with:
