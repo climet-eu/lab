@@ -1,3 +1,4 @@
+import argparse
 import json
 import re
 import shutil
@@ -5,6 +6,10 @@ from pathlib import Path
 
 lock_path = Path("pyodide") / "dist" / "pyodide-lock.json"
 pypa_path = Path("pypa") / "simple"
+
+parser = argparse.ArgumentParser()
+parser.add_argument('pyodide_url')
+args = parser.parse_args()
 
 if pypa_path.exists():
     shutil.rmtree(pypa_path)
@@ -63,9 +68,7 @@ for name, package in packages.items():
             "files": [
                 {
                     "filename": package["filename"],
-                    # from /pypa/simple/<project>/
-                    # to /static/pyodide/<filename>
-                    "url": f"../../../static/pyodide/{package['filename']}",
+                    "url": f"{args.pyodide_url.rstrip('/')}/{package['filename']}",
                     "hashes": { "sha256": package["sha256"] },
                     "dist-info-metadata": True,
                 }
