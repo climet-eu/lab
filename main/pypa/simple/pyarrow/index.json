@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "pyarrow", "files": [{"filename": "pyarrow-18.1.0-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/pyarrow-18.1.0-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "30954033137af390381173e7827634092dc3f1f61561956ba9e5ba91ffede322"}, "dist-info-metadata": true}]}

@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "healpy", "files": [{"filename": "healpy-1.18.0-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/healpy-1.18.0-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "fa9de6ce54816c9f6dfe30a8170eedf3548b209c4e664fdd7defc7291a339833"}, "dist-info-metadata": true}]}

@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "netcdf4", "files": [{"filename": "netCDF4-1.7.2-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/netCDF4-1.7.2-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "13d209dfa7ef588b55749a431867d6be462fdbc2b54a890e22944064dcdb0dc0"}, "dist-info-metadata": true}]}

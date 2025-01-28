@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "ecmwf-opendata", "files": [{"filename": "ecmwf_opendata-0.3.14-py3-none-any.whl", "url": "https://lab.climet.eu/main/static/pyodide/ecmwf_opendata-0.3.14-py3-none-any.whl", "hashes": {"sha256": "a674be3398297b7684e4a445d1ab28ef779e3bf3c27fc65ce5b09be2c4acec4d"}, "dist-info-metadata": true}]}

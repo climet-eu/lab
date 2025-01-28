@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "pandas", "files": [{"filename": "pandas-2.2.0-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/pandas-2.2.0-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "60f2cc53725e2eedc48116d6c9ff6e401ac38b9f4e1ed5635641bb99a4f50635"}, "dist-info-metadata": true}]}

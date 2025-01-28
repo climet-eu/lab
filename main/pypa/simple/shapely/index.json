@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "shapely", "files": [{"filename": "shapely-2.0.6-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/shapely-2.0.6-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "f76321f3f12709aebd56e7e314180a8c48840d9769f9fb2c65a86c99f70b80b0"}, "dist-info-metadata": true}]}

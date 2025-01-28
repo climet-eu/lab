@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "orjson", "files": [{"filename": "orjson-3.10.1-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/orjson-3.10.1-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "b532b2ac12968bd4d30c70fc89097e2a5601ecbcfcdec0b0830b6bfdc647c0ef"}, "dist-info-metadata": true}]}

@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "msgpack", "files": [{"filename": "msgpack-1.1.0-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/msgpack-1.1.0-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "476be866cdced33bef025f0aa75d07e2d993de8cf42eb05364803ce0672a192d"}, "dist-info-metadata": true}]}

@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "numpy", "files": [{"filename": "numpy-1.26.4-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/numpy-1.26.4-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "e82f8ff0367161f9d5f4f4a7a213dd186d2256531b08d8f25ec71d6013c8e037"}, "dist-info-metadata": true}]}

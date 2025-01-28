@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "zarr", "files": [{"filename": "zarr-2.18.3-py3-none-any.whl", "url": "https://lab.climet.eu/main/static/pyodide/zarr-2.18.3-py3-none-any.whl", "hashes": {"sha256": "455c67f0df255b49f1598f1b6f47facef3407ce80f760b2e03b37d759341b2d0"}, "dist-info-metadata": true}]}

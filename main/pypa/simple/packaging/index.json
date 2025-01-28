@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "packaging", "files": [{"filename": "packaging-23.2-py3-none-any.whl", "url": "https://lab.climet.eu/main/static/pyodide/packaging-23.2-py3-none-any.whl", "hashes": {"sha256": "1e6e300b6edc6cc90a2b42f6200607ef85b651f743031aaa0f66dfa8f9767c03"}, "dist-info-metadata": true}]}

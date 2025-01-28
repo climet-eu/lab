@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "basemap", "files": [{"filename": "basemap-1.4.1-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/basemap-1.4.1-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "fb7c40863da46a1846fa318eecb5eb959c6332dfcdcd13fb6d76235c0aa00522"}, "dist-info-metadata": true}]}

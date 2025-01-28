@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "scikit-learn", "files": [{"filename": "scikit_learn-1.6.0-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/scikit_learn-1.6.0-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "8a97effca337cc7bd89958b1e373922dc776518ca126b52e47759ca8d3b25f6a"}, "dist-info-metadata": true}]}

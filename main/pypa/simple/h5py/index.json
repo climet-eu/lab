@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "h5py", "files": [{"filename": "h5py-3.11.0-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/h5py-3.11.0-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "2487d6268deb42e7b96a6da3f9ba5849d80276e81e9f31d5eddcbe3495acbbaa"}, "dist-info-metadata": true}]}

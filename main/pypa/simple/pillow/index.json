@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "pillow", "files": [{"filename": "pillow-11.0.0-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/pillow-11.0.0-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "d045995f64acaf37d42dcd77d867ce140cfb4ccc22d0be58a5f3345d002944de"}, "dist-info-metadata": true}]}
