@@ -46,9 +46,13 @@ for package in lock["packages"].values():
     with open(recipe_path / package["name"] / "meta.yaml") as f:
         recipe = yaml.load(f, yaml.SafeLoader)
 
-    url = recipe["source"]["url"]
+    try:
+        url = recipe["source"]["url"]
+    except KeyError:
+        url = None
 
     if (
+        url is not None and
         url.startswith("https://files.pythonhosted.org/packages") and
         url.endswith("none-any.whl") and
         package["name"] != "micropip"
