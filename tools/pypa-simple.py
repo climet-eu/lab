@@ -2,9 +2,11 @@ import argparse
 import json
 import re
 import shutil
+import yaml
 from pathlib import Path
 
 lock_path = Path("pyodide") / "dist" / "pyodide-lock.json"
+recipe_path = Path("pyodide") / "packages"
 pypa_path = Path("pypa") / "simple"
 
 parser = argparse.ArgumentParser()
@@ -39,6 +41,19 @@ for package in lock["packages"].values():
     if Path(package["file_name"]).suffix != ".whl":
         continue
     if package["install_dir"] != "site":
+        continue
+
+    with open(recipe_path / package["name"] / "meta.yaml") as f:
+        recipe = yaml.load(f, yaml.SafeLoader)
+
+    url = recipe["source"]["url"]
+
+    if (
+        url.startswith("https://files.pythonhosted.org/packages") and
+        url.endswith("none-any.whl") and
+        package["name"] != "micropip"
+    ):
+        print(f"excluding pure PyPi package {package['name']} from repository")
         continue
 
     name = PACKAGE_PYPI_NAME_FIXES.get(package["name"], package["name"])
