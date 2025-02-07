@@ -1,9 +1,15 @@
 /venv
 /.cache
+
 /dist
 /static/pyodide
+
+/files/constraints.txt
+/files/requirements.in
 /files/requirements.txt
+
 /pypa
+
 /.jupyterlite.doit.db
 
 __pycache__/

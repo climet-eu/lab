@@ -10,7 +10,7 @@ recipe_path = Path("pyodide") / "packages"
 pypa_path = Path("pypa") / "simple"
 
 parser = argparse.ArgumentParser()
-parser.add_argument('pyodide_url')
+parser.add_argument("pyodide_url")
 args = parser.parse_args()
 
 if pypa_path.exists():
@@ -52,10 +52,10 @@ for package in lock["packages"].values():
         url = None
 
     if (
-        url is not None and
-        url.startswith("https://files.pythonhosted.org/packages") and
-        url.endswith("none-any.whl") and
-        package["name"] != "micropip"
+        url is not None
+        and url.startswith("https://files.pythonhosted.org/packages")
+        and url.endswith("none-any.whl")
+        and package["name"] != "micropip"
     ):
         print(f"excluding pure PyPi package {package['name']} from repository")
         continue
@@ -64,14 +64,15 @@ for package in lock["packages"].values():
     packages[name] = dict(filename=package["file_name"], sha256=package["sha256"])
 
 with (pypa_path / "index.json").open("w") as f:
-    json.dump({
-        "meta": {
-            "api-version": "1.0",
+    json.dump(
+        {
+            "meta": {
+                "api-version": "1.0",
+            },
+            "projects": [{"name": name} for name in packages.keys()],
         },
-        "projects": [
-            { "name": name } for name in packages.keys()
-        ],
-    }, f)
+        f,
+    )
 
 for name, package in packages.items():
     normalized_name = re.sub(r"[-_.]+", "-", name).lower()
@@ -79,17 +80,20 @@ for name, package in packages.items():
     (pypa_path / normalized_name).mkdir(parents=True, exist_ok=True)
 
     with (pypa_path / normalized_name / "index.json").open("w") as f:
-        json.dump({
-            "meta": {
-                "api-version": "1.0",
+        json.dump(
+            {
+                "meta": {
+                    "api-version": "1.0",
+                },
+                "name": normalized_name,
+                "files": [
+                    {
+                        "filename": package["filename"],
+                        "url": f"{args.pyodide_url.rstrip('/')}/{package['filename']}",
+                        "hashes": {"sha256": package["sha256"]},
+                        "dist-info-metadata": True,
+                    }
+                ],
             },
-            "name": normalized_name,
-            "files": [
-                {
-                    "filename": package["filename"],
-                    "url": f"{args.pyodide_url.rstrip('/')}/{package['filename']}",
-                    "hashes": { "sha256": package["sha256"] },
-                    "dist-info-metadata": True,
-                }
-            ],
-        }, f)
+            f,
+        )

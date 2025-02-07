@@ -22,9 +22,13 @@ PACKAGE_PYPI_NAME_FIXES = {
 requirements = dict()
 
 for dependency in dependencies:
-    with (packages_path / PACKAGE_PYPI_NAME_FIXES.get(dependency, dependency) / "meta.yaml").open("r") as f:
+    with (
+        packages_path
+        / PACKAGE_PYPI_NAME_FIXES.get(dependency, dependency)
+        / "meta.yaml"
+    ).open("r") as f:
         recipe = yaml.load(f, yaml.SafeLoader)
-    
+
     requirements[dependency] = recipe["package"]["version"]
 
 with requirements_path.open("w") as f:

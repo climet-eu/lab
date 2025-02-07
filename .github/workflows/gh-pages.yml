@@ -97,6 +97,19 @@ jobs:
           rm files/requirements-valid.txt
           deactivate
           rm -rf venv
+      - name: Check the validity of the constraints.txt and requirements.in files
+        continue-on-error: ${{ github.event_name != 'release' }}
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          cp files/requirements.in files/requirements-valid.in
+          # FIXME: pyicon -> ipdb and pytest
+          sed -i '/pyicon-diagnostics/d' files/requirements-valid.in
+          python -m pip install -r files/constraints.txt -r files/requirements-valid.in --dry-run --ignore-installed
+          rm files/requirements-valid.in
+          deactivate
+          rm -rf venv
       - name: Build the JupyterLite site
         run: |
           rm -f files/README.md && cp ./README.md files/

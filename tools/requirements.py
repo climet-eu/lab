@@ -1,8 +1,21 @@
 import json
+import yaml
+from dataclasses import dataclass
 from pathlib import Path
 
 lock_path = Path("pyodide") / "dist" / "pyodide-lock.json"
+recipe_path = Path("pyodide") / "packages"
+
 requirements_path = Path("files") / "requirements.txt"
+requirements_in_path = Path("files") / "requirements.in"
+constraints_path = Path("files") / "constraints.txt"
+
+
+@dataclass
+class Package:
+    version: str
+    is_pure: bool
+
 
 with lock_path.open("rb") as f:
     lock = json.load(f)
@@ -10,9 +23,9 @@ with lock_path.open("rb") as f:
 python = lock["info"]["python"]
 pyodide = lock["info"]["version"]
 
-packages = dict()
+packages: dict[str, Package] = dict()
 
-IGNORE_PACKAGES = [
+IGNORE_PACKAGES = {
     "git2",  # not a real package, experiment-in-progress
     "jupyterlite-cors",  # climet-eu/lab implementation detail
     "jupyterlite-preload",  # climet-eu/lab implementation detail
@@ -20,7 +33,7 @@ IGNORE_PACKAGES = [
     "micropip",  # pyodide implementation detail
     "pyodide-http",  # pyodide implementation detail
     "widgetsnbextension",  # JupyterLite mock with fake version
-]
+}
 
 PACKAGE_PYPI_NAME_FIXES = {
     "fiona": "fiona",  # no-op, otherwise a false positive
@@ -48,6 +61,24 @@ for package in lock["packages"].values():
     if package["name"] in IGNORE_PACKAGES:
         continue
 
+    is_pure = False
+
+    with open(recipe_path / package["name"] / "meta.yaml") as f:
+        recipe = yaml.load(f, yaml.SafeLoader)
+
+    try:
+        url = recipe["source"]["url"]
+    except KeyError:
+        url = None
+
+    if (
+        url is not None
+        and url.startswith("https://files.pythonhosted.org/packages")
+        and url.endswith("none-any.whl")
+        and package["name"] != "micropip"
+    ):
+        is_pure = True
+
     name = PACKAGE_PYPI_NAME_FIXES.get(package["name"], package["name"])
 
     # check for packages whose name guess might be wrong
@@ -56,34 +87,83 @@ for package in lock["packages"].values():
         if package["name"] not in PACKAGE_PYPI_NAME_FIXES:
             suspicious_packages.append((package["name"], name_guess))
 
-    packages[name] = package["version"]
+    packages[name] = Package(version=package["version"], is_pure=is_pure)
 
-with requirements_path.open("w") as f:
-    f.write(
+with (
+    requirements_path.open("w") as req,
+    requirements_in_path.open("w") as reqin,
+    constraints_path.open("w") as con,
+):
+
+    def write(s: str, *to) -> None:
+        if len(to) == 0:
+            to = (req, reqin, con)
+        for t in to:
+            t.write(s)
+
+    write(
         "# "
         + " Online Laboratory for Climate Science and Meteorology ".center(76, "=")
         + " #\n"
     )
-    f.write("# " + " requirements.txt (automatically generated) ".center(76) + " #\n")
-    f.write("# " + "".center(76) + " #\n")
-    f.write(
+
+    req.write("# " + " requirements.txt (automatically generated) ".center(76) + " #\n")
+    reqin.write(
+        "# " + " requirements.in (automatically generated) ".center(76) + " #\n"
+    )
+    con.write("# " + " constraints.txt (automatically generated) ".center(76) + " #\n")
+
+    write("# " + "".center(76) + " #\n")
+
+    req.write(
+        "# "
+        + " This list contains the locked versions of all pre-installed packages. ".center(
+            76
+        )
+        + " #\n"
+    )
+    reqin.write(
+        "# "
+        + " This list contains the names of all pre-installed packages. ".center(76)
+        + " #\n"
+    )
+    con.write(
+        "# "
+        + " This list contains the locked versions of all patched or ported ".center(76)
+        + " #\n"
+    )
+    con.write(
+        "# "
+        + " packages, which must be installed with exactly the lab-provided version. ".center(
+            76
+        )
+        + " #\n"
+    )
+
+    write("# " + "".center(76) + " #\n")
+    write(
         "# "
         + " Please note that this list is currently only an approximation ".center(76)
         + " #\n"
     )
-    f.write(
+    write(
         "# "
-        + " and does not include e.g. shared library dependencies ".center(76)
+        + " and does not include e.g. shared library dependencies. ".center(76)
         + " #\n"
     )
-    f.write("# " + "".center(76, "=") + " #\n")
-    f.write("\n")
-    f.write(f"# python == {python}\n")
-    f.write(f"# pyodide == {pyodide}\n")
-    f.write("\n")
+    write("# " + "".center(76, "=") + " #\n")
+    write("\n")
 
-    for name, version in sorted(packages.items(), key=lambda kv: kv[0].lower()):
-        f.write(f"{name} == {version}\n")
+    write(f"# python == {python}\n", req, con)
+    write(f"# pyodide == {pyodide}\n", req, con)
+    write("\n", req, con)
+
+    for name, package in sorted(packages.items(), key=lambda kv: kv[0].lower()):
+        req.write(f"{name} == {package.version}\n")
+        reqin.write(f"{name}\n")
+
+        if not package.is_pure:
+            con.write(f"{name} == {package.version}\n")
 
 if len(suspicious_packages) > 0:
     raise Exception(
