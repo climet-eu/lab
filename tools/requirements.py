@@ -17,7 +17,7 @@ class Package:
     is_pure: bool
 
 
-with lock_path.open("rb") as f:
+with lock_path.open("r") as f:
     lock = json.load(f)
 
 python = lock["info"]["python"]

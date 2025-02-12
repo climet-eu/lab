@@ -108,7 +108,7 @@ jobs:
           mkdir -p static
           mv pyodide/dist static/pyodide
           rm -rf static/pyodide/*-tests.tar
-          rm -f static/pyodide/tsconfig.tsbuildinfo
+          python tools/clean-dist.py static/pyodide
           jupyter lite build --output-dir staging
           cp static/favicons/favicon.ico staging/
           find staging/ -name favicon.ico | xargs -L1 cp -f static/favicons/favicon.ico

@@ -17,7 +17,7 @@ if pypa_path.exists():
     shutil.rmtree(pypa_path)
 pypa_path.mkdir(parents=True, exist_ok=True)
 
-with lock_path.open("rb") as f:
+with lock_path.open("r") as f:
     lock = json.load(f)
 
 packages = dict()
