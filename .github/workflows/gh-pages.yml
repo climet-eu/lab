@@ -90,11 +90,7 @@ jobs:
           python -m venv venv
           source venv/bin/activate
           pip install --upgrade pip
-          cp files/requirements.txt files/requirements-valid.txt
-          # FIXME: pyicon -> ipdb and pytest
-          sed -i '/pyicon-diagnostics ==/d' files/requirements-valid.txt
-          python -m pip install -r files/requirements-valid.txt --dry-run --ignore-installed
-          rm files/requirements-valid.txt
+          python -m pip install -r files/requirements.txt --dry-run --ignore-installed
           deactivate
           rm -rf venv
       - name: Check the validity of the constraints.txt and requirements.in files
@@ -103,11 +99,7 @@ jobs:
           python -m venv venv
           source venv/bin/activate
           pip install --upgrade pip
-          cp files/requirements.in files/requirements-valid.in
-          # FIXME: pyicon -> ipdb and pytest
-          sed -i '/pyicon-diagnostics/d' files/requirements-valid.in
-          python -m pip install -r files/constraints.txt -r files/requirements-valid.in --dry-run --ignore-installed
-          rm files/requirements-valid.in
+          python -m pip install -r files/constraints.txt -r files/requirements.in --dry-run --ignore-installed
           deactivate
           rm -rf venv
       - name: Build the JupyterLite site
