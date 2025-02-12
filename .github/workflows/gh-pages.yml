@@ -107,8 +107,8 @@ jobs:
           rm -f files/README.md && cp ./README.md files/
           mkdir -p static
           mv pyodide/dist static/pyodide
-          rm -rf static/pyodide/*-tests.tar
           python tools/clean-dist.py static/pyodide
+          rm -f static/pyodide/tsconfig.tsbuildinfo
           jupyter lite build --output-dir staging
           cp static/favicons/favicon.ico staging/
           find staging/ -name favicon.ico | xargs -L1 cp -f static/favicons/favicon.ico
