@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "scipy", "files": [{"filename": "scipy-1.14.1-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/scipy-1.14.1-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "3a1ebc71a0313d2cfbc0dff935ef09f5436413f863df93b06e4ec9fa94b76138"}, "dist-info-metadata": true}]}

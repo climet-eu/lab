@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "micropip", "files": [{"filename": "micropip-0.9.0-py3-none-any.whl", "url": "https://lab.climet.eu/main/static/pyodide/micropip-0.9.0-py3-none-any.whl", "hashes": {"sha256": "7b1a48f023cd542467576d5953a9113c9737259f6dddb27224b50e9be5f269bf"}, "dist-info-metadata": true}]}

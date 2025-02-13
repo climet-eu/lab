@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "antlr4-python3-runtime", "files": [{"filename": "antlr4_python3_runtime-4.13.2-py3-none-any.whl", "url": "https://lab.climet.eu/main/static/pyodide/antlr4_python3_runtime-4.13.2-py3-none-any.whl", "hashes": {"sha256": "ef65acfdb233c1dbb6c55d353a6c3c0c08d61299573dc340fb023788c417a440"}, "dist-info-metadata": true}]}

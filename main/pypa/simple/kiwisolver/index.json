@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "kiwisolver", "files": [{"filename": "kiwisolver-1.4.7-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/kiwisolver-1.4.7-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "0f352b658fb48530794b388eef79c17b46f3ee87b086e7efe96887736a8471d5"}, "dist-info-metadata": true}]}

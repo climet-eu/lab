@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "rasterio", "files": [{"filename": "rasterio-1.4.3-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/rasterio-1.4.3-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "9674375e0949db4201e74a958227b12542e05b77698021b9de7b4b4254bfdbfb"}, "dist-info-metadata": true}]}

@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "ecmwf-api-client", "files": [{"filename": "ecmwf_api_client-1.6.3-py3-none-any.whl", "url": "https://lab.climet.eu/main/static/pyodide/ecmwf_api_client-1.6.3-py3-none-any.whl", "hashes": {"sha256": "6b874a1ad08531d62c23c89f127307dac707bc25a9c2eadcd8705a2919ae930c"}, "dist-info-metadata": true}]}

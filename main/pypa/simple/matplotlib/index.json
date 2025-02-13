@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "matplotlib", "files": [{"filename": "matplotlib-3.8.4-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/matplotlib-3.8.4-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "e98ac8f02634b3d7ca3471861e3f2b3b666f21cbcf5c7c92c87f8e5c0e017168"}, "dist-info-metadata": true}]}

@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "jupyterlite-preload", "files": [{"filename": "jupyterlite_preload-0.0.0-py3-none-any.whl", "url": "https://lab.climet.eu/main/static/pyodide/jupyterlite_preload-0.0.0-py3-none-any.whl", "hashes": {"sha256": "c8f33cb7427b99ffa7106c35013869562cf304f93004e70883b82d31683bea79"}, "dist-info-metadata": true}]}

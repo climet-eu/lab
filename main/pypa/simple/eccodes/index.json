@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "eccodes", "files": [{"filename": "eccodes-2.39.1-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/eccodes-2.39.1-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "640e0960bb1c96ff105d38c84afa120882f31766b812bfa9321292deb585ca45"}, "dist-info-metadata": true}]}

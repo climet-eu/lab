@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "lz4", "files": [{"filename": "lz4-4.4.3-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/lz4-4.4.3-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "89d129420640d33fb9249ec044c3706f6acae5ce405629342daa99e10053a878"}, "dist-info-metadata": true}]}

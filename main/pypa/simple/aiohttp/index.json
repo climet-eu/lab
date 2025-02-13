@@ -1,0 +1,1 @@
+{"meta": {"api-version": "1.0"}, "name": "aiohttp", "files": [{"filename": "aiohttp-3.11.10-cp312-cp312-pyodide_2024_0_wasm32.whl", "url": "https://lab.climet.eu/main/static/pyodide/aiohttp-3.11.10-cp312-cp312-pyodide_2024_0_wasm32.whl", "hashes": {"sha256": "d68c8cc4dacf15aca56fd73b9dd6b4b1fca05654d55ac45f06b2094d13307770"}, "dist-info-metadata": true}]}
