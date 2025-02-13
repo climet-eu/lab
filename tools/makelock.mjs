@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from "fs";
 import { argv } from "process";
 
-import { loadPyodide } from "dist/pyodide.mjs";
+import { loadPyodide } from "./pyodide.mjs";
 
 const [_node_path, _script_path, requirements_path, new_lockfile_path] = argv;
 
