@@ -75,7 +75,7 @@ jobs:
         continue-on-error: ${{ github.event_name != 'release' }}
         run: python tools/requirements.py
       - name: Extract the PyPa simple repository API
-        run: python tools/pypa-simple.py https://lab.climet.eu/${{ env.CLIMETLAB_VERSION }}/static/pyodide/
+        run: python tools/pypa-simple.py ../../../static/pyodide/
       - name: Clean up the pyodide build
         run: |
           cd pyodide
