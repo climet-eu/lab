@@ -18,6 +18,11 @@ micropip.set_index_urls([
     "https://pypi.org/pypi/{package_name}/json",
 ])
 
+micropip.set_constraints([
+    c for c in """${requirements}""".splitlines()
+    if len(c) > 0 and not c.startswith('#')
+])
+
 await micropip.install([
     r for r in """${requirements}""".splitlines()
     if len(r) > 0 and not r.startswith('#')
