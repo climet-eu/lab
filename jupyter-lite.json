@@ -15,6 +15,12 @@
                         "ssl"
                     ]
                 }
+            },
+            "a-jupyterlite-query-config:plugin": {
+                "overrides": {
+                    "pyodideKernelLockFileURL": "litePluginSettings.@jupyterlite/pyodide-kernel-extension:kernel.loadPyodideOptions.lockFileURL",
+                    "pyodideKernelPackages": "litePluginSettings.@jupyterlite/pyodide-kernel-extension:kernel.loadPyodideOptions.packages"
+                }
             }
         },
         "fileTypes": {

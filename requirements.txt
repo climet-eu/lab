@@ -14,6 +14,9 @@ jupyterlite-pyodide-kernel==0.5.2
 a-jupyterlite-session~=0.1.12
 a-jupyterlab-session~=0.1.10
 
+# JupyterLite: override config settings with URL query parameters
+a-jupyterlite-query-config~=0.1.0
+
 # JupyterLab: guided tour
 jupyterlab-tour~=4.0.0
 # JupyterLab: dark theme
