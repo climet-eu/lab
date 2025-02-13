@@ -76,15 +76,16 @@ jobs:
         run: python tools/requirements.py
       - name: Extract the PyPa simple repository API
         run: python tools/pypa-simple.py https://lab.climet.eu/${{ env.CLIMETLAB_VERSION }}/static/pyodide/
-      # - name: Extract the PyPi-enabled pyodide-lock.json
-      #   run: |
-      #     cp files/requirements.txt pyodide/my-requirements.txt
-      #     cp tools/makelock.mjs pyodide/dist/makelock.mjs
-      #     cd pyodide
-      #     ./run_docker --non-interactive node dist/makelock.mjs my-requirements.txt dist/pypi-pyodide-lock.json
-      #     cd ..
-      #     rm pyodide/makelock.mjs
-      #     rm pyodide/my-requirements.txt
+      - name: Extract the PyPi-enabled pyodide-lock.json
+        continue-on-error: ${{ github.event_name != 'release' }}
+        run: |
+          cp files/requirements.txt pyodide/my-requirements.txt
+          cp tools/makelock.mjs pyodide/dist/makelock.mjs
+          cd pyodide
+          ./run_docker --non-interactive node dist/makelock.mjs my-requirements.txt dist/pypi-pyodide-lock.json
+          cd ..
+          rm pyodide/makelock.mjs
+          rm pyodide/my-requirements.txt
       - name: Clean up the pyodide build
         run: |
           cd pyodide
