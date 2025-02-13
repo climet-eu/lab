@@ -79,7 +79,9 @@ jobs:
       - name: Extract the PyPi-enabled pyodide-lock.json
         run: |
           cp files/requirements.txt pyodide/my-requirements.txt
-          pyodide/run_docker --non-interactive node tools/makelock.mjs my-requirements.txt dist/pypi-pyodide-lock.json
+          cp tools/makelock.mjs pyodide/makelock.mjs
+          pyodide/run_docker --non-interactive node makelock.mjs my-requirements.txt dist/pypi-pyodide-lock.json
+          rm pyodide/makelock.mjs
           rm pyodide/my-requirements.txt
       - name: Clean up the pyodide build
         run: |
