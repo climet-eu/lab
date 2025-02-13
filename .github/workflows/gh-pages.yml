@@ -80,7 +80,7 @@ jobs:
         run: |
           cp files/requirements.txt pyodide/my-requirements.txt
           cp tools/makelock.mjs pyodide/makelock.mjs
-          cd && ./run_docker --non-interactive node makelock.mjs my-requirements.txt dist/pypi-pyodide-lock.json && cd ..
+          cd pyodide && ./run_docker --non-interactive node makelock.mjs my-requirements.txt dist/pypi-pyodide-lock.json && cd ..
           rm pyodide/makelock.mjs
           rm pyodide/my-requirements.txt
       - name: Clean up the pyodide build
