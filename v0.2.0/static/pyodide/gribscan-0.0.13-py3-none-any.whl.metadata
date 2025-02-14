@@ -1,0 +1,77 @@
+Metadata-Version: 2.1
+Name: gribscan
+Version: 0.0.13
+Summary: Create indices for GRIB files and provide an xarray interface.
+Author: Tobias Kölling, Lukas Kluft, Thomas Rackow
+License: MIT License
+        
+        Copyright (c) 2022 gribscan contributors
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+Keywords: fsspec,grib,zarr
+Classifier: Programming Language :: Python :: 3
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: cfgrib>=0.9.9.0
+Requires-Dist: eccodes
+Requires-Dist: numcodecs>=0.10.0
+Requires-Dist: numpy
+Requires-Dist: scipy
+Provides-Extra: docs
+Requires-Dist: sphinx; extra == "docs"
+Requires-Dist: myst-parser; extra == "docs"
+Requires-Dist: sphinx-diagrams; extra == "docs"
+Requires-Dist: sphinx-book-theme; extra == "docs"
+
+[![Documentation Status](https://readthedocs.org/projects/gribscan/badge/?version=latest)](https://gribscan.readthedocs.io/en/latest/?badge=latest) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10625188.svg)](https://doi.org/10.5281/zenodo.10625188)
+
+# gribscan
+
+Tools to scan GRIB files and create zarr-compatible indices.
+
+## warning
+
+This repository is still experimental. The code is not yet tested for many kinds of files. It will likely not destroy your files, as it only accesses GRIB files in read-mode, but it may skip some information or may crash. Please file an issue if you discover something is missing.
+
+## installing
+
+`gribscan` is on [PyPI](http://pypi.org/project/gribscan/), you can install the recent released version using
+
+```bash
+python -m pip install gribscan
+```
+
+if you are interested in the recent development version, please clone the repository and install the package in development mode:
+
+```bash
+python -m pip install -e <path to your clone>
+```
+
+## docs
+
+The latest documentation can be found [online](https://gribscan.readthedocs.io) or may be built using sphinx in your local clone:
+
+```bash
+pip install -e .[docs]
+cd docs
+make html
+```
+
+afterwards, the documentation is available at `docs/build/html/index.html`.

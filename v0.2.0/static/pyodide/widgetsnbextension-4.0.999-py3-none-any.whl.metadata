@@ -1,0 +1,14 @@
+Metadata-Version: 2.3
+Name: widgetsnbextension
+Version: 4.0.999
+Dynamic: Summary
+Project-URL: Source, https://github.com/jupyterlite/pyodide-kernel
+Author: JupyterLite Contributors
+Classifier: License :: OSI Approved :: BSD License
+Requires-Python: <3.12,>=3.11
+Description-Content-Type: text/markdown
+
+# widgetsnbextension mock
+
+This is an widgetsnbextension mock that provides nothing. It's only there so that
+`%pip install widgetsnbextension` does not fail (for `ipywidgets 8` support).

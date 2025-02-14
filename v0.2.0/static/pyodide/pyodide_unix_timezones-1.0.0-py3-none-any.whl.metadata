@@ -1,0 +1,21 @@
+Metadata-Version: 2.1
+Name: pyodide-unix-timezones
+Version: 1.0.0
+Summary: Helper package to install unix timezone data on Pyodide
+Author-email: Joe Marshall <joe.marshall@nottingham.ac.uk>
+Maintainer-email: Joe Marshall <joe.marshall@nottingham.ac.uk>
+Project-URL: Homepage, https://github.com/joemarshall/pyodide-unix-timezones
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Description-Content-Type: text/markdown
+
+# Pyodide Unix Timezones Package
+
+This package installs Unix style timezone data into /usr/share/zoneinfo of a pyodide instance.
+
+To install the data just import the `unix_timezones` package.
+
+It won't overwrite any existing data, so it is safe to use under node.js etc.
