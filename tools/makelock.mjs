@@ -13,8 +13,7 @@ await py.runPythonAsync(`
 import micropip
 
 micropip.set_index_urls([
-    # TODO: use a locally-hosted index with the fresh wheels
-    "https://lab.climet.eu/main/pypa/simple/{package_name}/",
+    "http://0.0.0.0:8000/pypa/simple/{package_name}/",
     "https://pypi.org/pypi/{package_name}/json",
 ])
 

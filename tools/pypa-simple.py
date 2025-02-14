@@ -5,13 +5,14 @@ import shutil
 import yaml
 from pathlib import Path
 
-lock_path = Path("pyodide") / "dist" / "pyodide-lock.json"
-recipe_path = Path("pyodide") / "packages"
-pypa_path = Path("pypa") / "simple"
-
 parser = argparse.ArgumentParser()
+parser.add_argument("pypa_path")
 parser.add_argument("pyodide_url")
 args = parser.parse_args()
+
+lock_path = Path("pyodide") / "dist" / "pyodide-lock.json"
+recipe_path = Path("pyodide") / "packages"
+pypa_path = Path(args.pypa_path)
 
 if pypa_path.exists():
     shutil.rmtree(pypa_path)
@@ -63,37 +64,39 @@ for package in lock["packages"].values():
     name = PACKAGE_PYPI_NAME_FIXES.get(package["name"], package["name"])
     packages[name] = dict(filename=package["file_name"], sha256=package["sha256"])
 
-with (pypa_path / "index.json").open("w") as f:
-    json.dump(
-        {
-            "meta": {
-                "api-version": "1.0",
-            },
-            "projects": [{"name": name} for name in packages.keys()],
-        },
-        f,
-    )
+with (pypa_path / "index.html").open("w") as f:
+    f.write("""<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="pypi:repository-version" content="1.3">
+        <title>Simple index</title>
+    </head>
+    <body>""")
+
+    for name in packages.keys():
+        normalized_name = re.sub(r"[-_.]+", "-", name).lower()
+
+        f.write(f"""
+        <a href="./{normalized_name}/">{name}</a><br>""")
+
+    f.write("""
+    </body>
+</html>""")
 
 for name, package in packages.items():
     normalized_name = re.sub(r"[-_.]+", "-", name).lower()
 
     (pypa_path / normalized_name).mkdir(parents=True, exist_ok=True)
 
-    with (pypa_path / normalized_name / "index.json").open("w") as f:
-        json.dump(
-            {
-                "meta": {
-                    "api-version": "1.0",
-                },
-                "name": normalized_name,
-                "files": [
-                    {
-                        "filename": package["filename"],
-                        "url": f"{args.pyodide_url.rstrip('/')}/{package['filename']}",
-                        "hashes": {"sha256": package["sha256"]},
-                        "dist-info-metadata": True,
-                    }
-                ],
-            },
-            f,
-        )
+    with (pypa_path / normalized_name / "index.html").open("w") as f:
+        f.write(f"""<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="pypi:repository-version" content="1.3">
+        <title>Links for {normalized_name}</title>
+    </head>
+    <body>
+        <h1>Links for {normalized_name}</h1>
+        <a href="{args.pyodide_url.rstrip('/')}/{package['filename']}#sha256={package['sha256']}" data-dist-info-metadata data-core-metadata">{package['filename']}</a><br> 
+    </body>
+</html>""")
