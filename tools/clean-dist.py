@@ -29,4 +29,4 @@ for name in packages_to_delete:
     del lock["packages"][name]
 
 with lock_path.open("w") as f:
-    json.dump(lock, f)
+    json.dump(lock, f, sort_keys=True)

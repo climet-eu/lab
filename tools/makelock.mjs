@@ -10,6 +10,8 @@ const requirements = readFileSync(requirements_path, { encoding: 'utf8' });
 const py = await loadPyodide({ packages: ["micropip"] });
 
 await py.runPythonAsync(`
+import json
+
 import micropip
 
 micropip.set_index_urls([
@@ -27,8 +29,10 @@ await micropip.install([
     if len(r) > 0 and not r.startswith('#')
 ], verbose=True)
 
+lock = micropip.freeze().replace("http://0.0.0.0:8000/dist/", "")
+
 with open("/pyodide-lock.json", "w") as f:
-    f.write(micropip.freeze())
+    json.dump(json.loads(lock), f, sort_keys=True)
 `);
 
 const lock = py.FS.readFile("/pyodide-lock.json", { encoding: 'utf8' });

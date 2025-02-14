@@ -73,9 +73,11 @@ jobs:
             make
       - name: Clean up the pyodide build
         run: |
+          python tools/clean-dist.py pyodide/dist
           cd pyodide
           find . -name jupyter-lite.json -delete
           find . -name jupyter_lite_config.json -delete
+          rm -f dist/tsconfig.tsbuildinfo
           mkdir -p packages/numpy/build
           touch packages/numpy/build/ls-success
           ls -d packages/*/build/* | xargs rm -r
@@ -119,8 +121,6 @@ jobs:
           rm -f files/README.md && cp ./README.md files/
           mkdir -p static
           mv pyodide/dist static/pyodide
-          python tools/clean-dist.py static/pyodide
-          rm -f static/pyodide/tsconfig.tsbuildinfo
           jupyter lite build --output-dir staging
           cp static/favicons/favicon.ico staging/
           find staging/ -name favicon.ico | xargs -L1 cp -f static/favicons/favicon.ico

@@ -68,7 +68,7 @@ with (pypa_path / "index.html").open("w") as f:
     f.write("""<!DOCTYPE html>
 <html>
     <head>
-        <meta name="pypi:repository-version" content="1.3">
+        <meta name="pypi:repository-version" content="1.0">
         <title>Simple index</title>
     </head>
     <body>""")
@@ -92,7 +92,7 @@ for name, package in packages.items():
         f.write(f"""<!DOCTYPE html>
 <html>
     <head>
-        <meta name="pypi:repository-version" content="1.3">
+        <meta name="pypi:repository-version" content="1.0">
         <title>Links for {normalized_name}</title>
     </head>
     <body>
