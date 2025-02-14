@@ -11,8 +11,8 @@
                 "pyodideUrl": "/static/pyodide/pyodide.js",
                 "loadPyodideOptions": {
                     "packages": [
-                        "comm", "packaging", "ipython", "micropip", "sqlite3",
-                        "ssl"
+                        "comm", "packaging", "ipython", "jupyterlite-cors",
+                        "jupyterlite-preload", "micropip", "sqlite3", "ssl"
                     ]
                 }
             },
