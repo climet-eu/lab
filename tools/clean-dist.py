@@ -28,5 +28,9 @@ for name, package in lock["packages"].items():
 for name in packages_to_delete:
     del lock["packages"][name]
 
+for package in lock["packages"].values():
+    package["depends"] = sorted(package["depends"])
+    package["imports"] = sorted(package["imports"])
+
 with lock_path.open("w") as f:
     json.dump(lock, f, sort_keys=True)
