@@ -69,7 +69,7 @@ jobs:
           cd pyodide
           ./run_docker \
             --non-interactive \
-            PYODIDE_PACKAGES="aiohttp,basemap,cdsapi,cfgrib,cf-units,cf-xarray,cmcrameri,dask,earthkit,ecmwf-api-client,ecmwf-opendata,field-compression-benchmark,fsspec,gribscan,healpy,h5netcdf,intake,intake-esm,intake-xarray,ipyfilite,ipython,kerchunk,lzma,lz4,matplotlib,MetPy,netcdf4,numcodecs,numpy,pandas,pint,pooch,pyarrow,pyicon-diagnostics,pystac,regex,requests,rich,scipy,shapely,sympy,s3fs,xarray,xeofs,zarr" \
+            PYODIDE_PACKAGES="$(cat ../venv/packages.txt | paste -sd "," -)" \
             make
       - name: Clean up the pyodide build
         run: |
@@ -81,20 +81,30 @@ jobs:
           mkdir -p packages/numpy/build
           touch packages/numpy/build/ls-success
           ls -d packages/*/build/* | xargs rm -r
+      - name: Prepare the JupyterLite-included files
+        run: |
+          mkdir -p files
+          cp ./README.md files/
       - name: Extract the requirements.txt file
-        continue-on-error: ${{ github.event_name != 'release' }}
-        run: python tools/requirements.py
+        run: |
+          python tools/requirements.py
+          git diff --no-index files/constraints.txt venv/constraints.txt
+          git diff --no-index files/requirements.in venv/requirements.in
+          git diff --no-index files/requirements.txt venv/requirements.txt
+          git diff --no-index files/constraints.txt venv/constraints.txt --check
+          git diff --no-index files/requirements.in venv/requirements.in --check
+          git diff --no-index files/requirements.txt venv/requirements.txt --check
       - name: Extract the PyPa simple repository API
         run: python tools/pypa-simple.py pypa/simple ../../../static/pyodide/
       - name: Extract the PyPi-enabled pyodide-lock.json
         run: |
           python tools/pypa-simple.py pyodide/pypa/simple ../../../dist
           cp files/requirements.txt pyodide/my-requirements.txt
-          cp tools/makelock.mjs pyodide/dist/makelock.mjs
+          cp tools/pypi-lock.mjs pyodide/dist/pypi-lock.mjs
           cd pyodide
-          ./run_docker --non-interactive python -m http.server "&" node dist/makelock.mjs my-requirements.txt dist/pypi-pyodide-lock.json
+          ./run_docker --non-interactive python -m http.server "&" node dist/pypi-lock.mjs my-requirements.txt dist/pypi-pyodide-lock.json
           cd ..
-          rm pyodide/dist/makelock.mjs
+          rm pyodide/dist/pypi-lock.mjs
           rm pyodide/my-requirements.txt
           rm -rf pyodide/pypa/simple
       - name: Check the validity of the requirements.txt file
@@ -117,7 +127,6 @@ jobs:
           rm -rf venv
       - name: Build the JupyterLite site
         run: |
-          rm -f files/README.md && cp ./README.md files/
           mkdir -p static
           mv pyodide/dist static/pyodide
           jupyter lite build --output-dir staging

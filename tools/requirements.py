@@ -106,12 +106,11 @@ with (
         + " Online Laboratory for Climate Science and Meteorology ".center(76, "=")
         + " #\n"
     )
+    write("# " + "".center(76) + " #\n")
 
-    req.write("# " + " requirements.txt (automatically generated) ".center(76) + " #\n")
-    reqin.write(
-        "# " + " requirements.in (automatically generated) ".center(76) + " #\n"
-    )
-    con.write("# " + " constraints.txt (automatically generated) ".center(76) + " #\n")
+    req.write("# " + " requirements.txt ".center(76) + " #\n")
+    reqin.write("# " + " requirements.in ".center(76) + " #\n")
+    con.write("# " + " constraints.txt ".center(76) + " #\n")
 
     write("# " + "".center(76) + " #\n")
 
@@ -137,18 +136,6 @@ with (
         + " packages, which must be installed with exactly the lab-provided version. ".center(
             76
         )
-        + " #\n"
-    )
-
-    write("# " + "".center(76) + " #\n")
-    write(
-        "# "
-        + " Please note that this list is currently only an approximation ".center(76)
-        + " #\n"
-    )
-    write(
-        "# "
-        + " and does not include e.g. shared library dependencies. ".center(76)
         + " #\n"
     )
     write("# " + "".center(76, "=") + " #\n")
