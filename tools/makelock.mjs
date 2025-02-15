@@ -86,7 +86,7 @@ lock = json.loads(
 for package in lock["packages"].values():
     package["depends"] = sorted(package["depends"])
 
-    if package["package_type"] == "shared_library":
+    if package.get("package_type", None) == "shared_library":
         package["imports"] = []
     else:
         package["imports"] = sorted(get_imports_for_package(package["name"]))
