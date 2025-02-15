@@ -86,10 +86,10 @@ lock = json.loads(
 for package in lock["packages"].values():
     package["depends"] = sorted(package["depends"])
 
-    if package.get("package_type", None) == "shared_library":
-        package["imports"] = []
-    elif package["name"] not in ["git2"]:
+    try:
         package["imports"] = sorted(get_imports_for_package(package["name"]))
+    except PackageNotFoundError as err:
+        print(f"Package {package['name']} has not been installed")
 
 with open("/pyodide-lock.json", "w") as f:
     json.dump(lock, f, sort_keys=True)
