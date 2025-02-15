@@ -6,9 +6,9 @@ from pathlib import Path
 lock_path = Path("pyodide") / "dist" / "pyodide-lock.json"
 recipe_path = Path("pyodide") / "packages"
 
-requirements_path = Path("files") / "requirements.txt"
-requirements_in_path = Path("files") / "requirements.in"
-constraints_path = Path("files") / "constraints.txt"
+requirements_path = Path("venv") / "requirements.txt"
+requirements_in_path = Path("venv") / "requirements.in"
+constraints_path = Path("venv") / "constraints.txt"
 
 
 @dataclass
