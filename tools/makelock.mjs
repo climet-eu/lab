@@ -88,7 +88,7 @@ for package in lock["packages"].values():
 
     if package.get("package_type", None) == "shared_library":
         package["imports"] = []
-    else:
+    elif package["name"] not in ["git2"]:
         package["imports"] = sorted(get_imports_for_package(package["name"]))
 
 with open("/pyodide-lock.json", "w") as f:
