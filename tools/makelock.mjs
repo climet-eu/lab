@@ -26,7 +26,7 @@ def get_imports_for_package(p: str) -> list[str]:
             continue
         
         # include top-level single-file packages
-        if len(f.parts) == 1 and f.suffix == ".py":
+        if len(f.parts) == 1 and f.suffix in [".py", ".so"]:
             imports.add(f.stem)
             continue
 
@@ -85,7 +85,11 @@ lock = json.loads(
 
 for package in lock["packages"].values():
     package["depends"] = sorted(package["depends"])
-    package["imports"] = sorted(get_imports_for_package(package["name"]))
+
+    if package["package_type"] == "shared_library":
+        package["imports"] = []
+    else:
+        package["imports"] = sorted(get_imports_for_package(package["name"]))
 
 with open("/pyodide-lock.json", "w") as f:
     json.dump(lock, f, sort_keys=True)
