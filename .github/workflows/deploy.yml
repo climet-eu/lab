@@ -206,7 +206,7 @@ jobs:
 
   build-jupyterlite:
     runs-on: ubuntu-latest
-    needs: build-pyodide
+    needs: [build-pyodide, build-pypa, build-lock]
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -257,7 +257,7 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-latest
-    needs: build-jupyterlite
+    needs: [build-jupyterlite, check-venv]
     steps:
       - name: Get the current branch name
         uses: tj-actions/branch-names@v8
