@@ -26,7 +26,7 @@ def get_imports_for_package(p: str) -> list[str]:
         # ignore special folders
         if Path(f.parts[0]).suffix in [".libs", ".dist-info", ".data"]:
             continue
-        
+
         # include top-level single-file packages
         if len(f.parts) == 1 and f.suffix in [".py", ".so"]:
             imports.add(f.stem)
@@ -61,10 +61,10 @@ def get_imports_for_package(p: str) -> list[str]:
     # remove prefixes from the list
     new_imports = []
     for i in imports:
-        if not any(j.startswith(i) for j in imports if j != i):
+        if not any(j.startswith(f"{i}.") for j in imports if j != i):
             new_imports.append(i)
-    
-            return new_imports
+
+    return new_imports
 
 micropip.set_index_urls([
     "http://0.0.0.0:8000/pypa/simple/{package_name}/",
