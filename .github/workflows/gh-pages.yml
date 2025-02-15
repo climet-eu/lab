@@ -87,7 +87,6 @@ jobs:
       - name: Extract the PyPa simple repository API
         run: python tools/pypa-simple.py pypa/simple ../../../static/pyodide/
       - name: Extract the PyPi-enabled pyodide-lock.json
-        continue-on-error: ${{ github.event_name != 'release' }}
         run: |
           python tools/pypa-simple.py pyodide/pypa/simple ../../../dist
           cp files/requirements.txt pyodide/my-requirements.txt

@@ -7,7 +7,9 @@ const [_node_path, _script_path, requirements_path, new_lockfile_path] = argv;
 
 const requirements = readFileSync(requirements_path, { encoding: 'utf8' });
 
-const py = await loadPyodide({ fullStdLib: true, packages: ["micropip"] });
+const py = await loadPyodide({ fullStdLib: true, packages: [
+    "micropip", "openssl", "test",
+] });
 
 await py.runPythonAsync(`
 import importlib.metadata
@@ -85,11 +87,7 @@ lock = json.loads(
 
 for package in lock["packages"].values():
     package["depends"] = sorted(package["depends"])
-
-    try:
-        package["imports"] = sorted(get_imports_for_package(package["name"]))
-    except importlib.metadata.PackageNotFoundError:
-        print(f"Package {package['name']} has not been installed")
+    package["imports"] = sorted(get_imports_for_package(package["name"]))
 
 with open("/pyodide-lock.json", "w") as f:
     json.dump(lock, f, sort_keys=True)
