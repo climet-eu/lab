@@ -187,9 +187,7 @@ jobs:
         run: python tools/requirements.py
 
       - name: Check that the venv requirements are up-to-date
-        run: |
-          git diff ./venv/
-          git diff ./venv --check
+        run: git diff --exit-code ./venv/
 
       - name: Check the requirements.txt file
         continue-on-error: ${{ github.event_name != 'release' }}
