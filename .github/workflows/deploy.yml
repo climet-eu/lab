@@ -205,7 +205,7 @@ jobs:
           python -m venv .venv
           source .venv/bin/activate
           pip install --upgrade pip
-          pip install -r files/constraints.txt -r files/requirements.in --dry-run --ignore-installed
+          pip install -r venv/constraints.txt -r venv/requirements.in --dry-run --ignore-installed
           deactivate
           rm -rf .venv
 
@@ -290,11 +290,11 @@ jobs:
           name: jupyterlite
           path: dist/${{ env.CLIMETLAB_VERSION }}
 
-      # - name: Deploy to dist branch
-      #   uses: peaceiris/actions-gh-pages@v4
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_branch: dist
-      #     publish_dir: ./dist
-      #     keep_files: false
-      #     force_orphan: true
+      - name: Deploy to dist branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: dist
+          publish_dir: ./dist
+          keep_files: false
+          force_orphan: true
