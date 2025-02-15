@@ -7,7 +7,7 @@ const [_node_path, _script_path, requirements_path, new_lockfile_path] = argv;
 
 const requirements = readFileSync(requirements_path, { encoding: 'utf8' });
 
-const py = await loadPyodide({ packages: ["micropip"] });
+const py = await loadPyodide({ fullStdLib: true, packages: ["micropip"] });
 
 await py.runPythonAsync(`
 import importlib.metadata
