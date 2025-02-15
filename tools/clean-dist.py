@@ -12,20 +12,33 @@ lock_path = dist_path / "pyodide-lock.json"
 with lock_path.open("r") as f:
     lock = json.load(f)
 
-packages_to_delete = []
+packages_to_delete = set()
+all_dependencies = set()
 
 for name, package in lock["packages"].items():
+    all_dependencies.update(package["depends"])
+
     if package["unvendored_tests"] is not True:
         continue
 
-    filename = lock["packages"][f"{name}-tests"]["file_name"]
+    packages_to_delete.add(f"{name}-tests")
+    package["unvendored_tests"] = False
+
+for name, package in lock["packages"].items():
+    if package["package_type"] != "shared_library":
+        continue
+
+    if name in all_dependencies:
+        continue
+
+    packages_to_delete.add(name)
+
+
+for name in packages_to_delete:
+    filename = lock["packages"][name]["file_name"]
     print(f"Removed {filename}")
     (dist_path / filename).unlink()
 
-    packages_to_delete.append(f"{name}-tests")
-    package["unvendored_tests"] = False
-
-for name in packages_to_delete:
     del lock["packages"][name]
 
 for package in lock["packages"].values():
