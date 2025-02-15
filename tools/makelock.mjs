@@ -88,7 +88,7 @@ for package in lock["packages"].values():
 
     try:
         package["imports"] = sorted(get_imports_for_package(package["name"]))
-    except PackageNotFoundError as err:
+    except importlib.metadata.PackageNotFoundError:
         print(f"Package {package['name']} has not been installed")
 
 with open("/pyodide-lock.json", "w") as f:
