@@ -79,12 +79,14 @@ jobs:
         with:
           name: pyodide-lock.json
           path: pyodide/dist/pyodide-lock.json
+          retention-days: 1
 
       - name: Upload the Pyodide distribution artifact
         uses: actions/upload-artifact@v4
         with:
           name: pyodide
           path: pyodide/dist
+          retention-days: 1
 
       - name: Remove the uploaded Pyodide distribution
         run: rm -rf pyodide/dist
@@ -112,6 +114,7 @@ jobs:
         with:
           name: pypa
           path: pypa
+          retention-days: 1
 
   build-lock:
     runs-on: ubuntu-latest
@@ -135,7 +138,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: pyodide
-          path: pyodide/dist
+          path: pyodide/static/pyodide
 
       - name: Download the PyPa repository artifact
         uses: actions/download-artifact@v4
@@ -146,15 +149,16 @@ jobs:
       - name: Extract the PyPi-enabled pyodide-lock.json
         run: |
           cp venv/requirements.txt pyodide/my-requirements.txt
-          cp tools/pypi-lock.mjs pyodide/dist/pypi-lock.mjs
+          cp tools/pypi-lock.mjs pyodide/static/pyodide/pypi-lock.mjs
           cd pyodide
-          ./run_docker --non-interactive python -m http.server "&" node dist/pypi-lock.mjs my-requirements.txt dist/pypi-pyodide-lock.json
+          ./run_docker --non-interactive python -m http.server "&" node static/pyodide/pypi-lock.mjs my-requirements.txt pypi-pyodide-lock.json
 
       - name: Upload the pypi-pyodide-lock.json artifact
         uses: actions/upload-artifact@v4
         with:
           name: pypi-pyodide-lock.json
-          path: pyodide/dist/pypi-pyodide-lock.json
+          path: pyodide/pypi-pyodide-lock.json
+          retention-days: 1
 
   check-venv:
     runs-on: ubuntu-latest
@@ -169,6 +173,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12.7"
+
+      - name: Install PyYAML
+        run: pip install PyYAML
 
       - name: Download the pyodide-lock.json artifact
         uses: actions/download-artifact@v4
@@ -190,7 +197,7 @@ jobs:
           python -m venv .venv
           source .venv/bin/activate
           pip install --upgrade pip
-          python -m pip install -r venv/requirements.txt --dry-run --ignore-installed
+          pip install -r venv/requirements.txt --dry-run --ignore-installed
           deactivate
           rm -rf .venv
 
@@ -200,7 +207,7 @@ jobs:
           python -m venv .venv
           source .venv/bin/activate
           pip install --upgrade pip
-          python -m pip install -r files/constraints.txt -r files/requirements.in --dry-run --ignore-installed
+          pip install -r files/constraints.txt -r files/requirements.in --dry-run --ignore-installed
           deactivate
           rm -rf .venv
 
@@ -213,7 +220,7 @@ jobs:
 
       - name: Install the dependencies
         run: |
-          python -m pip install -r requirements.txt
+          pip install -r requirements.txt
 
       - name: Prepare the JupyterLite input files
         run: |
@@ -252,6 +259,7 @@ jobs:
         with:
           name: jupyterlite
           path: staging
+          retention-days: 1
 
   deploy:
     permissions:
