@@ -8,7 +8,7 @@ const [_node_path, _script_path, requirements_path, new_lockfile_path] = argv;
 const requirements = readFileSync(requirements_path, { encoding: 'utf8' });
 
 const py = await loadPyodide({ fullStdLib: true, packages: [
-    "micropip", "openssl", "test",
+    "micropip", "test",
 ] });
 
 await py.runPythonAsync(`
@@ -87,7 +87,9 @@ lock = json.loads(
 
 for package in lock["packages"].values():
     package["depends"] = sorted(package["depends"])
-    package["imports"] = sorted(get_imports_for_package(package["name"]))
+
+    if package["name"] != "openssl":
+        package["imports"] = sorted(get_imports_for_package(package["name"]))
 
 with open("/pyodide-lock.json", "w") as f:
     json.dump(lock, f, sort_keys=True)
