@@ -29,11 +29,17 @@ def get_imports_for_package(p: str) -> list[str]:
         # ignore special folders
         if Path(f.parts[0]).suffix in [".libs", ".dist-info", ".data"]:
             continue
+        
+        if (
+            len(f.parts) == 1 and
+            f.suffix == ".so"
+        ):
+            print(f"{p}: {f} -> {f.stem.split('.')[0]}")
 
         # include top-level single-file packages
         if (
             len(f.parts) == 1 and
-            f.suffix in [".py", ".so"] and
+            f.suffix in [".py", ".pyc", ".so"] and
             valid_package_name(f.stem)
         ):
             imports.add(f.stem)
@@ -93,7 +99,7 @@ await micropip.install([
 ], verbose=True)
 
 lock = json.loads(
-    micropip.freeze().replace("http://0.0.0.0:8000/dist/", "")
+    micropip.freeze().replace("http://0.0.0.0:8000/static/pyodide/", "")
 )
 
 for package in lock["packages"].values():
