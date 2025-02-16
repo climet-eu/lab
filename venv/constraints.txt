@@ -13,7 +13,7 @@ aiohttp == 3.11.10
 antlr4-python3-runtime == 4.13.2
 asciitree == 0.3.3
 astropy == 7.0.0
-astropy_iers_data == 0.2024.12.9.0.36.21
+astropy-iers-data == 0.2024.12.9.0.36.21
 basemap == 1.4.1
 Cartopy == 0.24.1
 cf-units == 3.3.0

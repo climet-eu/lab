@@ -31,21 +31,8 @@ IGNORE_PACKAGES = {
     "jupyterlite-preload",  # climet-eu/lab implementation detail
     "matplotlib-pyodide",  # pyodide implementation detail
     "micropip",  # pyodide implementation detail
-    "pyodide-http",  # pyodide implementation detail
+    "pyodide_http",  # pyodide implementation detail
     "widgetsnbextension",  # JupyterLite mock with fake version
-}
-
-PACKAGE_PYPI_NAME_FIXES = {
-    "fiona": "fiona",  # no-op, otherwise a false positive
-    "Jinja2": "Jinja2",  # no-op, otherwise a false positive
-    "markdown": "Markdown",
-    "netcdf4": "netCDF4",
-    "Pillow": "pillow",
-    "pint": "Pint",
-    "Pygments": "Pygments",  # no-op, otherwise a false positive
-    "pyyaml": "PyYAML",
-    "shapely": "shapely",  # no-op, otherwise a false positive
-    "Webob": "WebOb",
 }
 
 suspicious_packages = []
@@ -90,15 +77,7 @@ for package in lock["packages"].values():
 
         is_pure = True
 
-    name = PACKAGE_PYPI_NAME_FIXES.get(package["name"], package["name"])
-
-    # check for packages whose name guess might be wrong
-    name_guess = package["file_name"].split("-")[0]
-    if name_guess != package["name"].replace("-", "_"):
-        if package["name"] not in PACKAGE_PYPI_NAME_FIXES:
-            suspicious_packages.append((package["name"], name_guess))
-
-    packages[name] = Package(version=package["version"], is_pure=is_pure)
+    packages[package["name"]] = Package(version=package["version"], is_pure=is_pure)
 
 with (
     requirements_path.open("w") as req,

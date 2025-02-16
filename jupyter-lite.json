@@ -11,10 +11,7 @@
                 "pyodideUrl": "/static/pyodide/pyodide.js",
                 "loadPyodideOptions": {
                     "fullStdLib": true,
-                    "packages": [
-                        "comm", "packaging", "ipython", "jupyterlite-cors",
-                        "jupyterlite-preload", "micropip", "sqlite3", "ssl"
-                    ]
+                    "packages": ["comm", "packaging", "ipython", "micropip"]
                 }
             },
             "a-jupyterlite-query-config:plugin": {

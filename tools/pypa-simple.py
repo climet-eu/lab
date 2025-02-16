@@ -23,19 +23,6 @@ with lock_path.open("r") as f:
 
 packages = dict()
 
-PACKAGE_PYPI_NAME_FIXES = {
-    "fiona": "fiona",  # no-op, otherwise a false positive
-    "Jinja2": "Jinja2",  # no-op, otherwise a false positive
-    "markdown": "Markdown",
-    "netcdf4": "netCDF4",
-    "Pillow": "pillow",
-    "pint": "Pint",
-    "Pygments": "Pygments",  # no-op, otherwise a false positive
-    "pyyaml": "PyYAML",
-    "shapely": "shapely",  # no-op, otherwise a false positive
-    "Webob": "WebOb",
-}
-
 for package in lock["packages"].values():
     if package["package_type"] != "package":
         continue
@@ -58,10 +45,13 @@ for package in lock["packages"].values():
         and url.endswith("none-any.whl")
         and package["name"] != "micropip"
     ):
-        raise Exception(f"pure PyPi package {package['name']} should not be in the repository")
+        raise Exception(
+            f"pure PyPi package {package['name']} should not be in the repository"
+        )
 
-    name = PACKAGE_PYPI_NAME_FIXES.get(package["name"], package["name"])
-    packages[name] = dict(filename=package["file_name"], sha256=package["sha256"])
+    packages[package["name"]] = dict(
+        filename=package["file_name"], sha256=package["sha256"]
+    )
 
 with (pypa_path / "index.html").open("w") as f:
     f.write("""<!DOCTYPE html>
@@ -96,6 +86,6 @@ for name, package in packages.items():
     </head>
     <body>
         <h1>Links for {normalized_name}</h1>
-        <a href="{args.pyodide_url.rstrip('/')}/{package['filename']}#sha256={package['sha256']}" data-dist-info-metadata data-core-metadata">{package['filename']}</a><br> 
+        <a href="{args.pyodide_url.rstrip("/")}/{package["filename"]}#sha256={package["sha256"]}" data-dist-info-metadata data-core-metadata">{package["filename"]}</a><br> 
     </body>
 </html>""")

@@ -17,7 +17,7 @@ antlr4-python3-runtime
 array-api-compat
 asciitree
 astropy
-astropy_iers_data
+astropy-iers-data
 asttokens
 async-timeout
 attrs
@@ -93,7 +93,7 @@ Jinja2
 jmespath
 joblib
 jsonschema
-jsonschema_specifications
+jsonschema-specifications
 jupyterlab_widgets
 kerchunk
 kiwisolver

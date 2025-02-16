@@ -3,7 +3,7 @@ basemap
 cdsapi
 cfgrib
 cf-units
-cf-xarray
+cf_xarray
 cmcrameri
 dask
 earthkit
@@ -24,7 +24,7 @@ lzma
 lz4
 matplotlib
 MetPy
-netcdf4
+netCDF4
 numcodecs
 numpy
 pandas
