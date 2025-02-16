@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 lock_path = Path("pyodide") / "dist" / "pyodide-lock.json"
-recipe_path = Path("pyodide") / "packages"
+recipes_path = Path("pyodide") / "packages"
 
 requirements_path = Path("venv") / "requirements.txt"
 requirements_in_path = Path("venv") / "requirements.in"
@@ -63,10 +63,10 @@ for package in lock["packages"].values():
 
     is_pure = False
 
-    recipe_path = recipe_path / package["name"] / "meta.yaml"
+    recipe_path = recipes_path / package["name"] / "meta.yaml"
 
     if recipe_path.exists():
-        with open(recipe_path / package["name"] / "meta.yaml") as f:
+        with recipe_path.open() as f:
             recipe = yaml.load(f, yaml.SafeLoader)
 
         try:
