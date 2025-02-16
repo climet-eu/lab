@@ -29,21 +29,13 @@ def get_imports_for_package(p: str) -> list[str]:
         # ignore special folders
         if Path(f.parts[0]).suffix in [".libs", ".dist-info", ".data"]:
             continue
-        
-        if (
-            len(f.parts) == 1 and
-            f.suffix == ".so"
-        ):
-            print(f"{p}: {f} -> {f.stem.split('.')[0]}")
 
         # include top-level single-file packages
-        if (
-            len(f.parts) == 1 and
-            f.suffix in [".py", ".pyc", ".so"] and
-            valid_package_name(f.stem)
-        ):
-            imports.add(f.stem)
-            continue
+        if len(f.parts) == 1 and f.suffix in [".py", ".pyc", ".so"]:
+            stem = f.name.split('.')[0] if f.suffix == ".so" else f.stem
+            if valid_package_name(stem):
+                imports.add(stem)
+                continue
 
         # build a tree of all other files
         t = tree
