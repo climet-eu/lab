@@ -100,6 +100,14 @@ for package in lock["packages"].values():
     if package["name"] != "openssl":
         package["imports"] = sorted(get_imports_for_package(package["name"]))
 
+    if "package_type" not in package:
+        assert Path(package["file_name"]).suffix == ".whl", f"{package['name']} has no package_type"
+        package["package_type"] = "package"
+
+    if "install_dir" not in package:
+        assert Path(package["file_name"]).suffix == ".whl", f"{package['name']} has no install_dir"
+        package["install_dir"] = "site"
+
 with open("/pyodide-lock.json", "w") as f:
     json.dump(lock, f, sort_keys=True)
 `);
