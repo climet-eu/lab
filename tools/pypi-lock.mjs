@@ -19,6 +19,9 @@ from pathlib import Path
 import micropip
 
 def get_imports_for_package(p: str) -> list[str]:
+    def valid_package_name(n: str) -> bool:
+        return all(invalid_chr not in n for invalid_chr in ".- ")
+
     imports = set()
 
     tree = dict()
@@ -28,7 +31,11 @@ def get_imports_for_package(p: str) -> list[str]:
             continue
 
         # include top-level single-file packages
-        if len(f.parts) == 1 and f.suffix in [".py", ".so"]:
+        if (
+            len(f.parts) == 1 and
+            f.suffix in [".py", ".so"] and
+            valid_package_name(f.stem)
+        ):
             imports.add(f.stem)
             continue
 
@@ -41,7 +48,10 @@ def get_imports_for_package(p: str) -> list[str]:
 
     # extract folders that only have folders but no files as children,
     #  these are package candidates
-    queue = [([k], t) for k, t in tree.items() if len(t) > 0]
+    queue = [
+        ([k], t) for k, t in tree.items()
+        if len(t) > 0 and valid_package_name(k)
+    ]
     while len(queue) > 0:
         ps, tree = queue.pop()
         imports.add('.'.join(ps))
@@ -51,7 +61,8 @@ def get_imports_for_package(p: str) -> list[str]:
         add_to_queue = []
         for k, t in tree.items():
             if len(t) > 0:
-                add_to_queue.append((ps + [k], t))
+                if valid_package_name(k):
+                    add_to_queue.append((ps + [k], t))
             else:
                 is_package = False
 
