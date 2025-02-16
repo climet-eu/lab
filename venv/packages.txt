@@ -28,7 +28,7 @@ netCDF4
 numcodecs
 numpy
 pandas
-pint
+Pint
 pooch
 pyarrow
 pyicon-diagnostics
