@@ -63,20 +63,31 @@ for package in lock["packages"].values():
 
     is_pure = False
 
-    with open(recipe_path / package["name"] / "meta.yaml") as f:
-        recipe = yaml.load(f, yaml.SafeLoader)
+    recipe_path = recipe_path / package["name"] / "meta.yaml"
 
-    try:
-        url = recipe["source"]["url"]
-    except KeyError:
-        url = None
+    if recipe_path.exists():
+        with open(recipe_path / package["name"] / "meta.yaml") as f:
+            recipe = yaml.load(f, yaml.SafeLoader)
 
-    if (
-        url is not None
-        and url.startswith("https://files.pythonhosted.org/packages")
-        and url.endswith("none-any.whl")
-        and package["name"] != "micropip"
-    ):
+        try:
+            url = recipe["source"]["url"]
+        except KeyError:
+            url = None
+
+        if (
+            url is not None
+            and url.startswith("https://files.pythonhosted.org/packages")
+            and url.endswith("none-any.whl")
+            and package["name"] != "micropip"
+        ):
+            is_pure = True
+    else:
+        assert package["file_name"].startswith(
+            "https://files.pythonhosted.org/packages"
+        ) and package["file_name"].endswith("none-any.whl"), (
+            f"{package['name']} has no recipe but isn't a pure Package"
+        )
+
         is_pure = True
 
     name = PACKAGE_PYPI_NAME_FIXES.get(package["name"], package["name"])
