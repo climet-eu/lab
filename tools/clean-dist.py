@@ -67,8 +67,11 @@ for name, package in lock["packages"].items():
 
 for name in packages_to_delete:
     filename = lock["packages"][name]["file_name"]
+
     print(f"Removed {name}: {filename}")
+
     (dist_path / filename).unlink()
+    (dist_path / f"{filename}.metadata").unlink(missing_ok=True)
 
     del lock["packages"][name]
 
