@@ -151,18 +151,18 @@ jobs:
           cp venv/requirements.txt pyodide/my-requirements.txt
           cp tools/pypi-lock.mjs pyodide/static/pyodide/pypi-lock.mjs
           cd pyodide
-          ./run_docker --non-interactive python -m http.server "&" node static/pyodide/pypi-lock.mjs my-requirements.txt pypi-pyodide-lock.json
+          ./run_docker --non-interactive python -m http.server "&" node static/pyodide/pypi-lock.mjs my-requirements.txt pyodide-lock.json
 
-      - name: Upload the pypi-pyodide-lock.json artifact
+      - name: Upload the PyPi pyodide-lock.json artifact
         uses: actions/upload-artifact@v4
         with:
           name: pypi-pyodide-lock.json
-          path: pyodide/pypi-pyodide-lock.json
+          path: pyodide/pyodide-lock.json
           retention-days: 1
 
   check-venv:
     runs-on: ubuntu-latest
-    needs: build-pyodide
+    needs: build-lock
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -177,10 +177,10 @@ jobs:
       - name: Install PyYAML
         run: pip install PyYAML
 
-      - name: Download the pyodide-lock.json artifact
+      - name: Download the PyPi pyodide-lock.json artifact
         uses: actions/download-artifact@v4
         with:
-          name: pyodide-lock.json
+          name: pypi-pyodide-lock.json
           path: pyodide/dist
 
       - name: Extract the requirements from the Pyodide build
@@ -234,7 +234,7 @@ jobs:
           name: pyodide
           path: static/pyodide
 
-      - name: Download the pypi-pyodide-lock.json artifact
+      - name: Download the PyPi pyodide-lock.json artifact
         uses: actions/download-artifact@v4
         with:
           name: pypi-pyodide-lock.json

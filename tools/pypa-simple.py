@@ -58,8 +58,7 @@ for package in lock["packages"].values():
         and url.endswith("none-any.whl")
         and package["name"] != "micropip"
     ):
-        print(f"excluding pure PyPi package {package['name']} from repository")
-        continue
+        raise Exception(f"pure PyPi package {package['name']} should not be in the repository")
 
     name = PACKAGE_PYPI_NAME_FIXES.get(package["name"], package["name"])
     packages[name] = dict(filename=package["file_name"], sha256=package["sha256"])

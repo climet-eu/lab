@@ -1,5 +1,6 @@
 import argparse
 import json
+import yaml
 from pathlib import Path
 
 parser = argparse.ArgumentParser()
@@ -8,21 +9,26 @@ args = parser.parse_args()
 
 dist_path = Path(args.dist_path)
 lock_path = dist_path / "pyodide-lock.json"
+recipe_path = Path("pyodide") / "packages"
 
 with lock_path.open("r") as f:
     lock = json.load(f)
 
-packages_to_delete = set()
 all_dependencies = set()
-
 for name, package in lock["packages"].items():
     all_dependencies.update(package["depends"])
 
+
+packages_to_delete = set()
+
+
+for name, package in lock["packages"].items():
     if package["unvendored_tests"] is not True:
         continue
 
     packages_to_delete.add(f"{name}-tests")
     package["unvendored_tests"] = False
+
 
 for name, package in lock["packages"].items():
     if package["package_type"] != "shared_library":
@@ -34,9 +40,34 @@ for name, package in lock["packages"].items():
     packages_to_delete.add(name)
 
 
+for name, package in lock["packages"].items():
+    if package["package_type"] != "package":
+        continue
+    if Path(package["file_name"]).suffix != ".whl":
+        continue
+    if package["install_dir"] != "site":
+        continue
+
+    with open(recipe_path / package["name"] / "meta.yaml") as f:
+        recipe = yaml.load(f, yaml.SafeLoader)
+
+    try:
+        url = recipe["source"]["url"]
+    except KeyError:
+        url = None
+
+    if (
+        url is not None
+        and url.startswith("https://files.pythonhosted.org/packages")
+        and url.endswith("none-any.whl")
+        and package["name"] != "micropip"
+    ):
+        packages_to_delete.add(name)
+
+
 for name in packages_to_delete:
     filename = lock["packages"][name]["file_name"]
-    print(f"Removed {filename}")
+    print(f"Removed {name}: {filename}")
     (dist_path / filename).unlink()
 
     del lock["packages"][name]
