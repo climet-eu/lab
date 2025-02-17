@@ -303,3 +303,17 @@ jobs:
           publish_dir: ./dist
           keep_files: false
           force_orphan: true
+
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: always()
+    steps:
+    - name: Delete the build artifacts
+      uses: geekyeggo/delete-artifact@v5
+      with:
+          name: |
+            pyodide
+            pypa
+            jupyterlite
+          failOnError: false
