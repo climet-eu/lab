@@ -11,7 +11,7 @@ parser.add_argument("pyodide_url")
 args = parser.parse_args()
 
 lock_path = Path("pyodide") / "dist" / "pyodide-lock.json"
-recipe_path = Path("pyodide") / "packages"
+recipes_path = Path("pyodide") / "packages"
 pypa_path = Path(args.pypa_path)
 
 if pypa_path.exists():
@@ -31,7 +31,7 @@ for package in lock["packages"].values():
     if package["install_dir"] != "site":
         continue
 
-    with open(recipe_path / package["name"] / "meta.yaml") as f:
+    with open(recipes_path / package["name"] / "meta.yaml") as f:
         recipe = yaml.load(f, yaml.SafeLoader)
 
     try:

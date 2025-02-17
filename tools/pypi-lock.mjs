@@ -82,12 +82,12 @@ micropip.set_index_urls([
 
 micropip.set_constraints([
     c for c in """${requirements}""".splitlines()
-    if len(c) > 0 and not c.startswith('#')
+    if len(c.strip()) > 0 and not c.startswith('#')
 ])
 
 await micropip.install([
     r for r in """${requirements}""".splitlines()
-    if len(r) > 0 and not r.startswith('#')
+    if len(r.strip()) > 0 and not r.startswith('#')
 ], verbose=True)
 
 lock = json.loads(

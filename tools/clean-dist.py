@@ -9,7 +9,7 @@ args = parser.parse_args()
 
 dist_path = Path(args.dist_path)
 lock_path = dist_path / "pyodide-lock.json"
-recipe_path = Path("pyodide") / "packages"
+recipes_path = Path("pyodide") / "packages"
 
 with lock_path.open("r") as f:
     lock = json.load(f)
@@ -48,7 +48,7 @@ for name, package in lock["packages"].items():
     if package["install_dir"] != "site":
         continue
 
-    with open(recipe_path / package["name"] / "meta.yaml") as f:
+    with open(recipes_path / package["name"] / "meta.yaml") as f:
         recipe = yaml.load(f, yaml.SafeLoader)
 
     try:
