@@ -12,6 +12,7 @@ gribscan
 healpy
 ipython
 lz4
+MarkupSafe
 matplotlib
 netCDF4
 numcodecs
