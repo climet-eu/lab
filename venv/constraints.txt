@@ -10,10 +10,8 @@
 # pyodide == 0.27.0.dev0
 
 aiohttp == 3.11.10
-antlr4-python3-runtime == 4.13.2
 asciitree == 0.3.3
 astropy == 7.0.0
-astropy-iers-data == 0.2024.12.9.0.36.21
 basemap == 1.4.1
 Cartopy == 0.24.1
 cf-units == 3.3.0
@@ -32,7 +30,6 @@ findlibs == 0.0.5
 fiona == 1.10.1
 frozenlist == 1.5.0
 fsspec == 2024.12.0
-future == 1.0.0
 gribscan == 0.0.13
 h5py == 3.11.0
 hda == 2.20
@@ -70,7 +67,6 @@ scikit-learn == 1.6.0
 scipy == 1.14.1
 shapely == 2.0.6
 ujson == 5.10.0
-uncertainties == 3.1.7
 wrapt == 1.17.0
 yarl == 1.18.3
 zarr == 2.18.3
