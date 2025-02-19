@@ -69,4 +69,3 @@ shapely == 2.0.6
 ujson == 5.10.0
 wrapt == 1.17.0
 yarl == 1.18.3
-zarr == 2.18.3

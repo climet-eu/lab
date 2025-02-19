@@ -30,4 +30,3 @@ scikit-learn
 scipy
 ujson
 wrapt
-zarr
