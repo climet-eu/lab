@@ -18,6 +18,7 @@ matplotlib
 netCDF4
 numcodecs
 numpy
+orjson
 pandas
 pyarrow
 pydantic_core
