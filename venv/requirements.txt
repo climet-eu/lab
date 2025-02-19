@@ -125,7 +125,7 @@ packaging == 23.2
 pandas == 2.2.0
 parso == 0.8.4
 partd == 1.4.2
-pdbufr == 0.11.0
+pdbufr == 0.12.2
 pillow == 11.0.0
 Pint == 0.24.4
 pkgconfig == 1.5.5
