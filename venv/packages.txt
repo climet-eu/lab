@@ -29,6 +29,5 @@ rpds-py
 scikit-learn
 scipy
 ujson
-uncertainties
 wrapt
 zarr
