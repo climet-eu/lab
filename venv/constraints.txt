@@ -22,7 +22,6 @@ earthkit-data == 0.11.4
 earthkit-regrid == 0.3.5
 eccodes == 2.39.1
 ecmwf-api-client == 1.6.3
-ecmwf-opendata == 0.3.14
 field-compression-benchmark == 0.0.15
 filelock == 3.16.1
 findlibs == 0.0.5

@@ -64,7 +64,7 @@ earthkit-time == 0.1.6
 earthkit-transforms == 0.3.4.1
 eccodes == 2.39.1
 ecmwf-api-client == 1.6.3
-ecmwf-opendata == 0.3.14
+ecmwf-opendata == 0.3.19
 entrypoints == 0.4
 executing == 2.1.0
 fastprogress == 1.0.3
