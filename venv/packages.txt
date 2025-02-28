@@ -9,7 +9,6 @@ earthkit-regrid
 eccodes
 field-compression-benchmark
 fsspec
-gribscan
 healpy
 ipython
 lz4

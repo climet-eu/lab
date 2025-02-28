@@ -79,7 +79,7 @@ frozenlist == 1.5.0
 fsspec == 2024.12.0
 future == 1.0.0
 geopandas == 1.0.1
-gribscan == 0.0.13
+gribscan == 0.0.14
 h5netcdf == 1.4.1
 h5py == 3.11.0
 hda == 2.20
