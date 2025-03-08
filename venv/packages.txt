@@ -28,7 +28,9 @@ pyrsistent
 rasterio
 regex
 rpds-py
+scikit-image
 scikit-learn
 scipy
+statsmodels
 ujson
 wrapt
