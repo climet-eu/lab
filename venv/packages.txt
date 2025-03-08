@@ -11,6 +11,7 @@ field-compression-benchmark
 fsspec
 healpy
 ipython
+ldcpy
 lz4
 MarkupSafe
 matplotlib

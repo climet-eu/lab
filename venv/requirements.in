@@ -99,6 +99,7 @@ jsonschema-specifications
 jupyterlab_widgets
 kerchunk
 kiwisolver
+ldcpy
 locket
 lru-dict
 lz4
