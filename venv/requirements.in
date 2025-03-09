@@ -82,6 +82,7 @@ h5py
 hda
 healpy
 idna
+imageio
 iniconfig
 intake
 intake-esm
@@ -99,6 +100,7 @@ jsonschema-specifications
 jupyterlab_widgets
 kerchunk
 kiwisolver
+lazy_loader
 ldcpy
 locket
 lru-dict
@@ -123,6 +125,7 @@ packaging
 pandas
 parso
 partd
+patsy
 pdbufr
 pillow
 Pint
@@ -162,16 +165,19 @@ rich
 rich-argparse
 rpds-py
 s3fs
+scikit-image
 scikit-learn
 scipy
 setuptools
 shapely
 six
 stack-data
+statsmodels
 sympy
 tblib
 tenacity
 threadpoolctl
+tifffile
 toolz
 tqdm
 traitlets
@@ -185,5 +191,6 @@ wrapt
 xarray
 xeofs
 xhistogram
+xrft
 yarl
 zarr
