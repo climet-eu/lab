@@ -119,6 +119,7 @@ multidict
 multiurl
 netCDF4
 networkx
+numba
 numcodecs
 numpy
 orjson

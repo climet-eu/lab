@@ -17,6 +17,7 @@ lz4
 MarkupSafe
 matplotlib
 netCDF4
+numba
 numcodecs
 numpy
 orjson
