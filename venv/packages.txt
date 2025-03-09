@@ -21,6 +21,7 @@ numba
 numcodecs
 numpy
 orjson
+packaging
 pandas
 pyarrow
 pydantic_core
