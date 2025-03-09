@@ -24,6 +24,7 @@ async-timeout
 attrs
 basemap
 basemap-data
+boltons
 botocore
 Bottleneck
 Cartopy
@@ -96,6 +97,7 @@ jedi
 Jinja2
 jmespath
 joblib
+jsonpickle
 jsonschema
 jsonschema-specifications
 jupyterlab_widgets
@@ -191,9 +193,10 @@ urllib3
 wcwidth
 wrapt
 xarray
+xclim
 xeofs
 xhistogram
 xrft
+yamale
 yarl
 zarr
-xclim
