@@ -13,7 +13,7 @@ aiohttp == 3.11.10
 asciitree == 0.3.3
 astropy == 7.0.0
 basemap == 1.4.1
-bottleneck == 1.4.2
+Bottleneck == 1.4.2
 Cartopy == 0.24.1
 cf-units == 3.3.0
 cffi == 1.17.1

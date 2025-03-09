@@ -1,7 +1,7 @@
 aiohttp
 asciitree
 basemap
-bottleneck
+Bottleneck
 Cartopy
 cf-units
 cftime
