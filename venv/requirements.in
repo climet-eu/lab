@@ -25,6 +25,7 @@ attrs
 basemap
 basemap-data
 botocore
+bottleneck
 Cartopy
 cdsapi
 certifi
