@@ -199,3 +199,4 @@ xhistogram == 0.3.2
 xrft == 1.0.1
 yarl == 1.18.3
 zarr == 2.18.3
+xclim == 0.55.1
