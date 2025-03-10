@@ -26,13 +26,10 @@ pyodide = lock["info"]["version"]
 packages: dict[str, Package] = dict()
 
 IGNORE_PACKAGES = {
-    "git2",  # not a real package, experiment-in-progress
     "jupyterlite-cors",  # climet-eu/lab implementation detail
     "jupyterlite-preload",  # climet-eu/lab implementation detail
-    "matplotlib-pyodide",  # pyodide implementation detail
     "micropip",  # pyodide implementation detail
     "pyodide_http",  # pyodide implementation detail
-    "widgetsnbextension",  # JupyterLite mock with fake version
 }
 
 suspicious_packages = []
