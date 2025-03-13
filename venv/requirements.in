@@ -90,6 +90,7 @@ intake-xarray
 ipdb
 ipyfilite
 ipython
+ipython_pygments_lexers
 ipywidgets
 jedi
 Jinja2
