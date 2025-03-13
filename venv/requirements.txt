@@ -127,24 +127,24 @@ numcodecs == 0.13.1
 numcodecs-combinators == 0.2.4
 numcodecs-observers == 0.1.1
 numcodecs_wasm == 0.1.2
-numcodecs-wasm-asinh
-numcodecs-wasm-bit-round
-numcodecs-wasm-fixed-offset-scale
-numcodecs-wasm-fourier-network
-numcodecs-wasm-identity
-numcodecs-wasm-linear-quantize
-numcodecs-wasm-log
-numcodecs-wasm-pco
-numcodecs-wasm-random-projection
-numcodecs-wasm-reinterpret
-numcodecs-wasm-round
-numcodecs-wasm-swizzle-reshape
-numcodecs-wasm-sz3
-numcodecs-wasm-tthresh
-numcodecs-wasm-uniform-noise
-numcodecs-wasm-zfp
-numcodecs-wasm-zlib
-numcodecs-wasm-zstd
+numcodecs_wasm_asinh == 0.2.1
+numcodecs_wasm_bit_round == 0.2.0
+numcodecs_wasm_fixed_offset_scale == 0.2.1
+numcodecs_wasm_fourier_network == 0.1.1
+numcodecs_wasm_identity == 0.2.0
+numcodecs_wasm_linear_quantize == 0.3.1
+numcodecs_wasm_log == 0.3.1
+numcodecs_wasm_pco == 0.1.0
+numcodecs_wasm_random_projection == 0.2.1
+numcodecs_wasm_reinterpret == 0.2.0
+numcodecs_wasm_round == 0.2.2
+numcodecs_wasm_swizzle_reshape == 0.2.1
+numcodecs_wasm_sz3 == 0.3.0
+numcodecs_wasm_tthresh == 0.1.0
+numcodecs_wasm_uniform_noise == 0.2.1
+numcodecs_wasm_zfp == 0.3.1
+numcodecs_wasm_zlib == 0.2.0
+numcodecs_wasm_zstd == 0.2.0
 numpy == 2.0.2
 orjson == 3.10.15
 packaging == 24.2
