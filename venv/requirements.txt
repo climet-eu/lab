@@ -124,6 +124,27 @@ netCDF4 == 1.7.2
 networkx == 3.4.2
 numba == 0.61.0
 numcodecs == 0.13.1
+numcodecs-combinators == 0.2.4
+numcodecs-observers == 0.1.1
+numcodecs-wasm == 0.1.2
+numcodecs-wasm-asinh
+numcodecs-wasm-bit-round
+numcodecs-wasm-fixed-offset-scale
+numcodecs-wasm-fourier-network
+numcodecs-wasm-identity
+numcodecs-wasm-linear-quantize
+numcodecs-wasm-log
+numcodecs-wasm-pco
+numcodecs-wasm-random-projection
+numcodecs-wasm-reinterpret
+numcodecs-wasm-round
+numcodecs-wasm-swizzle-reshape
+numcodecs-wasm-sz3
+numcodecs-wasm-tthresh
+numcodecs-wasm-uniform-noise
+numcodecs-wasm-zfp
+numcodecs-wasm-zlib
+numcodecs-wasm-zstd
 numpy == 2.0.2
 orjson == 3.10.15
 packaging == 24.2

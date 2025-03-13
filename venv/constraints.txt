@@ -41,6 +41,7 @@ multiurl == 0.3.3
 netCDF4 == 1.7.2
 numba == 0.61.0
 numcodecs == 0.13.1
+numcodecs-wasm == 0.1.2
 numpy == 2.0.2
 orjson == 3.10.15
 packaging == 24.2
