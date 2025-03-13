@@ -1,6 +1,5 @@
 aiohttp
 asciitree
-basemap
 Bottleneck
 Cartopy
 cf-units

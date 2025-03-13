@@ -22,8 +22,6 @@ astropy-iers-data
 asttokens
 async-timeout
 attrs
-basemap
-basemap-data
 boltons
 botocore
 Bottleneck
