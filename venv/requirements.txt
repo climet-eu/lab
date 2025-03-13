@@ -68,7 +68,6 @@ ecmwf-opendata == 0.3.19
 entrypoints == 0.4
 executing == 2.1.0
 fastprogress == 1.0.3
-field-compression-benchmark == 0.0.15
 filelock == 3.17.0
 findlibs == 0.0.5
 fiona == 1.10.1

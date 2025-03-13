@@ -65,7 +65,6 @@ ecmwf-opendata
 entrypoints
 executing
 fastprogress
-field-compression-benchmark
 filelock
 findlibs
 fiona

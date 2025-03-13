@@ -7,7 +7,6 @@ cftime
 earthkit-data
 earthkit-regrid
 eccodes
-field-compression-benchmark
 fsspec
 healpy
 ipython
