@@ -123,7 +123,7 @@ numba
 numcodecs
 numcodecs-combinators
 numcodecs-observers
-numcodecs-wasm
+numcodecs_wasm
 numcodecs-wasm-asinh
 numcodecs-wasm-bit-round
 numcodecs-wasm-fixed-offset-scale

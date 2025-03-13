@@ -17,7 +17,7 @@ matplotlib
 netCDF4
 numba
 numcodecs
-numcodecs-wasm
+numcodecs_wasm
 numpy
 orjson
 packaging

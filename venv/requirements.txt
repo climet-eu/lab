@@ -126,7 +126,7 @@ numba == 0.61.0
 numcodecs == 0.13.1
 numcodecs-combinators == 0.2.4
 numcodecs-observers == 0.1.1
-numcodecs-wasm == 0.1.2
+numcodecs_wasm == 0.1.2
 numcodecs-wasm-asinh
 numcodecs-wasm-bit-round
 numcodecs-wasm-fixed-offset-scale
