@@ -30,6 +30,7 @@ IGNORE_PACKAGES = {
     "jupyterlite-preload",  # climet-eu/lab implementation detail
     "micropip",  # pyodide implementation detail
     "pyodide_http",  # pyodide implementation detail
+    "widgetsnbextension",  # JupyterLite provides this package
 }
 
 suspicious_packages = []
