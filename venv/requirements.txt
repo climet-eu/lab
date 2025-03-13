@@ -141,7 +141,7 @@ numcodecs_wasm_swizzle_reshape == 0.2.1
 numcodecs_wasm_sz3 == 0.3.0
 numcodecs_wasm_tthresh == 0.1.0
 numcodecs_wasm_uniform_noise == 0.2.1
-numcodecs_wasm_zfp == 0.3.1
+numcodecs_wasm_zfp == 0.4.0
 numcodecs_wasm_zlib == 0.2.0
 numcodecs_wasm_zstd == 0.2.0
 numpy == 2.0.2
