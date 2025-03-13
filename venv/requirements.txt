@@ -91,8 +91,7 @@ intake-esm == 2025.2.3
 intake-xarray == 2.0.0
 ipdb == 0.13.13
 ipyfilite == 0.1.30
-ipython == 9.0.2
-ipython_pygments_lexers == 1.1.1
+ipython == 8.34.0
 ipywidgets == 8.1.5
 jedi == 0.19.2
 Jinja2 == 3.1.6
