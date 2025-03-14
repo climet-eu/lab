@@ -3,7 +3,9 @@
     "jupyter-config-data": {
         "faviconUrl": "/static/favicons/favicon.ico",
         "exposeAppInBrowser": false,
-        "disabledExtensions": ["@jupyterlite/server-extension:service-worker"],
+        "disabledExtensions": [
+            "@jupyterlite/server-extension:service-worker"
+        ],
         "enableMemoryStorage": false,
         "terminalsAvailable": false,
         "litePluginSettings": {
@@ -11,7 +13,13 @@
                 "pyodideUrl": "/static/pyodide/pyodide.js",
                 "loadPyodideOptions": {
                     "fullStdLib": true,
-                    "packages": ["comm", "packaging", "ipython", "micropip"]
+                    "packages": [
+                        "comm",
+                        "packaging",
+                        "ipython",
+                        "micropip",
+                        "pyodide_http"
+                    ]
                 }
             },
             "a-jupyterlite-query-config:plugin": {
@@ -23,9 +31,14 @@
         },
         "fileTypes": {
             "plain": {
-                "extensions": [".txt", ""],
+                "extensions": [
+                    ".txt",
+                    ""
+                ],
                 "fileFormat": "text",
-                "mimeTypes": ["text/plain"],
+                "mimeTypes": [
+                    "text/plain"
+                ],
                 "name": "plain"
             }
         }

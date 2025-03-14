@@ -9,7 +9,6 @@ earthkit-regrid
 eccodes
 fsspec
 healpy
-ipython
 ldcpy
 lz4
 MarkupSafe
