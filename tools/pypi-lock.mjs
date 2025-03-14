@@ -88,7 +88,7 @@ micropip.set_constraints([
 await micropip.install([
     r for r in """${requirements}""".splitlines()
     if len(r.strip()) > 0 and not r.startswith('#')
-], verbose=True)
+] + ["pyodide_http"], verbose=True)
 
 lock = json.loads(
     micropip.freeze().replace("http://0.0.0.0:8000/static/pyodide/", "")
