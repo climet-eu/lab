@@ -138,7 +138,7 @@ numcodecs_wasm_random_projection == 0.2.1
 numcodecs_wasm_reinterpret == 0.2.0
 numcodecs_wasm_round == 0.2.2
 numcodecs_wasm_swizzle_reshape == 0.2.1
-numcodecs_wasm_sz3 == 0.3.0
+numcodecs_wasm_sz3 == 0.4.0
 numcodecs_wasm_tthresh == 0.1.0
 numcodecs_wasm_uniform_noise == 0.2.1
 numcodecs_wasm_zfp == 0.4.0
