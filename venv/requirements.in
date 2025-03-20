@@ -104,6 +104,7 @@ lazy_loader
 ldcpy
 locket
 lru-dict
+lxml
 lz4
 Markdown
 markdown-it-py
