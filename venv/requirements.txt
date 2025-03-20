@@ -168,6 +168,7 @@ pyarrow == 19.0.1
 pycparser == 2.22
 pydantic == 2.10.6
 pydantic_core == 2.27.2
+pydap == 3.5.4
 pyerfa == 2.0.1.5
 Pygments == 2.18.0
 pyicon-diagnostics == 0.3.6

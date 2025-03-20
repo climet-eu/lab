@@ -165,6 +165,7 @@ pyarrow
 pycparser
 pydantic
 pydantic_core
+pydap
 pyerfa
 Pygments
 pyicon-diagnostics
