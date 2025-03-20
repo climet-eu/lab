@@ -22,10 +22,12 @@ astropy-iers-data
 asttokens
 async-timeout
 attrs
+beautifulsoup4
 boltons
 botocore
 Bottleneck
 Cartopy
+cattrs
 cdsapi
 certifi
 cf-units
@@ -185,6 +187,7 @@ rasterio
 referencing
 regex
 requests
+requests-cache
 rich
 rich-argparse
 rpds-py
@@ -195,6 +198,7 @@ scipy
 setuptools
 shapely
 six
+soupsieve
 stack-data
 statsmodels
 sympy
@@ -209,8 +213,10 @@ typing_extensions
 tzdata
 ujson
 uncertainties
+url-normalize
 urllib3
 wcwidth
+WebOb
 wrapt
 xarray
 xclim

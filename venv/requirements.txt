@@ -25,10 +25,12 @@ astropy-iers-data == 0.2025.1.31.12.41.4
 asttokens == 3.0.0
 async-timeout == 5.0.1
 attrs == 24.2.0
+beautifulsoup4 == 4.13.3
 boltons == 25.0.0
 botocore == 1.35.36
 Bottleneck == 1.4.2
 Cartopy == 0.24.1
+cattrs == 24.1.2
 cdsapi == 0.7.5
 certifi == 2024.8.30
 cf-units == 3.3.0
@@ -188,6 +190,7 @@ rasterio == 1.4.3
 referencing == 0.35.1
 regex == 2024.11.6
 requests == 2.32.3
+requests-cache == 1.2.1
 rich == 13.7.1
 rich-argparse == 1.6.0
 rpds-py == 0.23.1
@@ -198,6 +201,7 @@ scipy == 1.14.1
 setuptools == 75.6.0
 shapely == 2.0.7
 six == 1.17.0
+soupsieve == 2.6
 stack-data == 0.6.3
 statsmodels == 0.14.4
 sympy == 1.13.3
@@ -212,8 +216,10 @@ typing_extensions == 4.12.2
 tzdata == 2024.2
 ujson == 5.10.0
 uncertainties == 3.1.7
+url-normalize == 1.4.3
 urllib3 == 2.2.3
 wcwidth == 0.2.13
+WebOb == 1.8.9
 wrapt == 1.17.2
 xarray == 2024.11.0
 xclim == 0.55.1
