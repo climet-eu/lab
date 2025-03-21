@@ -1,9 +1,9 @@
 # Jupyter Lite
-jupyterlite-core==0.6.0a2
-jupyterlab~=4.3.2
+jupyterlite-core==0.6.0a4
+jupyterlab~=4.3.0
 
 # Pyodide kernel
-jupyterlite-pyodide-kernel==0.6.0a3
+jupyterlite-pyodide-kernel==0.6.0a4
 
 # JupyterLite terminal with /drive access
 # FIXME: currently requires the service worker
@@ -11,16 +11,16 @@ jupyterlite-pyodide-kernel==0.6.0a3
 # jupyterlite-terminal==0.1.3
 
 # JupyterLite and JupyterLab: create a fresh session directory
-a-jupyterlite-session~=0.1.12
-a-jupyterlab-session~=0.1.10
+# a-jupyterlite-session~=0.1.12
+# a-jupyterlab-session~=0.1.10
 
 # JupyterLite: override config settings with URL query parameters
-a-jupyterlite-query-config~=0.1.0
+# a-jupyterlite-query-config~=0.1.0
 
 # JupyterLab: guided tour
 jupyterlab-tour~=4.0.0
 # JupyterLab: dark theme
-jupyterlab-night~=0.4.6
+jupyterlab-night~=0.5.0
 # JupyterLab: import files from URLs
 jupyterlab-open-url-parameter~=0.3.0
 # JupyterLite: import a GitHub repo from its URL
@@ -35,11 +35,11 @@ jupyterlab-spreadsheet-editor~=0.7.2
 jupyterlab-myst~=2.4.2
 
 # Python: ipywidget library for Jupyter notebooks
-ipywidgets>=8.0.0,<9
+ipywidgets~=8.1.0
 # Python: ipyevents library for Jupyter notebooks
-ipyevents>=2.0.1
+ipyevents~=2.0.0
 # Python: interative Matplotlib library for Jupyter notebooks
-ipympl>=0.9.3
+ipympl~=0.9.0
 
 # Python: ipyfilite library for file upload in JupyterLite Pyodide notebooks
 ipyfilite>=0.1.30
