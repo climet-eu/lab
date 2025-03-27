@@ -134,7 +134,7 @@ numcodecs_wasm_bit_round == 0.2.0
 numcodecs_wasm_fixed_offset_scale == 0.2.1
 numcodecs_wasm_fourier_network == 0.1.1
 numcodecs_wasm_identity == 0.2.0
-numcodecs_wasm_jpeg2000 == 0.1.0
+numcodecs_wasm_jpeg2000 == 0.1.1
 numcodecs_wasm_linear_quantize == 0.3.1
 numcodecs_wasm_log == 0.3.1
 numcodecs_wasm_pco == 0.1.0
