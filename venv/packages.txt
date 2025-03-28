@@ -24,6 +24,7 @@ packaging
 pandas
 pyarrow
 pydantic_core
+pyicon-diagnostics
 pyodide_http
 pyogrio
 pyrsistent

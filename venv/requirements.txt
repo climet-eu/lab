@@ -174,7 +174,7 @@ pydantic_core == 2.27.2
 pydap == 3.5.4
 pyerfa == 2.0.1.5
 Pygments == 2.18.0
-pyicon-diagnostics == 0.4.0
+pyicon-diagnostics == 0.3.6
 pyodc == 1.4.1
 pyodide-unix-timezones == 1.0.0
 pyogrio == 0.10.0
