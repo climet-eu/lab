@@ -76,7 +76,7 @@ def get_imports_for_package(p: str) -> list[str]:
     return new_imports
 
 # tornado is mocked by JupyterLite
-micropip.add_mock_package("tornado", "6.0.0")
+micropip.add_mock_package("tornado", "6.1.0")
 
 micropip.set_index_urls([
     "http://0.0.0.0:8000/pypa/simple/{package_name}/",
