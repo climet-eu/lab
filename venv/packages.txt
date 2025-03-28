@@ -1,5 +1,6 @@
 aiohttp
 asciitree
+blosc
 Bottleneck
 Cartopy
 cf-units
@@ -14,6 +15,7 @@ lxml
 lz4
 MarkupSafe
 matplotlib
+ndindex
 netCDF4
 numba
 numcodecs
