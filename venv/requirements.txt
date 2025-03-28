@@ -26,7 +26,7 @@ asttokens == 3.0.0
 async-timeout == 5.0.1
 attrs == 24.2.0
 beautifulsoup4 == 4.13.3
-blosc == 3.2.0
+blosc2 == 3.2.0
 boltons == 25.0.0
 botocore == 1.35.36
 Bottleneck == 1.4.2

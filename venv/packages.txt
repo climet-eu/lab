@@ -1,6 +1,6 @@
 aiohttp
 asciitree
-blosc
+blosc2
 Bottleneck
 Cartopy
 cf-units
