@@ -23,6 +23,7 @@ asttokens
 async-timeout
 attrs
 beautifulsoup4
+blosc2
 boltons
 botocore
 Bottleneck
@@ -104,6 +105,7 @@ kerchunk
 kiwisolver
 lazy_loader
 ldcpy
+legacy-cgi
 locket
 lru-dict
 lxml
@@ -119,6 +121,7 @@ mpmath
 msgpack
 multidict
 multiurl
+ndindex
 netCDF4
 networkx
 numba
