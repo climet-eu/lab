@@ -48,7 +48,6 @@ pillow == 11.1.0
 pyarrow == 19.0.1
 pydantic_core == 2.27.2
 pyerfa == 2.0.1.5
-pyicon-diagnostics == 0.3.6
 pyodc == 1.4.1
 pyogrio == 0.10.0
 pyproj == 3.7.1
