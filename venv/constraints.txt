@@ -53,7 +53,7 @@ pyerfa == 2.0.1.5
 pyicon-diagnostics == 0.3.6
 pyodc == 1.4.1
 pyogrio == 0.10.0
-pyproj == 3.7.1
+pyproj == 3.6.1
 pyrsistent == 0.20.0
 PyYAML == 6.0.2
 rasterio == 1.4.3
