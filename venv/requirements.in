@@ -52,10 +52,14 @@ cycler
 dask
 datapi
 decorator
+Deprecated
+deprecation
 docstring_parser
+donfig
 earthkit
 earthkit-data
 earthkit-geo
+earthkit-hydro
 earthkit-meteo
 earthkit-plots
 earthkit-plots-default-styles
@@ -121,6 +125,7 @@ mpmath
 msgpack
 multidict
 multiurl
+narwhals
 ndindex
 netCDF4
 networkx
@@ -213,6 +218,7 @@ tifffile
 toolz
 tqdm
 traitlets
+typing-inspection
 typing_extensions
 tzdata
 ujson
