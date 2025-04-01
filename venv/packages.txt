@@ -5,6 +5,7 @@ Bottleneck
 Cartopy
 cf-units
 cftime
+crc32c
 earthkit-data
 earthkit-regrid
 eccodes

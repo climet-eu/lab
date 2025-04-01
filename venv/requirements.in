@@ -48,6 +48,7 @@ conflator
 contourpy
 covjson-pydantic
 covjsonkit
+crc32c
 cycler
 dask
 datapi
