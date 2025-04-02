@@ -40,3 +40,4 @@ scipy
 statsmodels
 ujson
 wrapt
+zarr

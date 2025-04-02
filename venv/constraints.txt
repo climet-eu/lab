@@ -67,3 +67,4 @@ shapely == 2.0.7
 statsmodels == 0.14.4
 ujson == 5.10.0
 wrapt == 1.17.2
+zarr == 3.0.6
