@@ -11,7 +11,6 @@ earthkit-regrid
 eccodes
 fsspec
 healpy
-ldcpy
 lxml
 lz4
 MarkupSafe
