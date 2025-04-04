@@ -41,7 +41,7 @@ ndindex == 1.9.2
 netCDF4 == 1.7.2
 numba == 0.61.0
 numcodecs == 0.15.1
-numcodecs_wasm == 0.1.4
+numcodecs_wasm == 0.1.5
 numpy == 2.0.2
 orjson == 3.10.16
 packaging == 24.2
