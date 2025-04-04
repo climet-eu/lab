@@ -1,0 +1,205 @@
+Metadata-Version: 2.4
+Name: earthkit-data
+Version: 0.13.6
+Summary: A format-agnostic Python interface for geospatial data
+Author-email: "European Centre for Medium-Range Weather Forecasts (ECMWF)" <software.support@ecmwf.int>
+License: Apache License Version 2.0
+Project-URL: Documentation, https://earthkit-data.readthedocs.io/
+Project-URL: Homepage, https://github.com/ecmwf/earthkit-data/
+Project-URL: Issues, https://github.com/ecmwf/earthkit-data.issues
+Project-URL: Repository, https://github.com/ecmwf/earthkit-data/
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: array-api-compat
+Requires-Dist: cfgrib>=0.9.10.1
+Requires-Dist: dask
+Requires-Dist: deprecation
+Requires-Dist: earthkit-meteo>=0.0.1
+Requires-Dist: eccodes>=1.7
+Requires-Dist: entrypoints
+Requires-Dist: filelock
+Requires-Dist: jinja2
+Requires-Dist: jsonschema
+Requires-Dist: lru-dict
+Requires-Dist: markdown
+Requires-Dist: multiurl>=0.3.3
+Requires-Dist: netcdf4
+Requires-Dist: pandas
+Requires-Dist: pdbufr>=0.11
+Requires-Dist: pyyaml
+Requires-Dist: tqdm>=4.63
+Requires-Dist: xarray>=0.19
+Provides-Extra: all
+Requires-Dist: cartopy; extra == "all"
+Requires-Dist: cdsapi>=0.7.2; extra == "all"
+Requires-Dist: covjsonkit>=0.1.1; extra == "all"
+Requires-Dist: earthkit-geo>=0.2; extra == "all"
+Requires-Dist: ecmwf-api-client>=1.6.1; extra == "all"
+Requires-Dist: ecmwf-opendata>=0.3.3; extra == "all"
+Requires-Dist: geopandas; extra == "all"
+Requires-Dist: hda>=2.22; extra == "all"
+Requires-Dist: polytope-client>=0.7.4; extra == "all"
+Requires-Dist: pyodc; extra == "all"
+Provides-Extra: cds
+Requires-Dist: cdsapi>=0.7.2; extra == "cds"
+Provides-Extra: ci
+Requires-Dist: numpy; extra == "ci"
+Provides-Extra: covjsonkit
+Requires-Dist: covjsonkit>=0.1.1; extra == "covjsonkit"
+Provides-Extra: dev
+Requires-Dist: cartopy; extra == "dev"
+Requires-Dist: cdsapi>=0.7.2; extra == "dev"
+Requires-Dist: covjsonkit>=0.1.1; extra == "dev"
+Requires-Dist: earthkit-data-demo-source; extra == "dev"
+Requires-Dist: earthkit-geo>=0.2; extra == "dev"
+Requires-Dist: ecmwf-api-client>=1.6.1; extra == "dev"
+Requires-Dist: ecmwf-opendata>=0.3.3; extra == "dev"
+Requires-Dist: geopandas; extra == "dev"
+Requires-Dist: hda>=2.22; extra == "dev"
+Requires-Dist: nbconvert; extra == "dev"
+Requires-Dist: nbformat; extra == "dev"
+Requires-Dist: polytope-client>=0.7.4; extra == "dev"
+Requires-Dist: pyodc; extra == "dev"
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: pytest-cov; extra == "dev"
+Requires-Dist: pytest-forked; extra == "dev"
+Requires-Dist: pytest-timeout; extra == "dev"
+Provides-Extra: docs
+Requires-Dist: nbsphinx; extra == "docs"
+Requires-Dist: pygments>=2.6.1; extra == "docs"
+Requires-Dist: sphinx>=7.3.7; extra == "docs"
+Requires-Dist: sphinx-autoapi; extra == "docs"
+Requires-Dist: sphinx-copybutton; extra == "docs"
+Requires-Dist: sphinx-issues; extra == "docs"
+Requires-Dist: sphinx-rtd-theme; extra == "docs"
+Requires-Dist: sphinx-tabs; extra == "docs"
+Provides-Extra: ecmwf-opendata
+Requires-Dist: ecmwf-opendata>=0.3.3; extra == "ecmwf-opendata"
+Provides-Extra: geo
+Requires-Dist: earthkit-geo>=0.2; extra == "geo"
+Provides-Extra: geopandas
+Requires-Dist: geopandas; extra == "geopandas"
+Provides-Extra: geotiff
+Requires-Dist: pyproj; extra == "geotiff"
+Requires-Dist: rasterio; extra == "geotiff"
+Requires-Dist: rioxarray; extra == "geotiff"
+Provides-Extra: mars
+Requires-Dist: ecmwf-api-client>=1.6.1; extra == "mars"
+Provides-Extra: odb
+Requires-Dist: pyodc; extra == "odb"
+Provides-Extra: polytope
+Requires-Dist: polytope-client>=0.7.4; extra == "polytope"
+Provides-Extra: projection
+Requires-Dist: cartopy; extra == "projection"
+Provides-Extra: s3
+Requires-Dist: aws-requests-auth; extra == "s3"
+Requires-Dist: botocore; extra == "s3"
+Provides-Extra: test
+Requires-Dist: earthkit-data-demo-source; extra == "test"
+Requires-Dist: nbconvert; extra == "test"
+Requires-Dist: nbformat; extra == "test"
+Requires-Dist: pytest; extra == "test"
+Requires-Dist: pytest-cov; extra == "test"
+Requires-Dist: pytest-forked; extra == "test"
+Requires-Dist: pytest-timeout; extra == "test"
+Provides-Extra: wekeo
+Requires-Dist: hda>=2.22; extra == "wekeo"
+Dynamic: license-file
+
+# earthkit-data
+
+<img src="https://github.com/ecmwf/logos/raw/refs/heads/main/logos/earthkit/earthkit-data-light.svg" width="160">
+
+<p align="center">
+  <a href="https://github.com/ecmwf/codex/raw/refs/heads/main/ESEE">
+    <img src="https://github.com/ecmwf/codex/raw/refs/heads/main/ESEE/foundation_badge.svg" alt="Static Badge">
+  </a>
+  <a href="https://github.com/ecmwf/codex/raw/refs/heads/main/Project%20Maturity">
+    <img src="https://github.com/ecmwf/codex/raw/refs/heads/main/Project%20Maturity/incubating_badge.svg" alt="Static Badge">
+  </a>
+
+<a href="https://opensource.org/licenses/apache-2-0">
+    <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License: Apache 2.0">
+  </a>
+
+<a href="https://github.com/ecmwf/earthkit-data/releases">
+    <img src="https://img.shields.io/github/v/release/ecmwf/earthkit-data?color=blue&label=Release&style=flat-square" alt="Latest Release">
+  </a>
+  <a href="https://earthkit-data.readthedocs.io/en/latest/?badge=latest">
+    <img src="https://readthedocs.org/projects/earthkit-data/badge/?version=latest" alt="Documentation Status">
+  </a>
+</p>
+
+<p align="center">
+  <a href="#quick-start">Quick Start</a> *
+  <a href="#installation">Installation</a> *
+  <a href="https://earthkit-data.readthedocs.io/en/latest/">Documentation</a>
+</p>
+
+> \[!IMPORTANT\]
+> This software is **Incubating** and subject to ECMWF's guidelines on [Software Maturity](https://github.com/ecmwf/codex/raw/refs/heads/main/Project%20Maturity).
+
+A format-agnostic interface for geospatial data with a focus on meteorology and
+climate science.
+
+## Quick Start
+
+```python
+import earthkit.data as ekd
+
+data = ekd.from_source("sample", "test.grib")
+arr = data.to_numpy()
+df = data.to_pandas()
+dataset = data.to_xarray()
+```
+
+## Installation
+
+Install from PyPI:
+
+```
+python -m pip install earthkit-data
+```
+
+More details, such as optional dependencies can be found at https://earthkit-data.readthedocs.io/en/latest/install.html.
+
+Alternatively, install via `conda` with:
+
+```
+$ conda install earthkit-data -c conda-forge
+```
+
+## License
+
+```
+Copyright 2022, European Centre for Medium Range Weather Forecasts.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+In applying this licence, ECMWF does not waive the privileges and immunities
+granted to it by virtue of its status as an intergovernmental organisation
+nor does it submit to any jurisdiction.
+```
