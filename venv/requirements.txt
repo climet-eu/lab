@@ -240,3 +240,4 @@ xrft == 1.0.1
 yamale == 6.0.0
 yarl == 1.18.3
 zarr == 3.0.6
+zarr-any-numcodecs == 0.1.0
