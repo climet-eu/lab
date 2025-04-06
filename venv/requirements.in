@@ -180,6 +180,7 @@ pydantic
 pydantic_core
 pydap
 pyerfa
+pyfdb
 Pygments
 pyicon-diagnostics
 pyodc
