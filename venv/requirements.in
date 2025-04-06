@@ -152,6 +152,7 @@ numcodecs_wasm_sz3
 numcodecs_wasm_tthresh
 numcodecs_wasm_uniform_noise
 numcodecs_wasm_zfp
+numcodecs_wasm_zfp_classic
 numcodecs_wasm_zlib
 numcodecs_wasm_zstd
 numpy
