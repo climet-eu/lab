@@ -33,6 +33,8 @@ litegitpuller~=0.3.0
 jupyterlab-spreadsheet-editor~=0.7.2
 # JupyterLab: extend markdown rendering
 jupyterlab-myst~=2.4.2
+# JupyterLab: view a notebook as a slideshow
+jupyterlab-slideshow~=0.3.2
 
 # Python: ipywidget library for Jupyter notebooks
 ipywidgets~=8.1.0
