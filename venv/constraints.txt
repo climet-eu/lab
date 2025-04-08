@@ -23,7 +23,6 @@ crc32c == 2.7.1
 earthkit-data == 0.13.7
 earthkit-regrid == 0.4.0
 eccodes == 2.40.1
-findlibs == 0.0.5
 fiona == 1.10.1
 frozenlist == 1.5.0
 fsspec == 2025.3.2
@@ -50,7 +49,7 @@ pillow == 11.1.0
 pyarrow == 19.0.1
 pydantic_core == 2.33.1
 pyerfa == 2.0.1.5
-pyfdb == 0.1.1
+pyfdb == 0.1.2
 pyicon-diagnostics == 0.3.6
 pyodc == 1.5.0
 pyogrio == 0.10.0
