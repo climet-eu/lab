@@ -70,7 +70,7 @@ earthkit-plots-default-styles == 0.0.1
 earthkit-regrid == 0.4.0
 earthkit-time == 0.1.7
 earthkit-transforms == 0.3.4.1
-eccodes == 2.40.1
+eccodes == 2.40.0
 ecmwf-api-client == 1.6.5
 ecmwf-opendata == 0.3.19
 entrypoints == 0.4
