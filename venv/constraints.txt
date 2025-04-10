@@ -12,7 +12,7 @@
 aiohttp == 3.11.16
 asciitree == 0.3.3
 astropy == 7.0.1
-blosc2 == 3.2.1
+blosc2 == 3.3.0
 Bottleneck == 1.4.2
 Cartopy == 0.24.1
 cf-units == 3.3.0
@@ -37,7 +37,7 @@ matplotlib == 3.8.4
 msgpack == 1.1.0
 ndindex == 1.9.2
 netCDF4 == 1.7.2
-numba == 0.61.0
+numba == 0.61.2
 numcodecs == 0.15.1
 numcodecs_wasm == 0.1.5
 numpy == 2.0.2
