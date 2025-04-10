@@ -9,7 +9,9 @@ crc32c
 earthkit-regrid
 eccodes
 fsspec
+hda
 healpy
+lru-dict
 lxml
 lz4
 MarkupSafe
@@ -26,9 +28,11 @@ pandas
 pyarrow
 pydantic_core
 pyicon-diagnostics
+pyodc
 pyodide_http
 pyogrio
 pyrsistent
+PyYAML
 rasterio
 regex
 rpds-py
