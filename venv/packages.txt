@@ -6,7 +6,6 @@ Cartopy
 cf-units
 cftime
 crc32c
-earthkit-data
 earthkit-regrid
 eccodes
 fsspec
@@ -26,7 +25,6 @@ packaging
 pandas
 pyarrow
 pydantic_core
-pyfdb
 pyicon-diagnostics
 pyodide_http
 pyogrio

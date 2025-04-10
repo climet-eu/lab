@@ -68,14 +68,11 @@ earthkit-regrid
 earthkit-time
 earthkit-transforms
 eccodes
-eccodeslib
-eckitlib
 ecmwf-api-client
 ecmwf-opendata
 entrypoints
 executing
 fastprogress
-fdb5lib
 filelock
 findlibs
 fiona
@@ -124,7 +121,6 @@ MarkupSafe
 matplotlib
 matplotlib-inline
 mdurl
-metkitlib
 MetPy
 mpmath
 msgpack
