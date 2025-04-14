@@ -9,7 +9,6 @@ crc32c
 earthkit-regrid
 eccodes
 fsspec
-hda
 healpy
 lru-dict
 lxml
