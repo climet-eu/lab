@@ -134,7 +134,7 @@ ndindex == 1.9.2
 netCDF4 == 1.7.2
 networkx == 3.4.2
 numba == 0.61.2
-numcodecs == 0.16.0
+numcodecs == 0.15.1
 numcodecs-combinators == 0.2.6
 numcodecs-observers == 0.1.2
 numcodecs_wasm == 0.1.6
