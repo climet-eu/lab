@@ -21,7 +21,7 @@ argparse == 1.4.0
 array_api_compat == 1.11.2
 asciitree == 0.3.3
 astropy == 7.0.1
-astropy-iers-data == 0.2025.3.31.0.36.18
+astropy-iers-data == 0.2025.4.14.0.37.22
 asttokens == 3.0.0
 async-timeout == 5.0.1
 attrs == 25.3.0
