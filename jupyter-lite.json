@@ -13,6 +13,10 @@
                 "pyodideUrl": "/static/pyodide/pyodide.js",
                 "loadPyodideOptions": {
                     "fullStdLib": true,
+                    "env": {
+                        "EARTHKIT_DATA_CACHE_POLICY": "off",
+                        "EARTHKIT_REGRID_CACHE_POLICY": "off"
+                    },
                     "packages": [
                         "comm",
                         "packaging",
