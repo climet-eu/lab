@@ -41,7 +41,7 @@ jobs:
           git status
 
       - name: Cache the Pyodide Docker image
-        uses: ScribeMD/docker-cache@0.5.0
+        uses: AndreKurait/docker-cache@0.6.0
         with:
           key: docker-pyodide-${{ hashFiles('pyodide/Dockerfile') }}
 
@@ -126,7 +126,7 @@ jobs:
           submodules: recursive
 
       - name: Cache the Pyodide Docker image
-        uses: ScribeMD/docker-cache@0.5.0
+        uses: AndreKurait/docker-cache@0.6.0
         with:
           key: docker-pyodide-${{ hashFiles('pyodide/Dockerfile') }}
           read-only: true
