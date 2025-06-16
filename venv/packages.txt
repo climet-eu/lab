@@ -1,5 +1,6 @@
 aiohttp
 asciitree
+basemap
 blosc2
 Bottleneck
 Cartopy

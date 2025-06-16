@@ -25,6 +25,8 @@ astropy-iers-data == 0.2025.4.21.0.37.6
 asttokens == 3.0.0
 async-timeout == 5.0.1
 attrs == 25.3.0
+basemap == 2.0.0
+basemap_data == 2.0.0
 beautifulsoup4 == 4.13.4
 blosc2 == 3.3.1
 boltons == 25.0.0
