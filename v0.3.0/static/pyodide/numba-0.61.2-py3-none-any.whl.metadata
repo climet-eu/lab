@@ -1,0 +1,4 @@
+Metadata-Version: 2.4
+Name: numba
+Version: 0.61.2
+Requires-Dist: numpy>=1.24
