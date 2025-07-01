@@ -204,7 +204,7 @@ PyYAML == 6.0.2
 rasterio == 1.4.3
 referencing == 0.36.2
 regex == 2024.11.6
-requests == 2.32.3
+requests == 2.32.4
 requests-cache == 1.2.1
 rich == 14.0.0
 rich-argparse == 1.7.0
@@ -233,7 +233,7 @@ tzdata == 2025.2
 ujson == 5.10.0
 uncertainties == 3.2.3
 url-normalize == 2.2.0
-urllib3 == 2.4.0
+urllib3 == 2.5.0
 wcwidth == 0.2.13
 WebOb == 1.8.9
 wrapt == 1.17.2
