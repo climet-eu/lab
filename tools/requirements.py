@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 lock_path = Path("pyodide") / "dist" / "pyodide-lock.json"
-recipes_path = Path("pyodide") / "packages"
+recipes_path = Path("pyodide") / "pyodide-recipes" / "packages"
 
 requirements_path = Path("venv") / "requirements.txt"
 requirements_in_path = Path("venv") / "requirements.in"

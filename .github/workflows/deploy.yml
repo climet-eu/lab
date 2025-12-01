@@ -40,6 +40,15 @@ jobs:
           echo ======
           git status
 
+      - name: Ensure that the Pyodide recipe source files are fresh
+        run: |
+          cd pyodide/pyodide-build
+          git status
+          git diff --name-only | xargs git checkout --
+          git clean -df
+          echo ======
+          git status
+
       - name: Cache the Pyodide Docker image
         uses: AndreKurait/docker-cache@0.6.0
         with:
@@ -60,7 +69,7 @@ jobs:
           cd pyodide
           ./run_docker \
             --non-interactive \
-            make
+            PYODIDE_PACKAGES="" make
 
       - name: Build all required packages
         run: |
@@ -76,9 +85,12 @@ jobs:
           find . -name jupyter-lite.json -delete
           find . -name jupyter_lite_config.json -delete
           rm -f dist/tsconfig.tsbuildinfo
-          mkdir -p packages/numpy/build
-          touch packages/numpy/build/ls-success
+          mkdir -p packages/micropip/build
+          touch packages/micropip/build/ls-success
           ls -d packages/*/build/* | xargs rm -r
+          mkdir -p pyodide-recipes/packages/micropip/build
+          touch pyodide-recipes/packages/micropip/build/ls-success
+          ls -d pyodide-recipes/packages/*/build/* | xargs rm -r
 
       - name: Upload the pyodide-lock.json artifact
         uses: actions/upload-artifact@v4
