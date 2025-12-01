@@ -55,13 +55,19 @@ jobs:
           docker build -t climet-eu/pyodide .
           echo "PYODIDE_DOCKER_IMAGE=$(docker build . -q)" >> $GITHUB_ENV
 
-      - name: Build Pyodide and all required packages
+      - name: Build Pyodide
         run: |
           cd pyodide
           ./run_docker \
             --non-interactive \
-            PYODIDE_PACKAGES="$(cat ../venv/packages.txt | paste -sd "," -)" \
             make
+
+      - name: Build all required packages
+        run: |
+          cd pyodide
+          ./run_docker \
+            --non-interactive \
+            pyodide build-recipes "$(cat ../venv/packages.txt | paste -sd "," -)" --recipe-dir pyodide-recipes/packages --install
 
       - name: Clean up the Pyodide build
         run: |
