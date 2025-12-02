@@ -43,8 +43,11 @@ for package in lock["packages"].values():
         url is not None
         and url.startswith("https://files.pythonhosted.org/packages")
         and url.endswith("none-any.whl")
-        and package["name"] != "micropip"
     ):
+        # micropip must always be in the lockfile, even if pure
+        if package["name"] == "micropip":
+            continue
+
         raise Exception(
             f"pure PyPi package {package['name']} should not be in the repository"
         )
