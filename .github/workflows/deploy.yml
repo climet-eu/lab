@@ -42,7 +42,7 @@ jobs:
 
       - name: Ensure that the Pyodide recipe source files are fresh
         run: |
-          cd pyodide/pyodide-build
+          cd pyodide/pyodide-recipes
           git status
           git diff --name-only | xargs git checkout --
           git clean -df
