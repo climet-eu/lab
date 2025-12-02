@@ -85,6 +85,8 @@ micropip.set_constraints([
     if len(c.strip()) > 0 and not c.startswith('#')
 ])
 
+micropip.add_mock_package("pyarrow", "19.0.1")  # FIXME
+
 await micropip.install([
     r for r in """${requirements}""".splitlines()
     if len(r.strip()) > 0 and not r.startswith('#')
@@ -97,7 +99,7 @@ lock = json.loads(
 for package in lock["packages"].values():
     package["depends"] = sorted(package["depends"])
 
-    if package["name"] != "openssl":
+    if package["name"] != "libopenssl":
         package["imports"] = sorted(get_imports_for_package(package["name"]))
 
     if "package_type" not in package:

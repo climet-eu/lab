@@ -89,7 +89,6 @@ gribscan
 h5netcdf
 h5py
 hda
-healpy
 idna
 imageio
 iniconfig
@@ -177,7 +176,6 @@ pooch
 prompt_toolkit
 propcache
 pure_eval
-pyarrow
 pycparser
 pydantic
 pydantic_core
@@ -185,7 +183,6 @@ pydap
 pyerfa
 pyfdb
 Pygments
-pyicon-diagnostics
 pyodc
 pyodide-unix-timezones
 pyogrio
