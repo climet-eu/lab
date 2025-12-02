@@ -1,5 +1,6 @@
 aiohttp
 asciitree
+astropy
 basemap
 blosc2
 Bottleneck
