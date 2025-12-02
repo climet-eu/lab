@@ -11,6 +11,8 @@ dist_path = Path(args.dist_path)
 lock_path = dist_path / "pyodide-lock.json"
 recipes_path = Path("pyodide") / "pyodide-recipes" / "packages"
 
+
+# read in the lockfile
 with lock_path.open("r") as f:
     lock = json.load(f)
 
@@ -65,7 +67,6 @@ for name, package in lock["packages"].items():
         url is not None
         and url.startswith("https://files.pythonhosted.org/packages")
         and url.endswith("none-any.whl")
-        and package["name"] != "micropip"
     ):
         packages_to_delete.add(name)
 
@@ -79,13 +80,26 @@ for name in packages_to_delete:
     (dist_path / filename).unlink()
     (dist_path / f"{filename}.metadata").unlink(missing_ok=True)
 
-    del lock["packages"][name]
+    if name != "micropip":
+        del lock["packages"][name]
 
 
-# create and write the clean lockfile
+# if micropip is a pure Python package and was deleted, patch in its PyPi url
+if "micropip" in packages_to_delete:
+    package = lock["packages"]["micropip"]
+    with open(recipes_path / package["name"] / "meta.yaml") as f:
+        recipe = yaml.load(f, yaml.SafeLoader)
+    print("Patched micropip: ", end="", flush=True)
+    package["file_name"] = recipe["source"]["url"]
+    package["sha256"] = recipe["source"]["sha256"]
+    print(package["file_name"], flush=True)
+
+
+# ensure that the cleaned lockfile has a deterministic (sorted) layout
 for package in lock["packages"].values():
     package["depends"] = sorted(package["depends"])
     package["imports"] = sorted(package["imports"])
 
+# write out the cleaned lockfile
 with lock_path.open("w") as f:
     json.dump(lock, f, sort_keys=True)
