@@ -30,6 +30,7 @@ IGNORE_PACKAGES = {
     "micropip",  # pyodide implementation detail
     "pyodide-http",  # pyodide implementation detail
     "widgetsnbextension",  # JupyterLite provides this package
+    "ipykernel",  # JupyterLite provides this package
 }
 
 suspicious_packages = []

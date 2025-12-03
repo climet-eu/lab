@@ -76,7 +76,11 @@ jobs:
           cd pyodide
           ./run_docker \
             --non-interactive \
-            pyodide build-recipes "$(cat ../venv/packages.txt | paste -sd "," -)" --recipe-dir pyodide-recipes/packages --install
+            pyodide build-recipes \
+              "$(cat ../venv/packages.txt | paste -sd "," -)" \
+              --recipe-dir pyodide-recipes/packages \
+              --metadata-files \
+              --install
 
       - name: Clean up the Pyodide build
         run: |

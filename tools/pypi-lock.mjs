@@ -75,6 +75,11 @@ def get_imports_for_package(p: str) -> list[str]:
 
     return new_imports
 
+extra_requirements = [
+    "jupyterlite-cors == 0.0.0",  # climet-eu/lab implementation detail
+    "pyodide-http == 0.2.2",  # pyodide implementation detail
+]
+
 micropip.set_index_urls([
     "http://0.0.0.0:8000/pypa/simple/{package_name}/",
     "https://pypi.org/pypi/{package_name}/json",
@@ -83,19 +88,20 @@ micropip.set_index_urls([
 micropip.set_constraints([
     c for c in """${requirements}""".splitlines()
     if len(c.strip()) > 0 and not c.startswith('#')
-])
+] + extra_requirements)
 
 micropip.add_mock_package("pyarrow", "19.0.1")  # FIXME
 
 await micropip.install([
     r for r in """${requirements}""".splitlines()
     if len(r.strip()) > 0 and not r.startswith('#')
-] + ["pyodide_http"], verbose=True)
+] + extra_requirements, verbose=True)
 
 lock = json.loads(
     micropip.freeze().replace("http://0.0.0.0:8000/static/pyodide/", "")
 )
 
+# ensure that all packages have all required metadata in the lockfile
 for package in lock["packages"].values():
     package["depends"] = sorted(package["depends"])
 
@@ -109,6 +115,10 @@ for package in lock["packages"].values():
     if "install_dir" not in package:
         assert Path(package["file_name"]).suffix == ".whl", f"{package['name']} has no install_dir"
         package["install_dir"] = "site"
+
+# remove packages provided by JupyterLite from the lockfile
+for name in ["widgetsnbextension", "ipykernel"]:
+    lock["packages"].pop(name, None)
 
 with open("/pyodide-lock.json", "w") as f:
     json.dump(lock, f, sort_keys=True)
