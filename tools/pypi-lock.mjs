@@ -18,6 +18,7 @@ from pathlib import Path
 
 import micropip
 
+
 def get_imports_for_package(p: str) -> list[str]:
     def valid_package_name(n: str) -> bool:
         return all(invalid_chr not in n for invalid_chr in ".- ")
@@ -32,7 +33,7 @@ def get_imports_for_package(p: str) -> list[str]:
 
         # include top-level single-file packages
         if len(f.parts) == 1 and f.suffix in [".py", ".pyc", ".so"]:
-            stem = f.name.split('.')[0] if f.suffix == ".so" else f.stem
+            stem = f.name.split(".")[0] if f.suffix == ".so" else f.stem
             if valid_package_name(stem):
                 imports.add(stem)
                 continue
@@ -46,13 +47,10 @@ def get_imports_for_package(p: str) -> list[str]:
 
     # extract folders that only have folders but no files as children,
     #  these are package candidates
-    queue = [
-        ([k], t) for k, t in tree.items()
-        if len(t) > 0 and valid_package_name(k)
-    ]
+    queue = [([k], t) for k, t in tree.items() if len(t) > 0 and valid_package_name(k)]
     while len(queue) > 0:
         ps, tree = queue.pop()
-        imports.add('.'.join(ps))
+        imports.add(".".join(ps))
 
         is_package = True
 
@@ -75,30 +73,44 @@ def get_imports_for_package(p: str) -> list[str]:
 
     return new_imports
 
+
 extra_requirements = [
     "jupyterlite-cors == 0.0.0",  # climet-eu/lab implementation detail
     "pyodide-http == 0.2.2",  # pyodide implementation detail
 ]
 
-micropip.set_index_urls([
-    "http://0.0.0.0:8000/pypa/simple/{package_name}/",
-    "https://pypi.org/pypi/{package_name}/json",
-])
+micropip.set_index_urls(
+    [
+        "http://0.0.0.0:8000/pypa/simple/{package_name}/",
+        "https://pypi.org/pypi/{package_name}/json",
+    ]
+)
 
-micropip.set_constraints([
-    c for c in """${requirements}""".splitlines()
-    if len(c.strip()) > 0 and not c.startswith('#')
-] + extra_requirements)
+micropip.set_constraints(
+    [
+        c
+        for c in """${requirements}""".splitlines()
+        if len(c.strip()) > 0 and not c.startswith("#")
+    ]
+    + extra_requirements
+)
 
 micropip.add_mock_package("pyarrow", "19.0.1")  # FIXME
 
-await micropip.install([
-    r for r in """${requirements}""".splitlines()
-    if len(r.strip()) > 0 and not r.startswith('#')
-] + extra_requirements, verbose=True)
+await micropip.install(
+    [
+        r
+        for r in """${requirements}""".splitlines()
+        if len(r.strip()) > 0 and not r.startswith("#")
+    ]
+    + extra_requirements,
+    verbose=True,
+)
 
 lock = json.loads(
-    micropip.freeze().replace("/src/static/pyodide/", "")
+    micropip.freeze()
+    .replace("http://0.0.0.0:8000/static/pyodide/", "")
+    .replace("/src/static/pyodide/", "")
 )
 
 # ensure that all packages have all required metadata in the lockfile
@@ -109,11 +121,15 @@ for package in lock["packages"].values():
         package["imports"] = sorted(get_imports_for_package(package["name"]))
 
     if "package_type" not in package:
-        assert Path(package["file_name"]).suffix == ".whl", f"{package['name']} has no package_type"
+        assert Path(package["file_name"]).suffix == ".whl", (
+            f"{package['name']} has no package_type"
+        )
         package["package_type"] = "package"
 
     if "install_dir" not in package:
-        assert Path(package["file_name"]).suffix == ".whl", f"{package['name']} has no install_dir"
+        assert Path(package["file_name"]).suffix == ".whl", (
+            f"{package['name']} has no install_dir"
+        )
         package["install_dir"] = "site"
 
 # fix up the package name for pyodide-http
