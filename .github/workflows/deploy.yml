@@ -317,6 +317,9 @@ jobs:
           name: jupyterlite
           path: dist/${{ env.CLIMETLAB_VERSION }}
 
+      - name: Update the global favicon to the latest main
+        run: cp main/favicon.ico .
+
       - name: Deploy to dist branch
         uses: peaceiris/actions-gh-pages@v4
         with:
