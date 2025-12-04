@@ -98,7 +98,7 @@ await micropip.install([
 ] + extra_requirements, verbose=True)
 
 lock = json.loads(
-    micropip.freeze().replace("http://0.0.0.0:8000/static/pyodide/", "")
+    micropip.freeze().replace("/src/static/pyodide/", "")
 )
 
 # ensure that all packages have all required metadata in the lockfile
