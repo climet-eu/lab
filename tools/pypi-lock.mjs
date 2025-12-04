@@ -116,6 +116,9 @@ for package in lock["packages"].values():
         assert Path(package["file_name"]).suffix == ".whl", f"{package['name']} has no install_dir"
         package["install_dir"] = "site"
 
+# fix up the package name for pyodide-http
+lock["packages"]["pyodide-http"] = "pyodide-http"
+
 # remove packages provided by JupyterLite from the lockfile
 for name in ["widgetsnbextension", "ipykernel"]:
     lock["packages"].pop(name, None)
