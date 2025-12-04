@@ -10,7 +10,7 @@
         "enableMemoryStorage": false,
         "contentsStorageName": "JupyterLite Storage",
         "settingsStorageName": "JupyterLite Storage",
-        "terminalsAvailable": false,
+        "terminalsAvailable": true,
         "litePluginSettings": {
             "@jupyterlite/pyodide-kernel-extension:kernel": {
                 "pyodideUrl": "/static/pyodide/pyodide.js",
