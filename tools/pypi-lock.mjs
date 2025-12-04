@@ -117,7 +117,7 @@ for package in lock["packages"].values():
         package["install_dir"] = "site"
 
 # fix up the package name for pyodide-http
-lock["packages"]["pyodide-http"] = "pyodide-http"
+lock["packages"]["pyodide-http"]["name"] = "pyodide-http"
 
 # remove packages provided by JupyterLite from the lockfile
 for name in ["widgetsnbextension", "ipykernel"]:
