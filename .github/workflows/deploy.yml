@@ -318,7 +318,7 @@ jobs:
           path: dist/${{ env.CLIMETLAB_VERSION }}
 
       - name: Update the global favicon to the latest main
-        run: cp main/favicon.ico .
+        run: cp dist/main/favicon.ico dist
 
       - name: Deploy to dist branch
         uses: peaceiris/actions-gh-pages@v4
