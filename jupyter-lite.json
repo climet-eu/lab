@@ -5,7 +5,8 @@
         "showLoadingIndicator": true,
         "exposeAppInBrowser": false,
         "disabledExtensions": [
-            "@jupyterlite/application-extension:service-worker-manager"
+            "@jupyterlite/application-extension:service-worker-manager",
+            "@jupyterlite/terminal:service-worker"
         ],
         "enableMemoryStorage": false,
         "contentsStorageName": "JupyterLite Storage",

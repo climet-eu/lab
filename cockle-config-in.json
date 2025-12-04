@@ -1,0 +1,16 @@
+{
+  "packages": {
+    "git2cpp": {},
+    "lua": {},
+    "nano": {},
+    "tree": {},
+    "vim": {}
+  },
+  "aliases": {
+    "git": "git2cpp",
+    "vi": "vim"
+  },
+  "environment": {
+    "GIT_CORS_PROXY": "https://cors.climet.eu/"
+  }
+}
