@@ -27,7 +27,7 @@ packaging
 pandas
 pydantic_core
 pyodc
-pyodide_http
+pyodide-http
 pyogrio
 pyrsistent
 PyYAML
