@@ -33,8 +33,6 @@ IGNORE_PACKAGES = {
     "ipykernel",  # JupyterLite provides this package
 }
 
-suspicious_packages = []
-
 for package in lock["packages"].values():
     if package["package_type"] != "package":
         continue
@@ -139,11 +137,3 @@ with (
 
         if not package.is_pure:
             con.write(f"{name} == {package.version}\n")
-
-if len(suspicious_packages) > 0:
-    raise Exception(
-        "The following package names have suspicious file names:\n"
-        + "\n".join(
-            f" - {name}: {name_guess}" for name, name_guess in suspicious_packages
-        )
-    )

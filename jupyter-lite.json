@@ -25,7 +25,7 @@
                         "packaging",
                         "ipython",
                         "micropip",
-                        "pyodide_http"
+                        "pyodide-http"
                     ]
                 }
             },
