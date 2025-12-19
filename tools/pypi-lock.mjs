@@ -138,6 +138,9 @@ lock["packages"]["pyodide-http"]["name"] = "pyodide-http"
 # remove packages provided by JupyterLite from the lockfile
 for name in ["widgetsnbextension", "ipykernel"]:
     lock["packages"].pop(name, None)
+    for package in lock["packages"].values():
+        if name in package["depends"]:
+            package["depends"].remove(name)
 
 with open("/pyodide-lock.json", "w") as f:
     json.dump(lock, f, sort_keys=True)
