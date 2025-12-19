@@ -27,6 +27,7 @@ fiona == 1.10.1
 frozenlist == 1.6.0
 fsspec == 2025.3.2
 h5py == 3.13.0
+healpy == 1.18.1
 kiwisolver == 1.4.8
 lru-dict == 1.3.0
 lxml == 6.0.2
@@ -44,9 +45,9 @@ orjson == 3.10.16
 packaging == 25.0
 pandas == 2.2.3
 pillow == 11.3.0
-pyarrow == 19.0.1
 pydantic_core == 2.33.1
 pyerfa == 2.0.1.5
+pyicon-diagnostics == 0.3.6
 pyodc == 1.5.0
 pyogrio == 0.10.0
 pyproj == 3.6.1

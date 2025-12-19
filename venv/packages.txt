@@ -11,6 +11,7 @@ crc32c
 earthkit-regrid
 eccodes
 fsspec
+healpy
 lru-dict
 lxml
 lz4
@@ -25,8 +26,8 @@ numpy
 orjson
 packaging
 pandas
-pyarrow
 pydantic_core
+pyicon-diagnostics
 pyodc
 pyodide-http
 pyogrio
