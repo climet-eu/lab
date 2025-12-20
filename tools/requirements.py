@@ -29,11 +29,19 @@ IGNORE_PACKAGES = {
     "jupyterlite-cors",  # climet-eu/lab implementation detail
     "micropip",  # pyodide implementation detail
     "pyodide-http",  # pyodide implementation detail
-    "widgetsnbextension",  # JupyterLite provides this package
     "ipykernel",  # JupyterLite provides this package
 }
 
+FORBIDDEN_PACKAGES = {
+    "ipykernel",  # JupyterLite provides this package
+    "piplite",  # JupyterLite provides this package
+    "pyodide-kernel",  # JupyterLite provides this package
+    # note: widgetsnbextension is special and vendored by us
+}
+
 for package in lock["packages"].values():
+    assert package["name"] not in FORBIDDEN_PACKAGES
+
     if package["package_type"] != "package":
         continue
     if Path(package["file_name"]).suffix != ".whl":

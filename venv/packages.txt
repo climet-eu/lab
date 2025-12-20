@@ -41,5 +41,6 @@ scikit-learn
 scipy
 statsmodels
 ujson
+widgetsnbextension
 wrapt
 zarr

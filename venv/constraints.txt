@@ -62,5 +62,6 @@ scipy == 1.14.1
 shapely == 2.1.0
 statsmodels == 0.14.4
 ujson == 5.11.0
+widgetsnbextension == 4.0.15
 wrapt == 1.17.2
 zarr == 3.0.7

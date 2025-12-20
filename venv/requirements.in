@@ -232,6 +232,7 @@ url-normalize
 urllib3
 wcwidth
 WebOb
+widgetsnbextension
 wrapt
 xarray
 xclim
