@@ -177,6 +177,7 @@ pooch
 prompt_toolkit
 propcache
 pure_eval
+pyarrow
 pycparser
 pydantic
 pydantic_core

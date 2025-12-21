@@ -95,8 +95,6 @@ micropip.set_constraints(
     + extra_requirements
 )
 
-micropip.add_mock_package("pyarrow", "19.0.1")  # FIXME
-
 await micropip.install(
     [
         r
