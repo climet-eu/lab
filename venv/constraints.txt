@@ -37,9 +37,9 @@ matplotlib == 3.8.4
 msgpack == 1.1.1
 ndindex == 1.9.2
 netCDF4 == 1.7.2
-numba == 0.61.2
+numba == 0.63.1
 numcodecs == 0.15.1
-numcodecs_wasm == 0.1.6
+numcodecs_wasm == 0.2.2
 numpy == 2.2.5
 orjson == 3.10.16
 packaging == 25.0
