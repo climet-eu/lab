@@ -231,6 +231,7 @@ ujson
 uncertainties
 url-normalize
 urllib3
+varint
 wcwidth
 WebOb
 widgetsnbextension
