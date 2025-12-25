@@ -12,6 +12,9 @@ jobs:
   build-pyodide:
     runs-on: ubuntu-latest
     steps:
+      - name: Free up disk space
+        uses: BRAINSia/free-disk-space@v2
+
       - name: Checkout the repository
         uses: actions/checkout@v4
         with:
