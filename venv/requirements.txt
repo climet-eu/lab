@@ -18,7 +18,7 @@ aiosignal == 1.4.0
 annotated-types == 0.7.0
 antlr4-python3-runtime == 4.13.2
 argparse == 1.4.0
-array_api_compat == 1.12.0
+array-api-compat == 1.12.0
 asciitree == 0.3.3
 astropy == 7.0.1
 astropy-iers-data == 0.2025.12.22.0.40.30
@@ -74,6 +74,7 @@ earthkit-time == 0.1.7
 earthkit-transforms == 0.4.0
 eccodes == 2.41.0
 ecmwf-api-client == 1.6.5
+ecmwf-datastores-client == 0.4.1
 ecmwf-opendata == 0.3.26
 entrypoints == 0.4
 executing == 2.2.1
@@ -94,7 +95,7 @@ h5py == 3.13.0
 hda == 2.39
 healpy == 1.18.1
 idna == 3.11
-imageio == 2.37.2
+ImageIO == 2.37.2
 iniconfig == 2.3.0
 intake == 2.0.8
 intake-esm == 2025.2.3
@@ -102,6 +103,7 @@ intake-xarray == 2.0.0
 ipdb == 0.13.13
 ipyfilite == 0.1.30
 ipython == 9.8.0
+ipython_pygments_lexers == 1.1.1
 ipywidgets == 8.1.8
 jedi == 0.19.2
 Jinja2 == 3.1.6

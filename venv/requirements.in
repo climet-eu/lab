@@ -15,7 +15,7 @@ aiosignal
 annotated-types
 antlr4-python3-runtime
 argparse
-array_api_compat
+array-api-compat
 asciitree
 astropy
 astropy-iers-data
@@ -71,6 +71,7 @@ earthkit-time
 earthkit-transforms
 eccodes
 ecmwf-api-client
+ecmwf-datastores-client
 ecmwf-opendata
 entrypoints
 executing
@@ -91,7 +92,7 @@ h5py
 hda
 healpy
 idna
-imageio
+ImageIO
 iniconfig
 intake
 intake-esm
@@ -99,6 +100,7 @@ intake-xarray
 ipdb
 ipyfilite
 ipython
+ipython_pygments_lexers
 ipywidgets
 jedi
 Jinja2
