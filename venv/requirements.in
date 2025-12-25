@@ -143,7 +143,7 @@ numcodecs-delta
 numcodecs-huffman
 numcodecs-observers
 numcodecs-safeguards
-+numcodecs-zero
+numcodecs-zero
 numcodecs_wasm
 numcodecs_wasm_asinh
 numcodecs_wasm_bit_round

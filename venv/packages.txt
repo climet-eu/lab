@@ -8,7 +8,6 @@ Cartopy
 cf-units
 cftime
 crc32c
-earthkit-regrid
 eccodes
 fsspec
 healpy
