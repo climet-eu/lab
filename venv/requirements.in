@@ -71,6 +71,7 @@ earthkit-plots-default-styles
 earthkit-regrid
 earthkit-time
 earthkit-transforms
+earthkit-utils
 eccodes
 ecmwf-api-client
 ecmwf-datastores-client
