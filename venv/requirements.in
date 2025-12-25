@@ -46,12 +46,14 @@ cloudpickle
 cmcrameri
 cmocean
 comm
+compression-safeguards
 conflator
 contourpy
 covjson-pydantic
 covjsonkit
 crc32c
 cycler
+dahuffman
 dask
 datapi
 decorator
@@ -137,7 +139,11 @@ networkx
 numba
 numcodecs
 numcodecs-combinators
+numcodecs-delta
+numcodecs-huffman
 numcodecs-observers
+numcodecs-safeguards
++numcodecs-zero
 numcodecs_wasm
 numcodecs_wasm_asinh
 numcodecs_wasm_bit_round
@@ -212,9 +218,11 @@ s3fs
 scikit-image
 scikit-learn
 scipy
+semver
 setuptools
 shapely
 six
+sly
 soupsieve
 stack-data
 statsmodels
@@ -239,6 +247,7 @@ WebOb
 widgetsnbextension
 wrapt
 xarray
+xarray-safeguards
 xclim
 xeofs
 xhistogram
