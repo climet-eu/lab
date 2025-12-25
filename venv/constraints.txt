@@ -15,7 +15,7 @@ astropy == 7.0.1
 basemap == 2.0.0
 blosc2 == 3.5.1
 Bottleneck == 1.4.2
-Cartopy == 0.24.1
+Cartopy == 0.25.0
 cf-units == 3.3.0
 cffi == 1.17.1
 cftime == 1.6.4.post1
@@ -51,7 +51,7 @@ pyerfa == 2.0.1.5
 pyicon-diagnostics == 0.3.6
 pyodc == 1.5.0
 pyogrio == 0.10.0
-pyproj == 3.6.1
+pyproj == 3.7.2
 pyrsistent == 0.20.0
 PyYAML == 6.0.2
 rasterio == 1.4.3

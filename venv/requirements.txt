@@ -32,7 +32,7 @@ blosc2 == 3.5.1
 boltons == 25.0.0
 botocore == 1.41.5
 Bottleneck == 1.4.2
-Cartopy == 0.24.1
+Cartopy == 0.25.0
 cattrs == 25.3.0
 cdsapi == 0.7.7
 certifi == 2025.11.12
@@ -193,7 +193,7 @@ pyodc == 1.5.0
 pyodide-unix-timezones == 1.0.0
 pyogrio == 0.10.0
 pyparsing == 3.3.1
-pyproj == 3.6.1
+pyproj == 3.7.2
 pyrsistent == 0.20.0
 pyshp == 2.3.1
 pystac == 1.14.2
