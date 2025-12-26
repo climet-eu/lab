@@ -6,6 +6,7 @@ blosc2
 Bottleneck
 Cartopy
 cf-units
+cffi
 cftime
 contourpy
 crc32c
