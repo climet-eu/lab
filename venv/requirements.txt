@@ -52,6 +52,7 @@ comm == 0.2.3
 compression-safeguards == 1.0.0a1
 conflator == 0.1.8
 contourpy == 1.3.2
+copernicusmarine == 2.2.5
 covjson-pydantic == 0.7.0
 covjsonkit == 0.2.9
 crc32c == 2.7.1
