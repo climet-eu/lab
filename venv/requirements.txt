@@ -42,7 +42,7 @@ cffi == 1.17.1
 cfgrib == 0.9.15.1
 cftime == 1.6.4.post1
 charset-normalizer == 3.4.4
-click == 8.3.1
+click == 8.2.1
 click-plugins == 1.1.1.2
 cligj == 0.7.2
 cloudpickle == 3.1.2
