@@ -24,7 +24,7 @@ crc32c == 2.8
 eccodes == 2.41.0
 fiona == 1.10.1
 frozenlist == 1.8.0
-fsspec == 2025.3.2
+fsspec == 2025.12.0
 h5py == 3.13.0
 healpy == 1.19.0
 kiwisolver == 1.4.9
