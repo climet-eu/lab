@@ -1,0 +1,1 @@
+(self.webpackChunkjupyterlab_myst=self.webpackChunkjupyterlab_myst||[]).push([[4540],{78072:t=>{t.exports=function(t){return{name:"Plain text",aliases:["text","txt"],disableAutodetect:!0}}}}]);
