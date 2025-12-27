@@ -14,6 +14,7 @@ aioitertools
 aiosignal
 annotated-types
 antlr4-python3-runtime
+arcosparse
 argparse
 array-api-compat
 asciitree
@@ -27,6 +28,7 @@ basemap_data
 beautifulsoup4
 blosc2
 boltons
+boto3
 botocore
 Bottleneck
 Cartopy
@@ -217,6 +219,7 @@ rich
 rich-argparse
 rpds-py
 s3fs
+s3transfer
 scikit-image
 scikit-learn
 scipy
