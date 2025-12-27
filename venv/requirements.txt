@@ -30,6 +30,7 @@ basemap_data == 2.0.0
 beautifulsoup4 == 4.13.4
 blosc2 == 3.5.1
 boltons == 25.0.0
+boto3 == 1.41.5
 botocore == 1.41.5
 Bottleneck == 1.4.2
 Cartopy == 0.25.0
