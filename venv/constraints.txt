@@ -54,7 +54,7 @@ pyproj == 3.7.2
 pyrsistent == 0.20.0
 PyYAML == 6.0.3
 rasterio == 1.4.3
-regex == 2024.11.6
+regex == 2025.11.3
 rpds-py == 0.30.0
 scikit-image == 0.25.2
 scikit-learn == 1.8.0
