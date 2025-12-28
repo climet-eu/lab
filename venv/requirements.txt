@@ -39,6 +39,7 @@ Cartopy == 0.25.0
 cattrs == 25.3.0
 cdsapi == 0.7.7
 certifi == 2025.11.12
+cf-python == 3.18.2
 cf-units == 3.3.0
 cf_xarray == 0.10.10
 cfapyx == 2025.12.9
@@ -143,7 +144,7 @@ multidict == 6.7.0
 multiurl == 0.3.7
 narwhals == 2.14.0
 ndindex == 1.10.1
-netCDF4 == 1.7.3
+netCDF4 == 1.7.2
 networkx == 3.6.1
 numba == 0.63.1
 numcodecs == 0.15.1
@@ -264,5 +265,5 @@ xhistogram == 0.3.2
 xrft == 1.0.1
 yamale == 6.1.0
 yarl == 1.22.0
-zarr == 3.0.7
+zarr == 3.0.8
 zarr-any-numcodecs == 0.1.3

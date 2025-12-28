@@ -35,7 +35,7 @@ MarkupSafe == 3.0.3
 matplotlib == 3.8.4
 msgpack == 1.1.2
 ndindex == 1.10.1
-netCDF4 == 1.7.3
+netCDF4 == 1.7.2
 numba == 0.63.1
 numcodecs == 0.15.1
 numcodecs_wasm == 0.2.2
@@ -65,4 +65,4 @@ ujson == 5.11.0
 varint == 1.0.2
 widgetsnbextension == 4.0.15
 wrapt == 1.17.3
-zarr == 3.0.7
+zarr == 3.0.8

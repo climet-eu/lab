@@ -5,9 +5,12 @@ basemap
 blosc2
 Bottleneck
 Cartopy
+cf-python
 cf-units
+cfdm
 cffi
 cftime
+cfunits
 contourpy
 crc32c
 eccodes
