@@ -17,6 +17,7 @@ antlr4-python3-runtime
 arcosparse
 argparse
 array-api-compat
+arraypartition
 asciitree
 astropy
 astropy-iers-data
