@@ -40,6 +40,7 @@ cdsapi == 0.7.7
 certifi == 2025.11.12
 cf-units == 3.3.0
 cf_xarray == 0.10.10
+cfapyx == 2025.12.9
 cffi == 2.0.0
 cfgrib == 0.9.15.1
 cftime == 1.6.5

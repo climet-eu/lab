@@ -37,6 +37,7 @@ cdsapi
 certifi
 cf-units
 cf_xarray
+cfapyx
 cffi
 cfgrib
 cftime
