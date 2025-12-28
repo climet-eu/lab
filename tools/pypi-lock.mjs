@@ -138,6 +138,23 @@ lock["packages"]["pyodide-http"]["name"] = "pyodide-http"
 for name in ["ipykernel", "piplite", "pyodide-kernel"]:
     assert lock["packages"].pop(name, None) is None
 
+# collect all entry points by group
+eps = importlib.metadata.entry_points()
+entry_points = { g: dict() for g in eps.groups }
+for ep in eps:
+    entry_points[ep.group][ep.name] = ep.value
+
+# sort the entry points
+entry_points = {
+    group: {
+        name: entry_points[group][name]
+        for name in sorted(entry_points[group])
+    } for group in sorted(entry_points)
+}
+
+assert "entry-points" not in lock
+lock["entry-points"] = entry_points
+
 with open("/pyodide-lock.json", "w") as f:
     json.dump(lock, f, sort_keys=True)
 `);
