@@ -43,9 +43,11 @@ cf-python == 3.18.2
 cf-units == 3.3.0
 cf_xarray == 0.10.10
 cfapyx == 2025.12.9
+cfdm == 1.12.3.1
 cffi == 2.0.0
 cfgrib == 0.9.15.1
 cftime == 1.6.5
+cfunits == 3.3.7
 charset-normalizer == 3.4.4
 click == 8.2.1
 click-plugins == 1.1.1.2
@@ -250,6 +252,7 @@ typing_extensions == 4.15.0
 tzdata == 2025.3
 ujson == 5.11.0
 uncertainties == 3.2.3
+uritools == 6.0.1
 url-normalize == 2.2.1
 urllib3 == 2.6.2
 varint == 1.0.2

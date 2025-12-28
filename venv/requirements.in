@@ -36,12 +36,15 @@ Cartopy
 cattrs
 cdsapi
 certifi
+cf-python
 cf-units
 cf_xarray
 cfapyx
+cfdm
 cffi
 cfgrib
 cftime
+cfunits
 charset-normalizer
 click
 click-plugins
@@ -246,6 +249,7 @@ typing_extensions
 tzdata
 ujson
 uncertainties
+uritools
 url-normalize
 urllib3
 varint
