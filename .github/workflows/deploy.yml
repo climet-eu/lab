@@ -79,6 +79,7 @@ jobs:
           cd pyodide
           ./run_docker \
             --non-interactive \
+            env CI=1 \
             pyodide build-recipes \
               "$(cat ../venv/packages.txt | paste -sd "," -)" \
               --recipe-dir pyodide-recipes/packages \
