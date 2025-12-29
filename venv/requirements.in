@@ -97,6 +97,7 @@ frozenlist
 fsspec
 future
 geopandas
+google-crc32c
 gribscan
 h5netcdf
 h5py
