@@ -17,6 +17,7 @@ eccodes
 fiona
 frozenlist
 fsspec
+google-crc32c
 h5py
 healpy
 jupyterlite-cors
