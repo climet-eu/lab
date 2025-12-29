@@ -268,5 +268,5 @@ xhistogram == 0.3.2
 xrft == 1.0.1
 yamale == 6.1.0
 yarl == 1.22.0
-zarr == 3.0.8
+zarr == 3.1.5
 zarr-any-numcodecs == 0.1.3

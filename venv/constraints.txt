@@ -68,4 +68,4 @@ ujson == 5.11.0
 varint == 1.0.2
 widgetsnbextension == 4.0.15
 wrapt == 1.17.3
-zarr == 3.0.8
+zarr == 3.1.5
