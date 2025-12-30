@@ -267,7 +267,7 @@ jobs:
           cd pyodide
           ./run_docker --non-interactive \
             node dist/check-imports.mjs \
-              .ipython/profile_default/startup_extensions/climet_lab_bootstrap.py
+              assets/home/pyodide/.ipython/profile_default/startup_extensions/climet_lab_bootstrap.py
 
   build-jupyterlite:
     runs-on: ubuntu-latest
