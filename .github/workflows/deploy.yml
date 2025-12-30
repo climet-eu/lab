@@ -237,6 +237,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Cache the Pyodide Docker image
         uses: AndreKurait/docker-cache@0.6.0
