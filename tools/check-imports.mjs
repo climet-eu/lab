@@ -1,4 +1,5 @@
 import { readFileSync } from "fs";
+import { argv } from "process";
 
 import { loadPyodide } from "./pyodide.mjs";
 
