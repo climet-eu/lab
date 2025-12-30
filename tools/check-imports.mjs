@@ -12,10 +12,6 @@ const EXPECTED_FAILURES = [
     "ipyfilite[ipyfilite]",
     // requires `fcntl`, which Pyodide doesn't support (but JupyterLite mocks)
     "locket[locket]", "partd[partd]",
-    // https://github.com/climet-eu/lab/issues/13
-    "pyfdb[pyfdb]",
-    // https://github.com/climet-eu/lab/issues/13
-    "pygribjump[pygribjump]",
 ];
 
 const [_node_path, _script_path, bootstrap_path] = argv;
