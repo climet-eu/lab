@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { argv } from "process";
+import { argv, exit } from "process";
 
 import { loadPyodide } from "./pyodide.mjs";
 
@@ -59,3 +59,6 @@ if (failures.length > 0) {
 if (JSON.stringify(failures) != JSON.stringify(EXPECTED_FAILURES)) {
     throw new Error(`unexpected import failures, expected ${EXPECTED_FAILURES}`);
 }
+
+// explicit exit for faster cleanup of the Pyodide runtimes
+exit(0);
