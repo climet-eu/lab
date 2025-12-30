@@ -266,7 +266,7 @@ jobs:
           cp tools/check-imports.mjs pyodide/dist/check-imports.mjs
           cd pyodide
           ./run_docker --non-interactive \
-            node dist/check-imports.mjs \
+            node --experimental-wasm-jspi dist/check-imports.mjs \
               assets/home/pyodide/.ipython/profile_default/startup_extensions/climet_lab_bootstrap.py
 
   build-jupyterlite:

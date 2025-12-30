@@ -6,8 +6,7 @@ import { loadPyodide } from "./pyodide.mjs";
 const [_node_path, _script_path, bootstrap_path] = argv;
 
 const bootstrap = readFileSync(bootstrap_path, { encoding: 'utf8' }).concat(`
-if not pyodide.ffi.can_run_sync():
-    patch_syncifiable_asyncio()
+assert pyodide.ffi.can_run_sync()
 patch_import_loader()
 `);
 
