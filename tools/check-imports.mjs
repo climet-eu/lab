@@ -14,6 +14,8 @@ const EXPECTED_FAILURES = [
     "locket[locket]", "partd[partd]",
     // https://github.com/climet-eu/lab/issues/13
     "pyfdb[pyfdb]",
+    // https://github.com/climet-eu/lab/issues/13
+    "pygribjump[pygribjump]",
 ];
 
 const [_node_path, _script_path, bootstrap_path] = argv;
