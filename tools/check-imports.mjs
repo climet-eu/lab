@@ -12,18 +12,31 @@ patch_import_loader()
 
 const py = await loadPyodide({ fullStdLib: true, packages: ["micropip"] });
 
+const successes = [];
+const failures = [];
+
 for (const [package_name, package_] of Object.entries(py.lockfile.packages)) {
     for (const import_ of package_.imports) {
-        console.log(`trying import ${import_} from ${package_name} ...`);
+        const import_info = `${import_}[${package_name}]`;
+
+        console.log(`trying to import ${import_info} ...`);
 
         const py = await loadPyodide({ fullStdLib: true, packages: [] });
         await py.runPythonAsync(bootstrap);
 
         try {
             await py.runPythonAsync(`import ${import_}`);
-            console.log("success");
+            console.log(`success: ${import_info}`);
+            successes.push(import_info);
         } catch {
-            console.error("FAIL");
+            console.error(`FAIL: ${import_info}`);
+            failures.push(import_info);
         }
     }
+}
+
+console.log(`successfully imported ${successes.length}/${successes.length+failures.length}`)
+
+if (failures.length > 0) {
+    throw new Error(`failed to import ${failures.length}: ${failures}`);
 }
