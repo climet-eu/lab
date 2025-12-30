@@ -3,6 +3,19 @@ import { argv } from "process";
 
 import { loadPyodide } from "./pyodide.mjs";
 
+const EXPECTED_FAILURES = [
+    // https://github.com/NCAS-CMS/cfunits/issues/60
+    "cf[cf-python]", "cfdm[cfdm]", "cfunits[cfunits]",
+    // https://github.com/ecmwf/eccodes-python/issues/116
+    "gribapi[eccodes]",
+    // FIXME: `js.postMessage` only exists in the browser
+    "ipyfilite[ipyfilite]",
+    // requires `fcntl`, which Pyodide doesn't support (but JupyterLite mocks)
+    "locket[locket]", "partd[partd]",
+    // https://github.com/climet-eu/lab/issues/13
+    "pyfdb[pyfdb]",
+];
+
 const [_node_path, _script_path, bootstrap_path] = argv;
 
 const bootstrap = readFileSync(bootstrap_path, { encoding: 'utf8' }).concat(`
@@ -35,8 +48,12 @@ for (const [package_name, package_] of Object.entries(py.lockfile.packages)) {
     }
 }
 
-console.log(`successfully imported ${successes.length}/${successes.length+failures.length}`)
+console.log(`successfully imported ${successes.length}/${successes.length+failures.length}`);
 
 if (failures.length > 0) {
-    throw new Error(`failed to import ${failures.length}: ${failures}`);
+    console.error(`failed to import ${failures.length}: ${failures}`);
+}
+
+if (JSON.stringify(failures) != JSON.stringify(EXPECTED_FAILURES)) {
+    throw new Error(`unexpected import failures, expected ${EXPECTED_FAILURES}`);
 }
