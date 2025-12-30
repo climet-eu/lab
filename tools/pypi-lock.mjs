@@ -19,7 +19,11 @@ from pathlib import Path
 import micropip
 
 
-def get_imports_for_package(p: str, unique_imports: dict[str, str]) -> list[str]:
+def get_imports_for_package(
+    p: str,
+    package_distributions: dict[str, list[str]],
+    unique_imports: dict[str, list[str]],
+) -> list[str]:
     def valid_package_name(n: str) -> bool:
         return all(invalid_chr not in n for invalid_chr in ".- ")
 
@@ -72,7 +76,6 @@ def get_imports_for_package(p: str, unique_imports: dict[str, str]) -> list[str]
             imports_no_prefixes.append(i)
 
     # only include imports that importlib recognises
-    package_distributions = importlib.metadata.packages_distributions()
     filtered_imports = [
         i for i in imports_no_prefixes
         if p in package_distributions.get(i.split(".", maxsplit=1)[0], [])
@@ -83,8 +86,10 @@ def get_imports_for_package(p: str, unique_imports: dict[str, str]) -> list[str]
 
     for i in filtered_imports:
         if i in unique_imports:
-            assert False, f"{p} has non-unique import {i} clashing with {unique_imports[i]}"
-            unique_imports[i] = p
+            print(f"{p} has non-unique import {i} clashing with {unique_imports[i]}")
+            unique_imports[i].append(p)
+        else:
+            unique_imports[i] = [p]
 
     return filtered_imports
 
@@ -126,6 +131,7 @@ lock = json.loads(
     .replace("/src/static/pyodide/", "")
 )
 
+package_distributions = importlib.metadata.packages_distributions()
 unique_imports = dict()
 
 # ensure that all packages have all required metadata in the lockfile
@@ -133,9 +139,9 @@ for package in lock["packages"].values():
     package["depends"] = sorted(package["depends"])
 
     if package["name"] != "libopenssl":
-        package["imports"] = sorted(
-            get_imports_for_package(package["name"], unique_imports)
-        )
+        package["imports"] = sorted(get_imports_for_package(
+            package["name"], package_distributions, unique_imports
+        ))
 
     if "package_type" not in package:
         assert Path(package["file_name"]).suffix == ".whl", (
