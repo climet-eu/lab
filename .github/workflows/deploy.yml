@@ -231,6 +231,42 @@ jobs:
           uv pip install -c venv/constraints.txt -r venv/requirements.in --dry-run
           rm -rf .venv
 
+  check-package-imports:
+    runs-on: ubuntu-latest
+    needs: build-lock
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Cache the Pyodide Docker image
+        uses: AndreKurait/docker-cache@0.6.0
+        with:
+          key: docker-pyodide-${{ hashFiles('pyodide/Dockerfile') }}
+          read-only: true
+
+      - name: Discover the cached Pyodide Docker image
+        run: echo "PYODIDE_DOCKER_IMAGE=$(docker images climet-eu/pyodide --format '{{.ID}}')" >> $GITHUB_ENV
+
+      - name: Download the Pyodide distribution artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pyodide
+          path: pyodide/dist
+
+      - name: Download the PyPi pyodide-lock.json artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pypi-pyodide-lock.json
+          path: pyodide/dist
+
+      - name: Check that all package imports work
+        run: |
+          cp tools/check-imports.mjs pyodide/dist/check-imports.mjs
+          cd pyodide
+          ./run_docker --non-interactive \
+            node dist/check-imports.mjs \
+              .ipython/profile_default/startup_extensions/climet_lab_bootstrap.py
+
   build-jupyterlite:
     runs-on: ubuntu-latest
     needs: [build-pyodide, build-pypa, build-lock]
