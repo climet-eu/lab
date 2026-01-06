@@ -9,7 +9,7 @@
 # python == 3.13.2
 # pyodide == 0.29.0
 
-aiohttp == 3.13.2
+aiohttp == 3.13.3
 asciitree == 0.3.3
 astropy == 7.2.0
 basemap == 2.0.0
