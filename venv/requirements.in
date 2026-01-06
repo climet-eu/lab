@@ -176,6 +176,7 @@ numcodecs_wasm_zfp_classic
 numcodecs_wasm_zlib
 numcodecs_wasm_zstd
 numpy
+numpy-quaddtype
 orjson
 packaging
 pandas

@@ -179,6 +179,7 @@ numcodecs_wasm_zfp_classic == 0.4.0
 numcodecs_wasm_zlib == 0.4.0
 numcodecs_wasm_zstd == 0.4.0
 numpy == 2.2.5
+numpy-quaddtype == 0.2.2
 orjson == 3.10.16
 packaging == 25.0
 pandas == 2.3.3
