@@ -44,7 +44,7 @@ numba == 0.63.1
 numcodecs == 0.15.1
 numcodecs_wasm == 0.2.2
 numpy == 2.2.5
-numpy-quaddtype == 0.2.2
+numpy_quaddtype == 0.2.2
 orjson == 3.10.16
 packaging == 25.0
 pandas == 2.3.3

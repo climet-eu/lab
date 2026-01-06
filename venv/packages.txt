@@ -34,7 +34,7 @@ numba
 numcodecs
 numcodecs_wasm
 numpy
-numpy-quaddtype
+numpy_quaddtype
 orjson
 packaging
 pandas
