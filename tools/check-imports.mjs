@@ -4,8 +4,6 @@ import { argv, exit } from "process";
 import { loadPyodide } from "./pyodide.mjs";
 
 const EXPECTED_FAILURES = [
-    // https://github.com/NCAS-CMS/cfunits/issues/60
-    "cf[cf-python]", "cfdm[cfdm]", "cfunits[cfunits]",
     // https://github.com/ecmwf/eccodes-python/issues/116
     "gribapi[eccodes]",
     // FIXME: `js.postMessage` only exists in the browser
