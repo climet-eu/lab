@@ -1,0 +1,157 @@
+Metadata-Version: 2.1
+Name: numpy_quaddtype
+Version: 0.2.2
+Summary: Quad (128-bit) float dtype for numpy
+Author-Email: Swayam Singh <singhswayam008@gmail.com>
+License: Copyright (c) 2022, NumPy Developers.
+         All rights reserved.
+         
+         Redistribution and use in source and binary forms, with or without
+         modification, are permitted provided that the following conditions are
+         met:
+         
+             * Redistributions of source code must retain the above copyright
+                notice, this list of conditions and the following disclaimer.
+         
+             * Redistributions in binary form must reproduce the above
+                copyright notice, this list of conditions and the following
+                disclaimer in the documentation and/or other materials provided
+                with the distribution.
+         
+             * Neither the name of the NumPy Developers nor the names of any
+                contributors may be used to endorse or promote products derived
+                from this software without specific prior written permission.
+         
+         THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+         "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+         LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+         A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+         OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+         SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+         LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+         DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+         THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+         (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+         OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+         
+Requires-Python: >=3.10.0
+Requires-Dist: numpy
+Provides-Extra: test
+Requires-Dist: pytest; extra == "test"
+Requires-Dist: pytest-run-parallel; extra == "test"
+Description-Content-Type: text/markdown
+
+# Numpy-QuadDType
+
+A cross-platform Quad (128-bit) float Data-Type for NumPy.
+
+## Installation
+
+```bash
+pip install numpy
+pip install numpy-quaddtype
+```
+
+## Usage
+
+```python
+import numpy as np
+from numpy_quaddtype import QuadPrecDType, QuadPrecision
+
+# using sleef backend (default)
+np.array([1,2,3], dtype=QuadPrecDType())
+np.array([1,2,3], dtype=QuadPrecDType("sleef"))
+
+# using longdouble backend
+np.array([1,2,3], dtype=QuadPrecDType("longdouble"))
+```
+
+## Installation from source
+
+#### Prerequisites
+
+- **gcc/clang**
+- **CMake** (≥3.15)
+- **Python 3.10+**
+- **Git**
+
+### Linux/Unix/macOS
+
+Building the `numpy-quaddtype` package:
+
+```bash
+# setup the virtual env
+python3 -m venv temp
+source temp/bin/activate
+
+# Install the package
+pip install numpy pytest
+
+# To build without QBLAS (default for MSVC)
+# export CFLAGS="-DDISABLE_QUADBLAS"
+# export CXXFLAGS="-DDISABLE_QUADBLAS"
+
+python -m pip install . -v
+
+# Run the tests
+cd ..
+python -m pytest
+```
+
+### Windows
+
+#### Prerequisites
+
+- **Visual Studio 2017 or later** (with MSVC compiler)
+- **CMake** (≥3.15)
+- **Python 3.10+**
+- **Git**
+
+#### Step-by-Step Installation
+
+1. **Setup Development Environment**
+
+   Open a **Developer Command Prompt for VS** or **Developer PowerShell for VS** to ensure MSVC is properly configured.
+
+2. **Setup Python Environment**
+
+   ```powershell
+   # Create and activate virtual environment
+   python -m venv numpy_quad_env
+   .\numpy_quad_env\Scripts\Activate.ps1
+
+   # Install build dependencies
+   pip install -U pip
+   pip install numpy pytest ninja meson
+   ```
+
+3. **Set Environment Variables**
+
+   ```powershell
+   # Note: QBLAS is disabled on Windows due to MSVC compatibility issues
+   $env:CFLAGS = "/DDISABLE_QUADBLAS"
+   $env:CXXFLAGS = "/DDISABLE_QUADBLAS"
+   ```
+
+4. **Build and Install numpy-quaddtype**
+
+   ```powershell
+   # Build and install the package
+   python -m pip install . -v
+   ```
+
+5. **Test Installation**
+
+   ```powershell
+   # Run tests
+   pytest -s tests/
+   ```
+
+6. **QBLAS Disabled**: QuadBLAS optimization is automatically disabled on Windows builds due to MSVC compatibility issues. This is handled by the `-DDISABLE_QUADBLAS` compiler flag.
+
+7. **Visual Studio Version**: The instructions assume Visual Studio 2022. For other versions, adjust the generator string:
+
+   - VS 2019: `"Visual Studio 16 2019"`
+   - VS 2017: `"Visual Studio 15 2017"`
+
+8. **Architecture**: The instructions are for x64. For x86 builds, change `-A x64` to `-A Win32`.
