@@ -4,10 +4,6 @@ import { argv, exit } from "process";
 import { loadPyodide } from "./pyodide.mjs";
 
 const EXPECTED_FAILURES = [
-    // FIXME: cfdm: loading `h5py` late causes `h5p.create(h5p.GROUP_CREATE)`
-    //        in import of `h5python` to fail with
-    //        OSError: Unable to create property list (memory allocation failed)
-    "cf[cf-python]", "cfdm[cfdm]",
     // https://github.com/ecmwf/eccodes-python/issues/116
     "gribapi[eccodes]",
     // FIXME: `js.postMessage` only exists in the browser
