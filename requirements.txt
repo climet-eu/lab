@@ -30,16 +30,21 @@ litegitpuller~=0.3.0
 # JupyterLab: spreadsheet editor (csv/tsv)
 jupyterlab-spreadsheet-editor~=0.7.2
 # JupyterLab: extend markdown rendering
-jupyterlab-myst~=2.4.2
+jupyterlab-myst~=2.6.0
 # JupyterLab: view a notebook as a slideshow
 jupyterlab-slideshow~=0.3.2
 
+# JupyterLab extensions with Python APIs (keep versions in sync with venv)
+
 # Python: ipywidget library for Jupyter notebooks
-ipywidgets~=8.1.0
+ipywidgets==8.1.8
 # Python: ipyevents library for Jupyter notebooks
-ipyevents~=2.0.0
+ipyevents==2.0.4
 # Python: interative Matplotlib library for Jupyter notebooks
-ipympl~=0.9.0
+ipympl==0.9.8
+
+# Python: custom Jupyter widgets written in pure Python
+anywidget==0.9.21
 
 # Python: ipyfilite library for file upload in JupyterLite Pyodide notebooks
-ipyfilite>=0.1.30
+ipyfilite==0.1.30

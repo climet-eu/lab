@@ -14,6 +14,7 @@ aioitertools
 aiosignal
 annotated-types
 antlr4-python3-runtime
+anywidget
 arcosparse
 argparse
 array-api-compat
@@ -109,7 +110,9 @@ intake
 intake-esm
 intake-xarray
 ipdb
+ipyevents
 ipyfilite
+ipympl
 ipython
 ipython_pygments_lexers
 ipywidgets

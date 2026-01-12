@@ -17,6 +17,7 @@ aioitertools == 0.13.0
 aiosignal == 1.4.0
 annotated-types == 0.7.0
 antlr4-python3-runtime == 4.13.2
+anywidget == 0.9.21
 arcosparse == 0.4.2
 argparse == 1.4.0
 array-api-compat == 1.13.0
@@ -112,7 +113,9 @@ intake == 2.0.8
 intake-esm == 2025.2.3
 intake-xarray == 2.0.0
 ipdb == 0.13.13
+ipyevents == 2.0.4
 ipyfilite == 0.1.30
+ipympl == 0.9.8
 ipython == 9.9.0
 ipython_pygments_lexers == 1.1.1
 ipywidgets == 8.1.8
