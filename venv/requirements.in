@@ -197,6 +197,7 @@ polytope-client
 pooch
 prompt_toolkit
 propcache
+psygnal
 pure_eval
 pyarrow
 pycparser
