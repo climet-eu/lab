@@ -29,12 +29,10 @@ litegitpuller~=0.3.0
 # jupyterlab-github~=4.0.0
 # JupyterLab: spreadsheet editor (csv/tsv)
 jupyterlab-spreadsheet-editor~=0.7.2
-# JupyterLab: extend markdown rendering
+# JupyterLab: render MyST Markdown cells
 jupyterlab-myst~=2.6.0
 # JupyterLab: view a notebook as a slideshow
 jupyterlab-slideshow~=0.3.2
-# JupyterLab: render MyST Markdown cells
-jupyterlab_myst~=2.6.0
 
 # JupyterLab extensions with Python APIs (keep versions in sync with venv)
 
