@@ -335,7 +335,7 @@ jobs:
     needs: [build-jupyterlite, check-venv]
     steps:
       - name: Get the current branch name
-        uses: tj-actions/branch-names@v8
+        uses: tj-actions/branch-names@v9
         id: branch
 
       - name: Compute the current version name
