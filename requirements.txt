@@ -33,6 +33,8 @@ jupyterlab-spreadsheet-editor~=0.7.2
 jupyterlab-myst~=2.6.0
 # JupyterLab: view a notebook as a slideshow
 jupyterlab-slideshow~=0.3.2
+# JupyterLab: render MyST Markdown cells
+jupyterlab_myst~=2.6.0
 
 # JupyterLab extensions with Python APIs (keep versions in sync with venv)
 
