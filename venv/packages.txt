@@ -1,4 +1,6 @@
 aiohttp
+arro3-compute
+arro3-core
 asciitree
 astropy
 basemap
@@ -17,6 +19,7 @@ eccodes
 fiona
 frozenlist
 fsspec
+geoarrow-rust-core
 google-crc32c
 h5py
 healpy

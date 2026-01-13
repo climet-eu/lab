@@ -19,6 +19,8 @@ arcosparse
 argparse
 array-api-compat
 arraypartition
+arro3-compute
+arro3-core
 asciitree
 astropy
 astropy-iers-data
@@ -96,6 +98,7 @@ fonttools
 frozenlist
 fsspec
 future
+geoarrow-rust-core
 geopandas
 google-crc32c
 gribscan
