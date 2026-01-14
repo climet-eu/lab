@@ -93,7 +93,7 @@ ecmwf-opendata == 0.3.26
 entrypoints == 0.4
 executing == 2.2.1
 fastprogress == 1.0.5
-filelock == 3.20.2
+filelock == 3.20.3
 findlibs == 0.1.2
 fiona == 1.10.1
 flexcache == 0.3
