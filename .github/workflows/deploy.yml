@@ -127,7 +127,7 @@ jobs:
           submodules: recursive
 
       - name: Download the pyodide-lock.json artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: pyodide-lock.json
           path: pyodide/dist
@@ -161,13 +161,13 @@ jobs:
         run: echo "PYODIDE_DOCKER_IMAGE=$(docker images climet-eu/pyodide --format '{{.ID}}')" >> $GITHUB_ENV
 
       - name: Download the Pyodide distribution artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: pyodide
           path: pyodide/static/pyodide
 
       - name: Download the PyPa repository artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: pypa
           path: pyodide/pypa
@@ -205,7 +205,7 @@ jobs:
         run: uv pip install PyYAML
 
       - name: Download the PyPi pyodide-lock.json artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: pypi-pyodide-lock.json
           path: pyodide/dist
@@ -250,13 +250,13 @@ jobs:
         run: echo "PYODIDE_DOCKER_IMAGE=$(docker images climet-eu/pyodide --format '{{.ID}}')" >> $GITHUB_ENV
 
       - name: Download the Pyodide distribution artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: pyodide
           path: pyodide/dist
 
       - name: Download the PyPi pyodide-lock.json artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: pypi-pyodide-lock.json
           path: pyodide/dist
@@ -298,13 +298,13 @@ jobs:
           mkdir -p static
 
       - name: Download the Pyodide distribution artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: pyodide
           path: static/pyodide
 
       - name: Download the PyPi pyodide-lock.json artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: pypi-pyodide-lock.json
           path: static/pyodide
@@ -316,7 +316,7 @@ jobs:
           find staging/ -name favicon.ico | xargs -L1 cp -f static/favicons/favicon.ico
 
       - name: Download the PyPa repository artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: pypa
           path: staging/pypa
@@ -354,7 +354,7 @@ jobs:
           rm -rf dist/${{ env.CLIMETLAB_VERSION }}
 
       - name: Download the JupyterLite artifact into the dist
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: jupyterlite
           path: dist/${{ env.CLIMETLAB_VERSION }}
