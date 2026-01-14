@@ -101,14 +101,14 @@ jobs:
           ls -d pyodide-recipes/packages/*/build/* | xargs rm -r
 
       - name: Upload the pyodide-lock.json artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: pyodide-lock.json
           path: pyodide/dist/pyodide-lock.json
           retention-days: 1
 
       - name: Upload the Pyodide distribution artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: pyodide
           path: pyodide/dist
@@ -136,7 +136,7 @@ jobs:
         run: python tools/pypa-simple.py pypa/simple ../../../static/pyodide/
 
       - name: Upload the PyPa repository artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: pypa
           path: pypa
@@ -180,7 +180,7 @@ jobs:
           ./run_docker --non-interactive python -m http.server "&" node static/pyodide/pypi-lock.mjs my-requirements.txt pyodide-lock.json
 
       - name: Upload the PyPi pyodide-lock.json artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: pypi-pyodide-lock.json
           path: pyodide/pyodide-lock.json
@@ -322,7 +322,7 @@ jobs:
           path: staging/pypa
 
       - name: Upload the JupyterLite artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: jupyterlite
           path: staging
