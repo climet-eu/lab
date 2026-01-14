@@ -12,6 +12,7 @@
 aiohttp == 3.13.3
 arro3-compute == 0.6.5
 arro3-core == 0.6.5
+arro3-io == 0.6.5
 asciitree == 0.3.3
 astropy == 7.2.0
 basemap == 2.0.0

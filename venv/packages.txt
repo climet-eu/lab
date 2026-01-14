@@ -1,6 +1,7 @@
 aiohttp
 arro3-compute
 arro3-core
+arro3-io
 asciitree
 astropy
 basemap

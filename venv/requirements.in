@@ -21,6 +21,7 @@ array-api-compat
 arraypartition
 arro3-compute
 arro3-core
+arro3-io
 asciitree
 astropy
 astropy-iers-data

@@ -24,6 +24,7 @@ array-api-compat == 1.13.0
 arraypartition == 1.2.0
 arro3-compute == 0.6.5
 arro3-core == 0.6.5
+arro3-io == 0.6.5
 asciitree == 0.3.3
 astropy == 7.2.0
 astropy-iers-data == 0.2026.1.5.0.43.43
