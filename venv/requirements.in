@@ -236,6 +236,7 @@ requests-cache
 rich
 rich-argparse
 rpds-py
+rtree
 s3fs
 s3transfer
 scikit-image
