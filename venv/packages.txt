@@ -16,6 +16,7 @@ cftime
 cfunits
 contourpy
 crc32c
+cykhash
 eccodes
 fiona
 frozenlist
@@ -51,7 +52,9 @@ pyodc
 pyodide-http
 pyogrio
 pyproj
+pyrosm
 pyrsistent
+python-rapidjson
 PyYAML
 rasterio
 regex

@@ -68,6 +68,7 @@ covjson-pydantic == 0.7.0
 covjsonkit == 0.2.10
 crc32c == 2.8
 cycler == 0.12.1
+cykhash == 2.0.1
 dahuffman == 0.4.2
 dask == 2025.12.0
 datapi == 0.4.0
@@ -219,11 +220,13 @@ pyodide-unix-timezones == 1.0.0
 pyogrio == 0.12.1
 pyparsing == 3.3.1
 pyproj == 3.7.2
+pyrosm == 0.6.2
 pyrsistent == 0.20.0
 pyshp == 2.3.1
 pystac == 1.14.2
 pytest == 9.0.2
 python-dateutil == 2.9.0.post0
+python-rapidjson == 1.23
 pytz == 2025.2
 PyYAML == 6.0.3
 rasterio == 1.4.3

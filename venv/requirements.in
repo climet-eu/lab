@@ -65,6 +65,7 @@ covjson-pydantic
 covjsonkit
 crc32c
 cycler
+cykhash
 dahuffman
 dask
 datapi
@@ -216,11 +217,13 @@ pyodide-unix-timezones
 pyogrio
 pyparsing
 pyproj
+pyrosm
 pyrsistent
 pyshp
 pystac
 pytest
 python-dateutil
+python-rapidjson
 pytz
 PyYAML
 rasterio
