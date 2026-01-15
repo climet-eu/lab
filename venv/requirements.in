@@ -245,6 +245,7 @@ shapely
 six
 sly
 soupsieve
+spint
 stack-data
 statsmodels
 sympy

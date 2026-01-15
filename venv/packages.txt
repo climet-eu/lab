@@ -63,6 +63,7 @@ scikit-image
 scikit-learn
 scipy
 shapely
+spint
 statsmodels
 ujson
 varint
