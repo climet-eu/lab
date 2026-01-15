@@ -134,6 +134,7 @@ kiwisolver
 lazy_loader
 ldcpy
 legacy-cgi
+libpysal
 locket
 lru-dict
 lxml
@@ -217,6 +218,7 @@ pyodide-unix-timezones
 pyogrio
 pyparsing
 pyproj
+pyrobuf
 pyrosm
 pyrsistent
 pyshp
@@ -245,7 +247,9 @@ shapely
 six
 sly
 soupsieve
+spglm
 spint
+spreg
 stack-data
 statsmodels
 sympy

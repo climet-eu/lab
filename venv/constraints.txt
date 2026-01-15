@@ -61,6 +61,7 @@ pyicon-diagnostics == 0.3.6
 pyodc == 1.5.0
 pyogrio == 0.12.1
 pyproj == 3.7.2
+pyrobuf == 0.9.3
 pyrosm == 0.6.2
 pyrsistent == 0.20.0
 python-rapidjson == 1.23

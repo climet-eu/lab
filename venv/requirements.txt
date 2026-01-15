@@ -137,6 +137,7 @@ kiwisolver == 1.4.9
 lazy_loader == 0.4
 ldcpy == 0.20
 legacy-cgi == 2.6.4
+libpysal == 4.14.1
 locket == 1.0.0
 lru-dict == 1.4.1
 lxml == 6.0.2
@@ -220,6 +221,7 @@ pyodide-unix-timezones == 1.0.0
 pyogrio == 0.12.1
 pyparsing == 3.3.1
 pyproj == 3.7.2
+pyrobuf == 0.9.3
 pyrosm == 0.6.2
 pyrsistent == 0.20.0
 pyshp == 2.3.1
@@ -248,7 +250,9 @@ shapely == 2.1.2
 six == 1.17.0
 sly == 0.5
 soupsieve == 2.8.1
+spglm == 1.1.0
 spint == 1.0.7
+spreg == 1.8.5
 stack-data == 0.6.3
 statsmodels == 0.14.6
 sympy == 1.14.0
