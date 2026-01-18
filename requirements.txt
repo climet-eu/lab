@@ -48,8 +48,8 @@ ipyleaflet==0.20.0
 # ipywidgets: Jupyter widget library for spinning activity indicators
 ipyspin==1.0.1
 # Jupyter Widget Library for accessing the server's URL
-# FIXME: add to venv, blocked on https://github.com/davidbrochart/ipyurl/issues/4
-ipyurl==0.1.3
+# FIXME: blocked on https://github.com/davidbrochart/ipyurl/issues/4
+# ipyurl==0.1.3
 
 # ipywidgets: custom Jupyter widgets written in pure Python
 anywidget==0.9.21
