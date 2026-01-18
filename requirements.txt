@@ -43,6 +43,9 @@ ipyevents==2.0.4
 # Python: interative Matplotlib library for Jupyter notebooks
 ipympl==0.9.8
 
+ipyleaflet==0.20.0
+ipyspin==1.0.1
+
 # Python: custom Jupyter widgets written in pure Python
 anywidget==0.9.21
 
