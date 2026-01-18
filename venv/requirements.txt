@@ -19,6 +19,8 @@ annotated-types == 0.7.0
 antlr4-python3-runtime == 4.13.2
 anywidget == 0.9.21
 arcosparse == 0.4.2
+argon2-cffi == 25.1.0
+argon2-cffi-bindings == 25.1.0
 argparse == 1.4.0
 array-api-compat == 1.13.0
 arraypartition == 1.2.0
@@ -39,6 +41,7 @@ boltons == 25.0.0
 boto3 == 1.41.5
 botocore == 1.41.5
 Bottleneck == 1.6.0
+branca == 0.8.2
 Cartopy == 0.25.0
 cattrs == 25.3.0
 cdsapi == 0.7.7
@@ -133,6 +136,7 @@ joblib == 1.5.3
 jsonpickle == 4.1.1
 jsonschema == 4.26.0
 jsonschema-specifications == 2025.9.1
+jupyter-leaflet == 0.20.0
 jupyterlab_widgets == 3.0.16
 kerchunk == 0.2.9
 kiwisolver == 1.4.9
@@ -266,6 +270,7 @@ tifffile == 2025.12.20
 toolz == 1.1.0
 tqdm == 4.67.1
 traitlets == 5.14.3
+traittypes == 0.2.3
 typing-inspection == 0.4.2
 typing_extensions == 4.15.0
 tzdata == 2025.3
@@ -285,6 +290,7 @@ xclim == 0.59.1
 xeofs == 3.0.4
 xhistogram == 0.3.2
 xrft == 1.0.1
+xyzservices == 2025.11.0
 yamale == 6.1.0
 yarl == 1.22.0
 zarr == 3.1.5

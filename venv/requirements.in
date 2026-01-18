@@ -16,6 +16,8 @@ annotated-types
 antlr4-python3-runtime
 anywidget
 arcosparse
+argon2-cffi
+argon2-cffi-bindings
 argparse
 array-api-compat
 arraypartition
@@ -36,6 +38,7 @@ boltons
 boto3
 botocore
 Bottleneck
+branca
 Cartopy
 cattrs
 cdsapi
@@ -117,7 +120,9 @@ intake-xarray
 ipdb
 ipyevents
 ipyfilite
+ipyleaflet
 ipympl
+ipyspin
 ipython
 ipython_pygments_lexers
 ipywidgets
@@ -128,6 +133,7 @@ joblib
 jsonpickle
 jsonschema
 jsonschema-specifications
+jupyter-leaflet
 jupyterlab_widgets
 kerchunk
 kiwisolver
@@ -261,6 +267,7 @@ tifffile
 toolz
 tqdm
 traitlets
+traittypes
 typing-inspection
 typing_extensions
 tzdata
@@ -280,6 +287,7 @@ xclim
 xeofs
 xhistogram
 xrft
+xyzservices
 yamale
 yarl
 zarr

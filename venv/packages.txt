@@ -1,4 +1,5 @@
 aiohttp
+argon2-cffi-bindings
 arro3-compute
 arro3-core
 arro3-io
