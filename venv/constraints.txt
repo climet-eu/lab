@@ -51,7 +51,7 @@ numcodecs == 0.15.1
 numcodecs_wasm == 0.2.2
 numpy == 2.2.5
 numpy_quaddtype == 0.2.2
-orjson == 3.10.16
+orjson == 3.11.7
 packaging == 25.0
 pandas == 2.3.3
 pillow == 12.1.0
