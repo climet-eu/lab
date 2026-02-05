@@ -137,6 +137,7 @@ kerchunk
 kiwisolver
 lazy_loader
 ldcpy
+leb128
 legacy-cgi
 libpysal
 locket
@@ -160,11 +161,14 @@ netCDF4
 networkx
 numba
 numcodecs
+numcodecs-bitmap-index
 numcodecs-combinators
 numcodecs-delta
 numcodecs-huffman
 numcodecs-observers
 numcodecs-safeguards
+numcodecs-shuffle
+numcodecs-tokenize
 numcodecs-zero
 numcodecs_wasm
 numcodecs_wasm_asinh
