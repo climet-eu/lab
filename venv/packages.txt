@@ -5,7 +5,6 @@ arro3-core
 arro3-io
 asciitree
 astropy
-basemap
 blosc2
 Bottleneck
 Cartopy

@@ -16,7 +16,6 @@ arro3-core == 0.6.5
 arro3-io == 0.6.5
 asciitree == 0.3.3
 astropy == 7.2.0
-basemap == 2.0.0
 blosc2 == 3.12.2
 Bottleneck == 1.6.0
 Cartopy == 0.25.0
@@ -46,11 +45,11 @@ matplotlib == 3.8.4
 msgpack == 1.1.2
 ndindex == 1.10.1
 netCDF4 == 1.7.2
-numba == 0.63.1
+numba == 0.64.0rc1
 numcodecs == 0.15.1
 numcodecs_wasm == 0.2.2
-numpy == 2.2.5
-numpy_quaddtype == 0.2.2
+numpy == 2.4.2
+numpy_quaddtype == 1.0.0
 orjson == 3.11.7
 packaging == 25.0
 pandas == 2.3.3
@@ -73,7 +72,7 @@ rpds-py == 0.30.0
 rtree == 1.4.1
 scikit-image == 0.25.2
 scikit-learn == 1.8.0
-scipy == 1.14.1
+scipy == 1.17.0
 shapely == 2.1.2
 spint == 1.0.7
 statsmodels == 0.14.6

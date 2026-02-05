@@ -30,8 +30,6 @@ astropy-iers-data
 asttokens
 async-timeout
 attrs
-basemap
-basemap_data
 beautifulsoup4
 blosc2
 boltons
