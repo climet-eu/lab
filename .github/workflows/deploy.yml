@@ -67,6 +67,11 @@ jobs:
           docker build -t climet-eu/pyodide .
           echo "PYODIDE_DOCKER_IMAGE=$(docker build . -q)" >> $GITHUB_ENV
 
+      - name: Ensure the latest pyodide-build is used
+        run: |
+          cd pyodide
+          rm -f .pyodide_build_installed
+
       - name: Build Pyodide
         run: |
           cd pyodide
