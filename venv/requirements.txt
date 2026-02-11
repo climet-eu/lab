@@ -176,6 +176,7 @@ numcodecs-zero == 0.1.2
 numcodecs_wasm == 0.2.2
 numcodecs_wasm_asinh == 0.4.0
 numcodecs_wasm_bit_round == 0.4.0
+numcodecs_wasm_ebcc == 0.1.1
 numcodecs_wasm_fixed_offset_scale == 0.4.0
 numcodecs_wasm_fourier_network == 0.3.0
 numcodecs_wasm_identity == 0.4.0
@@ -183,10 +184,12 @@ numcodecs_wasm_jpeg2000 == 0.3.0
 numcodecs_wasm_linear_quantize == 0.5.0
 numcodecs_wasm_log == 0.5.0
 numcodecs_wasm_pco == 0.3.0
+numcodecs_wasm_qpet_sperr == 0.2.0
 numcodecs_wasm_random_projection == 0.4.0
 numcodecs_wasm_reinterpret == 0.4.0
 numcodecs_wasm_round == 0.5.0
 numcodecs_wasm_sperr == 0.2.0
+numcodecs_wasm_stochastic_rounding == 0.2.0
 numcodecs_wasm_swizzle_reshape == 0.4.0
 numcodecs_wasm_sz3 == 0.8.1
 numcodecs_wasm_tthresh == 0.3.0

@@ -173,6 +173,7 @@ numcodecs-zero
 numcodecs_wasm
 numcodecs_wasm_asinh
 numcodecs_wasm_bit_round
+numcodecs_wasm_ebcc
 numcodecs_wasm_fixed_offset_scale
 numcodecs_wasm_fourier_network
 numcodecs_wasm_identity
@@ -180,10 +181,12 @@ numcodecs_wasm_jpeg2000
 numcodecs_wasm_linear_quantize
 numcodecs_wasm_log
 numcodecs_wasm_pco
+numcodecs_wasm_qpet_sperr
 numcodecs_wasm_random_projection
 numcodecs_wasm_reinterpret
 numcodecs_wasm_round
 numcodecs_wasm_sperr
+numcodecs_wasm_stochastic_rounding
 numcodecs_wasm_swizzle_reshape
 numcodecs_wasm_sz3
 numcodecs_wasm_tthresh
