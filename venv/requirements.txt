@@ -257,7 +257,7 @@ scikit-image == 0.26.0
 scikit-learn == 1.8.0
 scipy == 1.17.0
 semver == 3.0.4
-setuptools == 82.0.0
+setuptools == 81.0.0
 shapely == 2.1.2
 six == 1.17.0
 sly == 0.5
@@ -266,7 +266,6 @@ spglm == 1.1.0
 spint == 1.0.7
 spreg == 1.8.5
 stack-data == 0.6.3
-standard-pkg-resources == 1.0.0
 statsmodels == 0.14.6
 sympy == 1.14.0
 tblib == 3.2.2
