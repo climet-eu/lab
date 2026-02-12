@@ -34,7 +34,7 @@ frozenlist == 1.8.0
 fsspec == 2026.2.0
 geoarrow-rust-core == 0.6.1
 google-crc32c == 1.8.0
-h5py == 3.13.0
+h5py == 3.15.1
 healpy == 1.19.0
 kiwisolver == 1.4.9
 lru-dict == 1.4.1
