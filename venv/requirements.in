@@ -263,6 +263,7 @@ spglm
 spint
 spreg
 stack-data
+standard-pkg-resources
 statsmodels
 sympy
 tblib

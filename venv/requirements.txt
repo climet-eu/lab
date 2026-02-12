@@ -266,6 +266,7 @@ spglm == 1.1.0
 spint == 1.0.7
 spreg == 1.8.5
 stack-data == 0.6.3
+standard-pkg-resources == 1.0.0
 statsmodels == 0.14.6
 sympy == 1.14.0
 tblib == 3.2.2
