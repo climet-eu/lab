@@ -219,7 +219,7 @@ prompt_toolkit == 3.0.52
 propcache == 0.4.1
 psygnal == 0.15.1
 pure_eval == 0.2.3
-pyarrow == 22.0.0
+pyarrow == 23.0.0
 pycparser == 3.0
 pydantic == 2.12.5
 pydantic_core == 2.41.5

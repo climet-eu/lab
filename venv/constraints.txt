@@ -54,7 +54,7 @@ orjson == 3.11.7
 packaging == 26.0
 pandas == 2.3.3
 pillow == 12.1.1
-pyarrow == 22.0.0
+pyarrow == 23.0.0
 pydantic_core == 2.41.5
 pyerfa == 2.0.1.5
 pyicon-diagnostics == 0.3.6
