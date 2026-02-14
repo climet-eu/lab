@@ -173,7 +173,7 @@ numcodecs-safeguards == 0.1.0b2
 numcodecs-shuffle == 0.1.0
 numcodecs-tokenize == 0.1.3
 numcodecs-zero == 0.1.2
-numcodecs_wasm == 0.2.3
+numcodecs_wasm == 0.2.4
 numcodecs_wasm_asinh == 0.4.0
 numcodecs_wasm_bit_round == 0.4.0
 numcodecs_wasm_ebcc == 0.1.1
