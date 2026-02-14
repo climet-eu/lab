@@ -10,7 +10,7 @@
 
 adjustText == 1.3.0
 affine == 2.4.0
-aiobotocore == 3.1.2
+aiobotocore == 3.1.3
 aiohappyeyeballs == 2.6.1
 aiohttp == 3.13.3
 aioitertools == 0.13.0
@@ -36,8 +36,8 @@ attrs == 25.4.0
 beautifulsoup4 == 4.14.3
 blosc2 == 4.0.0
 boltons == 25.0.0
-boto3 == 1.42.42
-botocore == 1.42.42
+boto3 == 1.42.49
+botocore == 1.42.49
 Bottleneck == 1.6.0
 branca == 0.8.2
 Cartopy == 0.25.0
@@ -95,7 +95,7 @@ ecmwf-opendata == 0.3.26
 entrypoints == 0.4
 executing == 2.2.1
 fastprogress == 1.0.5
-filelock == 3.21.2
+filelock == 3.23.0
 findlibs == 0.1.2
 fiona == 1.10.1
 flexcache == 0.3
@@ -184,15 +184,15 @@ numcodecs_wasm_jpeg2000 == 0.3.0
 numcodecs_wasm_linear_quantize == 0.5.0
 numcodecs_wasm_log == 0.5.0
 numcodecs_wasm_pco == 0.3.0
-numcodecs_wasm_qpet_sperr == 0.2.1
+numcodecs_wasm_qpet_sperr == 0.2.2
 numcodecs_wasm_random_projection == 0.4.0
 numcodecs_wasm_reinterpret == 0.4.0
 numcodecs_wasm_round == 0.5.0
-numcodecs_wasm_sperr == 0.2.1
+numcodecs_wasm_sperr == 0.2.2
 numcodecs_wasm_stochastic_rounding == 0.2.0
 numcodecs_wasm_swizzle_reshape == 0.4.0
-numcodecs_wasm_sz3 == 0.8.3
-numcodecs_wasm_tthresh == 0.3.1
+numcodecs_wasm_sz3 == 0.8.4
+numcodecs_wasm_tthresh == 0.3.2
 numcodecs_wasm_uniform_noise == 0.4.0
 numcodecs_wasm_zfp == 0.6.0
 numcodecs_wasm_zfp_classic == 0.4.0
@@ -210,7 +210,7 @@ pdbufr == 0.14.1
 pillow == 12.1.1
 Pint == 0.25.2
 pkgconfig == 1.5.5
-platformdirs == 4.7.0
+platformdirs == 4.8.0
 plotly == 6.5.2
 pluggy == 1.6.0
 polytope-client == 0.7.9
@@ -289,7 +289,7 @@ wcwidth == 0.6.0
 WebOb == 1.8.9
 widgetsnbextension == 4.0.15
 wrapt == 2.1.1
-xarray == 2026.1.0
+xarray == 2026.2.0
 xarray-safeguards == 0.1.0b2
 xclim == 0.60.0
 xeofs == 3.0.4
