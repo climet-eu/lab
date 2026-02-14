@@ -1,0 +1,50 @@
+Metadata-Version: 2.4
+Name: spint
+Version: 1.0.7
+Summary: SPatial INTeraction models
+Home-page: https://github.com/pysal/spint
+Maintainer: Taylor M. Oshan
+Maintainer-email: tayoshan@gmail.com
+License: 3-Clause BSD
+Keywords: spatial statistics
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Education
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Scientific/Engineering :: GIS
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Requires-Python: >3.5
+License-File: LICENSE
+Requires-Dist: scipy>=0.11
+Requires-Dist: numpy>=1.3
+Requires-Dist: libpysal>=4.0.0
+Requires-Dist: spglm>=1.0.6
+Requires-Dist: spreg
+Provides-Extra: tests
+Requires-Dist: nose; extra == "tests"
+Requires-Dist: nose-progressive; extra == "tests"
+Requires-Dist: nose-exclude; extra == "tests"
+Requires-Dist: coverage; extra == "tests"
+Requires-Dist: coveralls; extra == "tests"
+Provides-Extra: docs
+Requires-Dist: sphinx>=1.4.3; extra == "docs"
+Requires-Dist: sphinxcontrib-napoleon; extra == "docs"
+Requires-Dist: sphinx_gallery; extra == "docs"
+Requires-Dist: sphinxcontrib-bibtex; extra == "docs"
+Requires-Dist: sphinx_bootstrap_theme; extra == "docs"
+Requires-Dist: numpydoc; extra == "docs"
+Dynamic: classifier
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: maintainer
+Dynamic: maintainer-email
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary

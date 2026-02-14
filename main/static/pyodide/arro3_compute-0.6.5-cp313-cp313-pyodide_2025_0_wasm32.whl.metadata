@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: arro3-compute
+Version: 0.6.5
+Classifier: Programming Language :: Rust
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Requires-Dist: arro3-core
+Home-Page: https://kylebarron.dev/arro3
+Requires-Python: >=3.9

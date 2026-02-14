@@ -1,0 +1,201 @@
+Metadata-Version: 2.4
+Name: cf-python
+Version: 3.19.0
+Summary: A CF-compliant earth science data analysis library
+Home-page: https://ncas-cms.github.io/cf-python
+Author: David Hassell
+Author-email: david.hassell@ncas.ac.uk
+Maintainer: David Hassell, Sadie Bartholomew
+Maintainer-email: david.hassell@ncas.ac.uk, sadie.bartholomew@ncas.ac.uk
+License: MIT
+Keywords: cf,netcdf,UM,data,science,oceanography,meteorology,climate
+Platform: Linux
+Platform: MacOS
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Classifier: Topic :: Scientific/Engineering :: Physics
+Classifier: Topic :: Scientific/Engineering :: Atmospheric Science
+Classifier: Topic :: Utilities
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: MacOS
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Requires-Python: >=3.9
+Description-Content-Type: text/x-rst
+License-File: LICENSE
+Requires-Dist: netCDF4==1.7.2
+Requires-Dist: cftime>=1.6.4
+Requires-Dist: numpy>=2.0.0
+Requires-Dist: cfdm<1.13.1.0,>=1.13.0.0
+Requires-Dist: cfunits>=3.3.7
+Requires-Dist: dask>=2025.5.1
+Requires-Dist: packaging>=20.0
+Requires-Dist: scipy>=1.10.0
+Provides-Extra: required-c-libraries
+Requires-Dist: udunits2==2.2.25; extra == "required-c-libraries"
+Provides-Extra: regridding
+Requires-Dist: esmpy; extra == "regridding"
+Requires-Dist: ESMF>=8.0; extra == "regridding"
+Provides-Extra: convolution-filters-derivatives-relative-vorticity
+Requires-Dist: scipy>=1.1.0; extra == "convolution-filters-derivatives-relative-vorticity"
+Provides-Extra: subspacing-with-multi-dimensional-construct-cells
+Requires-Dist: matplotlib>=3.0.0; extra == "subspacing-with-multi-dimensional-construct-cells"
+Provides-Extra: documentation
+Requires-Dist: sphinx>=7.0.0; extra == "documentation"
+Requires-Dist: sphinx-copybutton; extra == "documentation"
+Requires-Dist: sphinx-toggleprompt; extra == "documentation"
+Requires-Dist: sphinxcontrib-spelling; extra == "documentation"
+Provides-Extra: pre-commit-hooks
+Requires-Dist: pre-commit; extra == "pre-commit-hooks"
+Requires-Dist: black; extra == "pre-commit-hooks"
+Requires-Dist: docformatter; extra == "pre-commit-hooks"
+Requires-Dist: flake8; extra == "pre-commit-hooks"
+Provides-Extra: zarr
+Requires-Dist: zarr>=3.1.3; extra == "zarr"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: maintainer
+Dynamic: maintainer-email
+Dynamic: platform
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+
+CF Python
+=========
+
+The Python cf package is an Earth science data analysis library that
+is built on a complete implementation of the `CF data
+model <https://cfconventions.org/cf-conventions/cf-conventions.html#appendix-CF-data-model>`_.
+
+Documentation
+=============
+
+http://ncas-cms.github.io/cf-python
+
+Dask
+====
+
+From version 3.14.0, the ``cf`` package uses `Dask
+<https://docs.dask.org>`_ for all of its data manipulations.
+
+Recipes
+=======
+
+https://ncas-cms.github.io/cf-python/recipes
+
+Tutorial
+========
+
+https://ncas-cms.github.io/cf-python/tutorial
+
+Installation
+============
+
+http://ncas-cms.github.io/cf-python/installation
+
+Command line utilities
+======================
+
+During installation the ``cfa`` command line utility is also
+installed, which
+
+* generates text descriptions of field constructs contained in files,
+  and
+
+* creates new datasets aggregated from existing files.
+
+Visualization
+=============
+
+Powerful, flexible, and very simple to produce visualizations of field
+constructs are available with the `cf-plot
+<https://ncas-cms.github.io/cf-plot>`_ package, that needs to be
+installed separately to the ``cf`` package.
+
+Training
+========
+
+https://github.com/NCAS-CMS/cf-tools-training
+
+Functionality
+=============
+
+The ``cf`` package implements the `CF data model
+<https://cfconventions.org/cf-conventions/cf-conventions.html#appendix-CF-data-model>`_
+for its internal data structures and so is able to process any
+CF-compliant dataset. It is not strict about CF-compliance, however,
+so that partially conformant datasets may be ingested from existing
+datasets and written to new datasets. This is so that datasets which
+are partially conformant may nonetheless be modified in memory.
+
+The ``cf`` package can:
+
+* read field and domain constructs from netCDF, CDL, Zarr, PP and UM datasets,
+
+* be fully flexible with respect to dataset storage chunking,
+
+* create new field constructs in memory,
+
+* write and append field and domain constructs to netCDF and Zarr v3 datasets on disk,
+
+* read, write, and create coordinates defined by geometry cells,
+
+* read netCDF and CDL datasets containing hierarchical groups,
+
+* inspect field constructs,
+
+* test whether two field constructs are the same,
+
+* modify field construct metadata and data,
+
+* create subspaces of field constructs,
+
+* incorporate, and create, metadata stored in external files,
+
+* read, write, and create data that have been compressed by convention
+  (i.e. ragged or gathered arrays, or coordinate arrays compressed by
+  subsampling), whilst presenting a view of the data in its
+  uncompressed form,
+
+* combine field constructs arithmetically,
+
+* manipulate field construct data by arithmetical and trigonometrical
+  operations,
+
+* perform statistical collapses on field constructs,
+
+* perform histogram, percentile and binning operations on field
+  constructs,
+
+* regrid structured grid, mesh and DSG field constructs with
+  (multi-)linear, nearest neighbour, first- and second-order
+  conservative and higher order patch recovery methods, including 3-d
+  regridding, and large-grid support,
+
+* apply convolution filters to field constructs,
+
+* create running means from field constructs,
+
+* apply differential operators to field constructs,
+
+* create derived quantities (such as relative vorticity),
+
+* read and write data that are quantized to eliminate false
+  precision.
+

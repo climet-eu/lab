@@ -1,0 +1,1 @@
+(self.webpackChunkjupyterlab_myst=self.webpackChunkjupyterlab_myst||[]).push([[6584],{86972:s=>{s.exports=function(s){return{aliases:["pycon"],contains:[{className:"meta",starts:{end:/ |$/,starts:{end:"$",subLanguage:"python"}},variants:[{begin:/^>>>(?=[ ]|$)/},{begin:/^\.\.\.(?=[ ]|$)/}]}]}}}}]);
