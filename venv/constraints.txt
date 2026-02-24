@@ -72,7 +72,7 @@ rpds-py == 0.30.0
 rtree == 1.4.1
 scikit-image == 0.26.0
 scikit-learn == 1.8.0
-scipy == 1.17.1
+scipy == 1.17.0
 shapely == 2.1.2
 spint == 1.0.7
 statsmodels == 0.14.6
