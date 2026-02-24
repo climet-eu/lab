@@ -11,9 +11,9 @@
 
 aiohttp == 3.13.3
 argon2-cffi-bindings == 25.1.0
-arro3-compute == 0.6.5
-arro3-core == 0.6.5
-arro3-io == 0.6.5
+arro3-compute == 0.8.0
+arro3-core == 0.8.0
+arro3-io == 0.8.0
 asciitree == 0.3.3
 astropy == 7.2.0
 blosc2 == 4.0.0
@@ -54,7 +54,7 @@ orjson == 3.11.7
 packaging == 26.0
 pandas == 2.3.3
 pillow == 12.1.1
-pyarrow == 23.0.0
+pyarrow == 23.0.1
 pydantic_core == 2.41.5
 pyerfa == 2.0.1.5
 pyicon-diagnostics == 0.3.6
@@ -67,12 +67,12 @@ pyrsistent == 0.20.0
 python-rapidjson == 1.23
 PyYAML == 6.0.3
 rasterio == 1.4.3
-regex == 2026.1.15
+regex == 2026.2.19
 rpds-py == 0.30.0
 rtree == 1.4.1
 scikit-image == 0.26.0
 scikit-learn == 1.8.0
-scipy == 1.17.0
+scipy == 1.17.1
 shapely == 2.1.2
 spint == 1.0.7
 statsmodels == 0.14.6
