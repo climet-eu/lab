@@ -165,7 +165,7 @@ networkx == 3.6.1
 numba == 0.64.0
 numcodecs == 0.15.1
 numcodecs-bitmap-index == 0.1.2
-numcodecs-combinators == 0.2.13
+numcodecs-combinators == 0.2.14
 numcodecs-delta == 0.1.0
 numcodecs-huffman == 0.1.3
 numcodecs-observers == 0.1.2
