@@ -16,7 +16,7 @@ a-jupyterlab-session~=0.2.0
 a-jupyterlite-query-config~=0.2.0
 
 # JupyterLab: guided tour
-jupyterlab-tour~=4.0.0
+# jupyterlab-tour~=4.0.0
 # JupyterLab: dark theme
 jupyterlab-night~=0.5.0
 # JupyterLab: import files from URLs
