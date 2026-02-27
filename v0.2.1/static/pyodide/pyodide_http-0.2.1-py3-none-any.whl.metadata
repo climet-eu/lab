@@ -1,0 +1,22 @@
+Metadata-Version: 2.2
+Name: pyodide_http
+Version: 0.2.1
+Summary: Patch requests, urllib and urllib3 to make them work in Pyodide
+Home-page: https://github.com/koenvo/pyodide-http
+Author: Koen Vossen
+Author-email: info@koenvossen.nl
+License: MIT
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: jupyterlite-cors==0.0.0
+Requires-Dist: requests
+Dynamic: author
+Dynamic: author-email
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: summary
+
+Patch requests, urllib and urllib3 to make them work in Pyodide

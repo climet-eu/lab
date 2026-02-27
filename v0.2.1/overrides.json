@@ -1,0 +1,32 @@
+{
+    "@jupyterlab/docmanager-extension:plugin": {
+        "defaultViewers": {
+            "markdown": "Markdown Preview"
+        }
+    },
+    "@jupyterlab/filebrowser-extension:browser": {
+        "navigateToCurrentDirectory": true,
+        "showHiddenFiles": true
+    },
+    "@jupyterlab/notebook-extension:panel": {
+        "toolbar": [
+            {
+                "name": "download",
+                "label": "Download",
+                "args": {},
+                "command": "docmanager:download",
+                "icon": "ui-components:download",
+                "rank": 50
+            },
+            {
+                "name": "interrupt",
+                "disabled": true
+            }
+        ]
+    },
+    "@jupyterlab/notebook-extension:tracker": {
+        "autoStartDefaultKernel": true,
+        "kernelShutdown": true,
+        "windowingMode": "defer"
+    }
+}

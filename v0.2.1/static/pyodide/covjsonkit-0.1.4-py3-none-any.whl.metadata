@@ -1,0 +1,19 @@
+Metadata-Version: 2.2
+Name: covjsonkit
+Version: 0.1.4
+Summary: ECMWF library for encoding and decoding coerageJSON files/objects of meteorlogical features such as
+Home-page: https://github.com/ecmwf/covjsonkit
+Author: ECMWF
+Author-email: James.Hawkes@ecmwf.int, Adam.Warde@ecmwf.int, Mathilde.Leuridan@ecmwf.int
+License-File: LICENSE
+Requires-Dist: pandas
+Requires-Dist: orjson
+Requires-Dist: xarray
+Requires-Dist: pandas~=2.2.0
+Requires-Dist: covjson-pydantic
+Requires-Dist: conflator
+Dynamic: author
+Dynamic: author-email
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: summary

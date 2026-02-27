@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkjupyterlab_myst=self.webpackChunkjupyterlab_myst||[]).push([[3073],{83073:(e,t,r)=>{r.d(t,{createArchitectureServices:()=>s.S});var s=r(31109);r(11254)}}]);

@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunk_deathbeds_jupyterlab_font_fira_code=self.webpackChunk_deathbeds_jupyterlab_font_fira_code||[]).push([[733],{733:(e,f,a)=>{a.r(f),a.d(f,{default:()=>b});const b=a.p+"abe3ab87cff86bb056106cb52f66d0dc.woff2"}}]);
+//# sourceMappingURL=733.44da09dc131c8410b397.js.map?v=44da09dc131c8410b397

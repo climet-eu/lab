@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunk_deathbeds_jupyterlab_font_atkinson_hyperlegible=self.webpackChunk_deathbeds_jupyterlab_font_atkinson_hyperlegible||[]).push([[637],{637:(e,a,t)=>{t.r(a),t.d(a,{default:()=>b});const b=t.p+"251aa71dddce15f4aab8b80ed02cdeb1.woff2"}}]);
+//# sourceMappingURL=637.462b01790058f71184c6.js.map?v=462b01790058f71184c6
