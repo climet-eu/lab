@@ -26,6 +26,7 @@ cffi == 2.0.0
 cftime == 1.6.5
 cfunits == 3.3.7
 contourpy == 1.3.3
+copernicusmarine == 2.3.0
 crc32c == 2.8
 cykhash == 2.0.1
 eccodes == 2.45.0
