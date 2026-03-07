@@ -301,6 +301,7 @@ jobs:
           mkdir -p files
           cp ./README.md files/
           cp venv/constraints.txt venv/requirements.in venv/requirements.txt files/
+          chmod -R a-w files/
 
           mkdir -p static
 
