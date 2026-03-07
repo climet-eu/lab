@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkjupyterlab_myst=self.webpackChunkjupyterlab_myst||[]).push([[2856],{72856:(r,t,n)=>{n.d(t,{u:()=>s});const s=function(r,t,n){const s={type:String(r)};return null!=n||"string"!=typeof t&&!Array.isArray(t)?Object.assign(s,t):n=t,Array.isArray(n)?s.children=n:null!=n&&(s.value=String(n)),s}}}]);
