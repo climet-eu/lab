@@ -227,14 +227,21 @@ jobs:
         run: |
           rm -rf .venv
           uv venv --python 3.13.2
-          uv pip install -r venv/requirements.txt --dry-run
+          uv pip install \
+            -r venv/requirements.txt \
+            --build-constraint venv/build-constraints.txt \
+            --dry-run
           rm -rf .venv
 
       - name: Check the validity of the constraints.txt and requirements.in files
         continue-on-error: ${{ github.event_name != 'release' }}
         run: |
           uv venv --python 3.13.2
-          uv pip install -c venv/constraints.txt -r venv/requirements.in --dry-run
+          uv pip install \
+            -r venv/requirements.in \
+            -c venv/constraints.txt \
+            --build-constraint venv/build-constraints.txt \
+            --dry-run
           rm -rf .venv
 
   check-package-imports:
