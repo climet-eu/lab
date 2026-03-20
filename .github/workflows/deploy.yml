@@ -120,6 +120,14 @@ jobs:
           path: pyodide/dist
           retention-days: 1
 
+      - name: Upload the pyodide build logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-logs
+          path: pyodide/pyodide-recipes/packages/*/build.log
+          retention-days: 1
+
       - name: Remove the uploaded Pyodide distribution
         run: rm -rf pyodide/dist
 
