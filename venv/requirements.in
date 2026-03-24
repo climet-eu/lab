@@ -108,6 +108,7 @@ gribscan
 h5netcdf
 h5py
 hda
+hdf5plugin
 healpy
 idna
 ImageIO

@@ -111,6 +111,7 @@ gribscan == 0.0.16
 h5netcdf == 1.8.1
 h5py == 3.15.1
 hda == 2.39
+hdf5plugin == 6.0.0
 healpy == 1.19.0
 idna == 3.11
 ImageIO == 2.37.2
