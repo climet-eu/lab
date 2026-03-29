@@ -1,0 +1,136 @@
+{
+  "packages": {
+    "cockle_fs": {
+      "modules": {
+        "fs": {
+          "commands": ""
+        }
+      },
+      "wasm": true,
+      "build_string": "h8b79025_1",
+      "platform": "emscripten-wasm32",
+      "version": "0.3.0",
+      "channel": "https://repo.prefix.dev/emscripten-forge-4x"
+    },
+    "coreutils": {
+      "modules": {
+        "coreutils": {
+          "commands": "basename,cat,chmod,cp,cut,date,dir,dircolors,dirname,echo,env,expr,head,id,join,ln,logname,ls,md5sum,mkdir,mv,nl,pwd,realpath,rm,rmdir,seq,sha1sum,sha224sum,sha256sum,sha384sum,sha512sum,sleep,sort,stat,stty,tail,tee,touch,tr,tty,uname,uniq,vdir,wc"
+        }
+      },
+      "wasm": true,
+      "build_string": "h072c4ef_0",
+      "platform": "emscripten-wasm32",
+      "version": "9.5",
+      "channel": "https://repo.prefix.dev/emscripten-forge-4x"
+    },
+    "grep": {
+      "wasm": true,
+      "build_string": "h8b79025_0",
+      "platform": "emscripten-wasm32",
+      "version": "3.12",
+      "channel": "https://repo.prefix.dev/emscripten-forge-4x",
+      "modules": {
+        "grep": {
+          "commands": "grep"
+        }
+      }
+    },
+    "less": {
+      "wasm": true,
+      "build_string": "h072c4ef_0",
+      "platform": "emscripten-wasm32",
+      "version": "668",
+      "channel": "https://repo.prefix.dev/emscripten-forge-4x",
+      "modules": {
+        "less": {
+          "commands": "less"
+        }
+      }
+    },
+    "sed": {
+      "wasm": true,
+      "build_string": "h072c4ef_0",
+      "platform": "emscripten-wasm32",
+      "version": "4.9",
+      "channel": "https://repo.prefix.dev/emscripten-forge-4x",
+      "modules": {
+        "sed": {
+          "commands": "sed"
+        }
+      }
+    },
+    "git2cpp": {
+      "wasm": true,
+      "build_string": "h98d5f15_0",
+      "platform": "emscripten-wasm32",
+      "version": "0.0.8",
+      "channel": "https://repo.prefix.dev/emscripten-forge-4x",
+      "modules": {
+        "git2cpp": {
+          "commands": "git2cpp"
+        }
+      }
+    },
+    "lua": {
+      "wasm": true,
+      "build_string": "h8b79025_0",
+      "platform": "emscripten-wasm32",
+      "version": "5.5.0",
+      "channel": "https://repo.prefix.dev/emscripten-forge-4x",
+      "modules": {
+        "lua": {
+          "commands": "lua"
+        }
+      }
+    },
+    "nano": {
+      "wasm": true,
+      "build_string": "hb9d79b4_0",
+      "platform": "emscripten-wasm32",
+      "version": "8.6",
+      "channel": "https://repo.prefix.dev/emscripten-forge-4x",
+      "modules": {
+        "nano": {
+          "commands": "nano"
+        }
+      }
+    },
+    "tree": {
+      "wasm": true,
+      "build_string": "h072c4ef_0",
+      "platform": "emscripten-wasm32",
+      "version": "2.3.2",
+      "channel": "https://repo.prefix.dev/emscripten-forge-4x",
+      "modules": {
+        "tree": {
+          "commands": "tree"
+        }
+      }
+    },
+    "vim": {
+      "wasm": true,
+      "build_string": "h072c4ef_0",
+      "platform": "emscripten-wasm32",
+      "version": "9.2.0",
+      "channel": "https://repo.prefix.dev/emscripten-forge-4x",
+      "modules": {
+        "vim": {
+          "commands": "vim"
+        }
+      }
+    }
+  },
+  "aliases": {
+    "dir": "dir --color=auto",
+    "grep": "grep --color=auto",
+    "ls": "ls --color=auto",
+    "ll": "ls -lF",
+    "vdir": "vdir --color=auto",
+    "git": "git2cpp",
+    "vi": "vim"
+  },
+  "environment": {
+    "GIT_CORS_PROXY": "https://cors.climet.eu/"
+  }
+}

@@ -1,0 +1,469 @@
+{
+  "jupyter-config-data": {
+    "appName": "JupyterLite",
+    "appUrl": "./lab",
+    "appVersion": "0.6.0-alpha.6",
+    "baseUrl": "./",
+    "defaultKernelName": "python",
+    "disabledExtensions": [
+      "@jupyterlite/application-extension:service-worker"
+    ],
+    "enableMemoryStorage": false,
+    "exposeAppInBrowser": false,
+    "faviconUrl": "/static/favicons/favicon.ico",
+    "federated_extensions": [
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.84fb12a2d77d4fba138f.js",
+        "name": "@deathbeds/jupyterlab-font-anonymous-pro"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.9d0e0e02cf346a361924.js",
+        "name": "@deathbeds/jupyterlab-font-atkinson-hyperlegible"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.fc308494b30447aef557.js",
+        "name": "@deathbeds/jupyterlab-font-dejavu-sans-mono"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.6fc3ad6366d192f9df4d.js",
+        "name": "@deathbeds/jupyterlab-font-fira-code"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.90fd4745446ff9dd5871.js",
+        "name": "@deathbeds/jupyterlab-fonts"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.4e1d614fd8228ac83ba6.js",
+        "name": "@jupyter-widgets/jupyterlab-manager"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.5da3ed293ba6a1285349.js",
+        "name": "@jupyterlite/litegitpuller",
+        "style": "./style"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.20c1fd18ad4cab4a5d25.js",
+        "name": "@jupyterlite/pyodide-kernel-extension"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.8cbae3614c71931bb769.js",
+        "name": "a-jupyterlab-session",
+        "style": "./style"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.2b3fcd71e08ee33f50aa.js",
+        "name": "a-jupyterlite-query-config",
+        "style": "./style"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.e0b28d262622cbca8f2f.js",
+        "name": "a-jupyterlite-session",
+        "style": "./style"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.4d5ef87d14f03accc582.js",
+        "name": "ipyevents"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.8fccaac7b23f394fe320.js",
+        "name": "ipyfilite"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.1cd74fa323152bfea195.js",
+        "name": "jupyter-matplotlib"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.37de765466b6d480035c.js",
+        "name": "jupyterlab-myst",
+        "style": "./style"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.2105cdd7da221c68dcd3.js",
+        "name": "jupyterlab-night"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.c7a31b7a4c60a21a3aa0.js",
+        "name": "jupyterlab-open-url-parameter",
+        "style": "./style"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.cf7a806efd763ef192b1.js",
+        "name": "jupyterlab-slideshow"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.c48d7690a4adc05b4e31.js",
+        "name": "jupyterlab-tour",
+        "style": "./style"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.5cbb9d2323598fbda535.js",
+        "name": "jupyterlab_pygments",
+        "style": "./style"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.68d9bc68e74e2042d034.js",
+        "name": "spreadsheet-editor",
+        "style": "./style"
+      }
+    ],
+    "fileTypes": {
+      "css": {
+        "extensions": [
+          ".css"
+        ],
+        "fileFormat": "text",
+        "mimeTypes": [
+          "text/css"
+        ],
+        "name": "css"
+      },
+      "csv": {
+        "extensions": [
+          ".csv"
+        ],
+        "fileFormat": "text",
+        "mimeTypes": [
+          "text/csv"
+        ],
+        "name": "csv"
+      },
+      "fasta": {
+        "extensions": [
+          ".fasta"
+        ],
+        "fileFormat": "text",
+        "mimeTypes": [
+          "text/plain"
+        ],
+        "name": "fasta"
+      },
+      "geojson": {
+        "extensions": [
+          ".geojson"
+        ],
+        "fileFormat": "json",
+        "mimeTypes": [
+          "application/geo+json"
+        ],
+        "name": "geojson"
+      },
+      "gzip": {
+        "extensions": [
+          ".tgz",
+          ".gz",
+          ".gzip"
+        ],
+        "fileFormat": "base64",
+        "mimeTypes": [
+          "application/gzip"
+        ],
+        "name": "gzip"
+      },
+      "html": {
+        "extensions": [
+          ".html"
+        ],
+        "fileFormat": "text",
+        "mimeTypes": [
+          "text/html"
+        ],
+        "name": "html"
+      },
+      "ical": {
+        "extensions": [
+          ".ical",
+          ".ics",
+          ".ifb",
+          ".icalendar"
+        ],
+        "fileFormat": "text",
+        "mimeTypes": [
+          "text/calendar"
+        ],
+        "name": "ical"
+      },
+      "ico": {
+        "extensions": [
+          ".ico"
+        ],
+        "fileFormat": "base64",
+        "mimeTypes": [
+          "image/x-icon"
+        ],
+        "name": "ico"
+      },
+      "ipynb": {
+        "extensions": [
+          ".ipynb"
+        ],
+        "fileFormat": "json",
+        "mimeTypes": [
+          "application/x-ipynb+json"
+        ],
+        "name": "ipynb"
+      },
+      "jpeg": {
+        "extensions": [
+          ".jpeg",
+          ".jpg"
+        ],
+        "fileFormat": "base64",
+        "mimeTypes": [
+          "image/jpeg"
+        ],
+        "name": "jpeg"
+      },
+      "js": {
+        "extensions": [
+          ".js",
+          ".mjs"
+        ],
+        "fileFormat": "text",
+        "mimeTypes": [
+          "application/javascript"
+        ],
+        "name": "js"
+      },
+      "jsmap": {
+        "extensions": [
+          ".map"
+        ],
+        "fileFormat": "json",
+        "mimeTypes": [
+          "application/json"
+        ],
+        "name": "jsmap"
+      },
+      "json": {
+        "extensions": [
+          ".json"
+        ],
+        "fileFormat": "json",
+        "mimeTypes": [
+          "application/json"
+        ],
+        "name": "json"
+      },
+      "manifest": {
+        "extensions": [
+          ".manifest"
+        ],
+        "fileFormat": "text",
+        "mimeTypes": [
+          "text/cache-manifest"
+        ],
+        "name": "manifest"
+      },
+      "md": {
+        "extensions": [
+          ".md",
+          ".markdown"
+        ],
+        "fileFormat": "text",
+        "mimeTypes": [
+          "text/markdown"
+        ],
+        "name": "md"
+      },
+      "pdf": {
+        "extensions": [
+          ".pdf"
+        ],
+        "fileFormat": "base64",
+        "mimeTypes": [
+          "application/pdf"
+        ],
+        "name": "pdf"
+      },
+      "plain": {
+        "extensions": [
+          ".txt"
+        ],
+        "fileFormat": "text",
+        "mimeTypes": [
+          "text/plain"
+        ],
+        "name": "plain"
+      },
+      "png": {
+        "extensions": [
+          ".png"
+        ],
+        "fileFormat": "base64",
+        "mimeTypes": [
+          "image/png"
+        ],
+        "name": "png"
+      },
+      "py": {
+        "extensions": [
+          ".py"
+        ],
+        "fileFormat": "text",
+        "mimeTypes": [
+          "text/x-python",
+          "application/x-python-code"
+        ],
+        "name": "py"
+      },
+      "svg": {
+        "extensions": [
+          ".svg"
+        ],
+        "fileFormat": "text",
+        "mimeTypes": [
+          "image/svg+xml"
+        ],
+        "name": "svg"
+      },
+      "toml": {
+        "extensions": [
+          ".toml"
+        ],
+        "fileFormat": "text",
+        "mimeTypes": [
+          "application/toml"
+        ],
+        "name": "toml"
+      },
+      "vue": {
+        "extensions": [
+          ".vue"
+        ],
+        "fileFormat": "text",
+        "mimeTypes": [
+          "text/plain"
+        ],
+        "name": "vue"
+      },
+      "wasm": {
+        "extensions": [
+          ".wasm"
+        ],
+        "fileFormat": "base64",
+        "mimeTypes": [
+          "application/wasm"
+        ],
+        "name": "wasm"
+      },
+      "wheel": {
+        "extensions": [
+          ".whl"
+        ],
+        "fileFormat": "base64",
+        "mimeTypes": [
+          "octet/stream",
+          "application/x-wheel+zip"
+        ],
+        "name": "wheel"
+      },
+      "xml": {
+        "extensions": [
+          ".xml"
+        ],
+        "fileFormat": "text",
+        "mimeTypes": [
+          "application/xml"
+        ],
+        "name": "xml"
+      },
+      "yaml": {
+        "extensions": [
+          ".yaml",
+          ".yml"
+        ],
+        "fileFormat": "text",
+        "mimeTypes": [
+          "application/x-yaml"
+        ],
+        "name": "yaml"
+      }
+    },
+    "fullLabextensionsUrl": "./extensions",
+    "fullStaticUrl": "./build",
+    "licensesUrl": "./lab/api/licenses",
+    "litePluginSettings": {
+      "@jupyterlite/pyodide-kernel-extension:kernel": {
+        "loadPyodideOptions": {
+          "env": {
+            "EARTHKIT_DATA_CACHE_POLICY": "off",
+            "EARTHKIT_REGRID_CACHE_POLICY": "off"
+          },
+          "fullStdLib": true,
+          "packages": [
+            "comm",
+            "packaging",
+            "ipython",
+            "micropip",
+            "pyodide_http"
+          ]
+        },
+        "pipliteUrls": [
+          "./extensions/@jupyterlite/pyodide-kernel-extension/static/pypi/all.json?sha256=5afc40dd88dbed5a558f0cb20d448fecdda9027b830eb565356a4e4e942a77f7"
+        ],
+        "pyodideUrl": "./static/pyodide/pyodide.js"
+      },
+      "a-jupyterlite-query-config:plugin": {
+        "overrides": {
+          "pyodideKernelLockFileURL": "litePluginSettings.@jupyterlite/pyodide-kernel-extension:kernel.loadPyodideOptions.lockFileURL",
+          "pyodideKernelPackages": "litePluginSettings.@jupyterlite/pyodide-kernel-extension:kernel.loadPyodideOptions.packages"
+        }
+      }
+    },
+    "settingsOverrides": {
+      "@jupyterlab/docmanager-extension:plugin": {
+        "defaultViewers": {
+          "markdown": "Markdown Preview"
+        }
+      },
+      "@jupyterlab/filebrowser-extension:browser": {
+        "navigateToCurrentDirectory": true,
+        "showHiddenFiles": true
+      },
+      "@jupyterlab/notebook-extension:panel": {
+        "toolbar": [
+          {
+            "args": {},
+            "command": "docmanager:download",
+            "icon": "ui-components:download",
+            "label": "Download",
+            "name": "download",
+            "rank": 50
+          },
+          {
+            "disabled": true,
+            "name": "interrupt"
+          }
+        ]
+      },
+      "@jupyterlab/notebook-extension:tracker": {
+        "autoStartDefaultKernel": true,
+        "kernelShutdown": true,
+        "windowingMode": "defer"
+      }
+    },
+    "terminalsAvailable": false
+  },
+  "jupyter-lite-schema-version": 0
+}
