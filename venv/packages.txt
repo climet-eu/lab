@@ -74,3 +74,4 @@ varint
 widgetsnbextension
 wrapt
 zarr
+zfpy
