@@ -43,13 +43,11 @@ for package in lock["packages"].values():
         url is not None
         and url.startswith("https://files.pythonhosted.org/packages")
         and url.endswith("none-any.whl")
+        # ipyfilite requires patches to the pure PyPi wheel
+        and package["name"] != "ipyfilite"
     ):
         # micropip must always be in the lockfile, even if pure
         if package["name"] == "micropip":
-            continue
-
-        # ipyfilite requires patches to the pure PyPi wheel
-        if package["name"] == "ipyfilite":
             continue
 
         raise Exception(
