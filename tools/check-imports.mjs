@@ -4,8 +4,6 @@ import { argv, exit } from "process";
 import { loadPyodide } from "./pyodide.mjs";
 
 const EXPECTED_FAILURES = [
-    // FIXME: `js.postMessage` only exists in the browser
-    "ipyfilite[ipyfilite]",
     // requires `fcntl`, which Pyodide doesn't support (but JupyterLite mocks)
     "locket[locket]", "partd[partd]",
 ];

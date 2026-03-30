@@ -38,6 +38,7 @@ google-crc32c == 1.8.0
 h5py == 3.15.1
 hdf5plugin == 6.0.0
 healpy == 1.19.0
+ipyfilite == 0.1.30
 kiwisolver == 1.4.9
 lru-dict == 1.4.1
 lxml == 6.0.2

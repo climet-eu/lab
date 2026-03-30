@@ -48,6 +48,10 @@ for package in lock["packages"].values():
         if package["name"] == "micropip":
             continue
 
+        # ipyfilite requires patches to the pure PyPi wheel
+        if package["name"] == "ipyfilite":
+            continue
+
         raise Exception(
             f"pure PyPi package {package['name']} should not be in the repository"
         )

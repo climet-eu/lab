@@ -70,6 +70,7 @@ for package in lock["packages"].values():
             and url.startswith("https://files.pythonhosted.org/packages")
             and url.endswith("none-any.whl")
             and package["name"] != "micropip"
+            and package["name"] != "ipyfilite"
         ):
             is_pure = True
     else:
