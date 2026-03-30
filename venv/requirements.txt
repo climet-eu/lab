@@ -137,7 +137,7 @@ jsonschema == 4.26.0
 jsonschema-specifications == 2025.9.1
 jupyter-leaflet == 0.20.0
 jupyterlab_widgets == 3.0.16
-kerchunk == 0.2.9
+kerchunk == 0.2.10
 kiwisolver == 1.4.9
 lazy_loader == 0.4
 ldcpy == 0.20
