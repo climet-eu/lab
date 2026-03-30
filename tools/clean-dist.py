@@ -55,6 +55,10 @@ for name, package in lock["packages"].items():
     if package["install_dir"] != "site":
         continue
 
+    # ipyfilite requires patches to the pure PyPi wheel
+    if package["name"] == "ipyfilite":
+        continue
+
     with open(recipes_path / package["name"] / "meta.yaml") as f:
         recipe = yaml.load(f, yaml.SafeLoader)
 
