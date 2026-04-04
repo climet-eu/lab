@@ -136,7 +136,7 @@ jupyter-leaflet
 jupyterlab_widgets
 kerchunk
 kiwisolver
-lazy_loader
+lazy-loader
 ldcpy
 leb128
 legacy-cgi
