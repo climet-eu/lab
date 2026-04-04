@@ -26,6 +26,7 @@ geoarrow-rust-core
 google-crc32c
 h5py
 hdf5plugin
+healpy
 ipyfilite
 jupyterlite-cors
 kiwisolver
