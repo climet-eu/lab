@@ -74,6 +74,7 @@ datapi
 decorator
 Deprecated
 deprecation
+dill
 docstring_parser
 donfig
 earthkit-climate
@@ -98,6 +99,7 @@ fastprogress
 filelock
 findlibs
 fiona
+fire
 flexcache
 flexparser
 fonttools
@@ -247,6 +249,7 @@ pytest
 python-dateutil
 python-rapidjson
 pytz
+pyvis
 PyYAML
 pyzmq
 qubed
@@ -270,6 +273,7 @@ shapely
 shellingham
 six
 sly
+sortedcontainers
 soupsieve
 spglm
 spint
@@ -279,6 +283,7 @@ statsmodels
 sympy
 tblib
 tenacity
+termcolor
 threadpoolctl
 tifffile
 toolz
