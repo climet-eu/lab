@@ -47,6 +47,7 @@ orjson
 packaging
 pandas
 pillow
+protobuf
 pyarrow
 pydantic_core
 pyerfa

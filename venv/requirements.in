@@ -100,6 +100,7 @@ fiona
 flexcache
 flexparser
 fonttools
+frozendict
 frozenlist
 fsspec
 future
@@ -112,6 +113,7 @@ h5py
 hda
 hdf5plugin
 healpy
+humanize
 idna
 ImageIO
 iniconfig
@@ -201,6 +203,7 @@ numcodecs_wasm_zlib
 numcodecs_wasm_zstd
 numpy
 numpy_quaddtype
+objsize
 orjson
 packaging
 pandas
@@ -218,6 +221,7 @@ polytope-client
 pooch
 prompt_toolkit
 propcache
+protobuf
 psygnal
 pure_eval
 pyarrow

@@ -57,6 +57,7 @@ orjson == 3.11.8
 packaging == 26.0
 pandas == 2.3.3
 pillow == 12.2.0
+protobuf == 7.34.1
 pyarrow == 23.0.1
 pydantic_core == 2.41.5
 pyerfa == 2.0.1.5

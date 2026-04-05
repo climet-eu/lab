@@ -103,6 +103,7 @@ fiona == 1.10.1
 flexcache == 0.3
 flexparser == 0.4
 fonttools == 4.62.1
+frozendict == 2.4.7
 frozenlist == 1.8.0
 fsspec == 2026.3.0
 future == 1.0.0
@@ -115,6 +116,7 @@ h5py == 3.16.0
 hda == 2.39
 hdf5plugin == 6.0.0
 healpy == 1.19.0
+humanize == 4.15.0
 idna == 3.11
 ImageIO == 2.37.3
 iniconfig == 2.3.0
@@ -204,6 +206,7 @@ numcodecs_wasm_zlib == 0.4.0
 numcodecs_wasm_zstd == 0.4.0
 numpy == 2.4.4
 numpy_quaddtype == 1.0.0
+objsize == 0.8.0
 orjson == 3.11.8
 packaging == 26.0
 pandas == 2.3.3
@@ -221,6 +224,7 @@ polytope-client == 0.7.9
 pooch == 1.9.0
 prompt_toolkit == 3.0.52
 propcache == 0.4.1
+protobuf == 7.34.1
 psygnal == 0.15.1
 pure_eval == 0.2.3
 pyarrow == 23.0.1
