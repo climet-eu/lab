@@ -69,6 +69,7 @@ pyrosm == 0.6.2
 pyrsistent == 0.20.0
 python-rapidjson == 1.23
 PyYAML == 6.0.3
+pyzmq == 27.1.0
 qubed == 0.3.1
 rasterio == 1.4.3
 regex == 2026.4.4

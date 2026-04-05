@@ -243,6 +243,7 @@ python-dateutil
 python-rapidjson
 pytz
 PyYAML
+pyzmq
 qubed
 rasterio
 referencing
