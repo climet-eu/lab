@@ -60,6 +60,7 @@ pyrosm
 pyrsistent
 python-rapidjson
 PyYAML
+qubed
 rasterio
 regex
 rpds-py

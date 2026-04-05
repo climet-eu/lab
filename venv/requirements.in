@@ -243,6 +243,7 @@ python-dateutil
 python-rapidjson
 pytz
 PyYAML
+qubed
 rasterio
 referencing
 regex
