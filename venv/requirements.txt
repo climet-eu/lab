@@ -15,6 +15,7 @@ aiohappyeyeballs == 2.6.1
 aiohttp == 3.13.5
 aioitertools == 0.13.0
 aiosignal == 1.4.0
+annotated-doc == 0.0.4
 annotated-types == 0.7.0
 antlr4-python3-runtime == 4.13.2
 anywidget == 0.9.21
@@ -262,6 +263,7 @@ scipy == 1.17.0
 semver == 3.0.4
 setuptools == 80.10.2
 shapely == 2.1.2
+shellingham == 1.5.4
 six == 1.17.0
 sly == 0.5
 soupsieve == 2.8.3
@@ -279,6 +281,7 @@ toolz == 1.1.0
 tqdm == 4.67.3
 traitlets == 5.14.3
 traittypes == 0.2.3
+typer == 0.24.1
 typing-inspection == 0.4.2
 typing_extensions == 4.15.0
 tzdata == 2026.1
@@ -298,6 +301,7 @@ xclim == 0.60.0
 xeofs == 3.0.4
 xhistogram == 0.3.2
 xrft == 1.0.1
+xsdba == 0.5.0
 xyzservices == 2026.3.0
 yamale == 6.1.0
 yarl == 1.23.0

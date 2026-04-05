@@ -12,6 +12,7 @@ aiohappyeyeballs
 aiohttp
 aioitertools
 aiosignal
+annotated-doc
 annotated-types
 antlr4-python3-runtime
 anywidget
@@ -259,6 +260,7 @@ scipy
 semver
 setuptools
 shapely
+shellingham
 six
 sly
 soupsieve
@@ -276,6 +278,7 @@ toolz
 tqdm
 traitlets
 traittypes
+typer
 typing-inspection
 typing_extensions
 tzdata
@@ -295,6 +298,7 @@ xclim
 xeofs
 xhistogram
 xrft
+xsdba
 xyzservices
 yamale
 yarl
