@@ -87,6 +87,7 @@ earthkit-regrid
 earthkit-time
 earthkit-transforms
 earthkit-utils
+earthkit-workflows
 eccodes
 ecmwf-api-client
 ecmwf-datastores-client

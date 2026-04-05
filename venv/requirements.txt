@@ -90,6 +90,7 @@ earthkit-regrid == 0.5.1
 earthkit-time == 0.1.8
 earthkit-transforms == 0.5.4
 earthkit-utils == 0.3.0
+earthkit-workflows == 0.9.0
 eccodes == 2.46.0
 ecmwf-api-client == 1.6.5
 ecmwf-datastores-client == 0.5.1
