@@ -220,6 +220,7 @@ pkgconfig
 platformdirs
 plotly
 pluggy
+polars
 polytope-client
 pooch
 prompt_toolkit
