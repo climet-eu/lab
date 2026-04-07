@@ -38,6 +38,7 @@ boto3
 botocore
 Bottleneck
 branca
+cachetools
 Cartopy
 cattrs
 cdsapi
@@ -208,6 +209,8 @@ numcodecs_wasm_zstd
 numpy
 numpy_quaddtype
 objsize
+odc-geo
+odc-loader
 odc-stac
 orjson
 packaging

@@ -41,6 +41,7 @@ boto3 == 1.42.84
 botocore == 1.42.84
 Bottleneck == 1.6.0
 branca == 0.8.2
+cachetools == 7.0.5
 Cartopy == 0.25.0
 cattrs == 26.1.0
 cdsapi == 0.7.7
@@ -211,6 +212,8 @@ numcodecs_wasm_zstd == 0.4.0
 numpy == 2.4.4
 numpy_quaddtype == 1.0.0
 objsize == 0.8.0
+odc-geo == 0.5.1
+odc-loader == 0.6.4
 odc-stac == 0.5.2
 orjson == 3.11.8
 packaging == 26.0
