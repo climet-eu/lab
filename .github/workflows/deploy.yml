@@ -417,6 +417,8 @@ jobs:
             -H "X-GitHub-Api-Version: 2026-03-10" \
             /repos/climet-eu/lab/releases | \
           python3 -c "import json; import sys; from pathlib import Path; [Path(release['name']).write_text(release['assets'][0]['browser_download_url']) for release in json.load(sys.stdin)]"
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Update the global favicon to the latest main
         run: cp dist/main/favicon.ico dist
@@ -424,7 +426,7 @@ jobs:
       - name: Deploy to dist branch
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ github.token }}
           publish_branch: dist
           publish_dir: ./dist
           keep_files: false
