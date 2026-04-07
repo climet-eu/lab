@@ -398,7 +398,7 @@ jobs:
           ref: dist
           path: dist
 
-      - name: Create the dist
+      - name: Create the dist folder
         if: github.ref_type == 'branch'
         run: mkdir -p dist
 
@@ -416,7 +416,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2026-03-10" \
             /repos/climet-eu/lab/releases | \
-          python3 -c "import json; import sys; from pathlib import Path; [Path(release['name']).write_text(release['assets'][0]['browser_download_url']) for release in json.load(sys.stdin)]"
+          python3 -c "import json; import sys; from pathlib import Path; [(Path("dist") / release['name']).write_text(release['assets'][0]['browser_download_url']) for release in json.load(sys.stdin)]"
         env:
           GH_TOKEN: ${{ github.token }}
 
