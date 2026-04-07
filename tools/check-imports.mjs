@@ -6,6 +6,8 @@ import { loadPyodide } from "./pyodide.mjs";
 const EXPECTED_FAILURES = [
     // requires `fcntl`, which Pyodide doesn't support (but JupyterLite mocks)
     "locket[locket]", "partd[partd]",
+    // assumes a poltly dash environment, which we do not provide
+    "itables_for_dash[itables]",
 ];
 
 const [_node_path, _script_path, bootstrap_path] = argv;
