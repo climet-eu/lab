@@ -84,6 +84,28 @@ for package in lock["packages"].values():
 
     packages[package["name"]] = Package(version=package["version"], is_pure=is_pure)
 
+# find the libraries that were build for but not by the packages
+packages_to_check = sorted(lock["packages"].keys())
+checked_packages = set()
+libraries = dict()
+while len(packages_to_check) > 0:
+    package = packages_to_check.pop()
+
+    if package in checked_packages:
+        continue
+    
+    checked_packages.add(package)
+
+    with open(recipes_path / lock["packages"].get(package, {}).get("name", package) / "meta.yaml") as f:
+        recipe = yaml.load(f, yaml.SafeLoader)
+    
+    type_ = recipe.get("build", {}).get("type", "package")
+    if type_ in ("static_library", "shared_library"):
+        libraries[recipe["package"]["name"]] = recipe["package"]["version"]
+    
+    packages_to_check += recipe.get("requirements", {}).get("host", [])
+    packages_to_check += recipe.get("requirements", {}).get("run", [])
+
 with (
     requirements_path.open("w") as req,
     requirements_in_path.open("w") as reqin,
@@ -146,3 +168,10 @@ with (
 
         if not package.is_pure:
             con.write(f"{name} == {package.version}\n")
+    
+    write("\n", req, con)
+    write("# system libraries\n", req, con)
+    write("\n", req, con)
+
+    for name, version in sorted(libraries.items(), key=lambda kv: kv[0].lower()):
+        write(f"# {name} == {version}\n", req, con)
