@@ -132,6 +132,7 @@ ipyspin
 ipython
 ipython_pygments_lexers
 ipywidgets
+itables
 jedi
 Jinja2
 jmespath
@@ -207,6 +208,7 @@ numcodecs_wasm_zstd
 numpy
 numpy_quaddtype
 objsize
+odc-stac
 orjson
 packaging
 pandas

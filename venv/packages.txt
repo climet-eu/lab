@@ -15,7 +15,6 @@ cffi
 cftime
 cfunits
 contourpy
-copernicusmarine
 crc32c
 cykhash
 eccodes
