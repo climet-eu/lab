@@ -93,16 +93,25 @@ while len(packages_to_check) > 0:
 
     if package in checked_packages:
         continue
-    
+
     checked_packages.add(package)
 
-    with open(recipes_path / lock["packages"].get(package, {}).get("name", package) / "meta.yaml") as f:
+    package_recipe_path = (
+        recipes_path
+        / lock["packages"].get(package, {}).get("name", package)
+        / "meta.yaml"
+    )
+
+    if not package_recipe_path.exists():
+        continue
+
+    with package_recipe_path.open() as f:
         recipe = yaml.load(f, yaml.SafeLoader)
-    
+
     type_ = recipe.get("build", {}).get("type", "package")
     if type_ in ("static_library", "shared_library"):
         libraries[recipe["package"]["name"]] = recipe["package"]["version"]
-    
+
     packages_to_check += recipe.get("requirements", {}).get("host", [])
     packages_to_check += recipe.get("requirements", {}).get("run", [])
 
@@ -168,7 +177,7 @@ with (
 
         if not package.is_pure:
             con.write(f"{name} == {package.version}\n")
-    
+
     write("\n", req, con)
     write("# system libraries\n", req, con)
     write("\n", req, con)
