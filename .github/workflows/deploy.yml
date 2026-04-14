@@ -375,7 +375,7 @@ jobs:
         run: tar -czvf "${{ github.ref_name }}.tar.gz" "${{ github.ref_name }}"
 
       - name: Publish the release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: ${{ github.ref_name }}
           files: ${{ github.ref_name }}.tar.gz
