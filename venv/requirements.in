@@ -176,6 +176,8 @@ numcodecs-combinators
 numcodecs-delta
 numcodecs-huffman
 numcodecs-observers
+numcodecs_pw_ratio
+numcodecs_replace
 numcodecs-safeguards
 numcodecs-shuffle
 numcodecs-tokenize
