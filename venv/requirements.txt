@@ -179,8 +179,8 @@ numcodecs-combinators == 0.2.14
 numcodecs-delta == 0.1.0
 numcodecs-huffman == 0.1.3
 numcodecs-observers == 0.1.2
-numcodecs_pw_ratio == 0.2.0
-numcodecs_replace == 0.1.0
+numcodecs-pw-ratio == 0.2.0
+numcodecs-replace == 0.1.0
 numcodecs-safeguards == 0.1.0b2
 numcodecs-shuffle == 0.1.0
 numcodecs-tokenize == 0.1.3
