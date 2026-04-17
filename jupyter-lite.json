@@ -34,6 +34,7 @@
             "a-jupyterlite-query-config:plugin": {
                 "overrides": {
                     "pyodideKernelLockFileURL": "litePluginSettings.@jupyterlite/pyodide-kernel-extension:kernel.loadPyodideOptions.lockFileURL",
+                    "pyodideKernelEnv": "litePluginSettings.@jupyterlite/pyodide-kernel-extension:kernel.loadPyodideOptions.env",
                     "pyodideKernelPackages": "litePluginSettings.@jupyterlite/pyodide-kernel-extension:kernel.loadPyodideOptions.packages"
                 }
             }
