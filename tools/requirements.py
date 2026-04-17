@@ -28,6 +28,7 @@ packages: dict[str, Package] = dict()
 IGNORE_PACKAGES = {
     "jupyterlite-cors",  # climet-eu/lab implementation detail
     "micropip",  # pyodide implementation detail
+    "pyodide-fs-mount-http",  # climet-eu/lab implementation detail
     "pyodide-http",  # pyodide implementation detail
     "ipykernel",  # JupyterLite provides this package
 }

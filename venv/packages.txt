@@ -53,6 +53,7 @@ pydantic_core
 pyerfa
 pyicon-diagnostics
 pyodc
+pyodide-fs-mount-http
 pyodide-http
 pyogrio
 pyproj

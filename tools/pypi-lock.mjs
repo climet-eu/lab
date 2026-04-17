@@ -96,6 +96,7 @@ def get_imports_for_package(
 
 extra_requirements = [
     "jupyterlite-cors == 0.0.0",  # climet-eu/lab implementation detail
+    "pyodide-fs-mount-http == 0.0.0",  # climet-eu/lab implementation detail
     "pyodide-http == 0.2.2",  # pyodide implementation detail
 ]
 
