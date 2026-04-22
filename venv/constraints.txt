@@ -40,7 +40,7 @@ healpy == 1.19.0
 ipyfilite == 0.1.30
 kiwisolver == 1.5.0
 lru-dict == 1.4.1
-lxml == 6.0.2
+lxml == 6.1.0
 lz4 == 4.4.5
 MarkupSafe == 3.0.3
 matplotlib == 3.10.8
