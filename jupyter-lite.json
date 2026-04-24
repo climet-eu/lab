@@ -5,6 +5,7 @@
         "showLoadingIndicator": true,
         "exposeAppInBrowser": false,
         "disabledExtensions": [
+            "@jupyterlab/workspaces-extension",
             "@jupyterlite/application-extension:service-worker-manager",
             "@jupyterlite/terminal:service-worker"
         ],

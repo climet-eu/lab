@@ -28,5 +28,13 @@
         "autoStartDefaultKernel": true,
         "kernelShutdown": true,
         "windowingMode": "defer"
+    },
+    "@jupyterlab/apputils-extension:notification": {
+        "checkForUpdates": false,
+        "fetchNews": "false"
+    },
+    "@jupyterlab/terminal-extension:plugin": {
+        "shutdownOnClose": true,
+        "closeOnExit": true
     }
 }
