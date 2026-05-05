@@ -242,6 +242,7 @@ pydantic
 pydantic_core
 pydap
 pyerfa
+pyfive
 Pygments
 pyicon-diagnostics
 pyodc
