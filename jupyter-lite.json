@@ -20,7 +20,10 @@
                     "fullStdLib": true,
                     "env": {
                         "EARTHKIT_DATA_CACHE_POLICY": "off",
-                        "EARTHKIT_REGRID_CACHE_POLICY": "off"
+                        "EARTHKIT_GEO_CACHE_POLICY": "off",
+                        "EARTHKIT_GEO_REGRID_PRECOMPUTED_WEIGHTS_MEMORY_CACHE_POLICY": "off",
+                        "EARTHKIT_REGRID_CACHE_POLICY": "off",
+                        "EARTHKIT_REGRID_WEIGHTS_MEMORY_CACHE_POLICY": "off"
                     },
                     "packages": [
                         "comm",
