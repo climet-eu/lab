@@ -13,7 +13,7 @@ a-jupyterlite-session~=0.2.2
 a-jupyterlab-session~=0.2.0
 
 # JupyterLite: override config settings with URL query parameters
-a-jupyterlite-query-config~=0.2.0
+a-jupyterlite-query-config~=0.2.1
 
 # JupyterLab: guided tour
 # jupyterlab-tour~=4.0.0
