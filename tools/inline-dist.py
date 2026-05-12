@@ -10,7 +10,6 @@ args = parser.parse_args()
 
 dist_path = Path(args.dist_path)
 lock_path = dist_path / "pyodide-lock.json"
-recipes_path = Path("pyodide") / "pyodide-recipes" / "packages"
 
 
 # read in the lockfile

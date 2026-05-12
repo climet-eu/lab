@@ -21,7 +21,7 @@ with lock_path.open("r") as f:
     lock = json.load(f)
 
 python = lock["info"]["python"]
-pyodide = lock["info"]["version"]
+abi = lock["packages"]["numpy"]["file_name"].split("-")[-1][: -len("_wasm32.whl")]
 
 packages: dict[str, Package] = dict()
 
@@ -169,7 +169,7 @@ with (
     write("\n")
 
     write(f"# python == {python}\n", req, con)
-    write(f"# pyodide == {pyodide}\n", req, con)
+    write(f"# abi == {abi}\n", req, con)
     write("\n", req, con)
 
     for name, package in sorted(packages.items(), key=lambda kv: kv[0].lower()):
