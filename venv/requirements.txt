@@ -188,7 +188,7 @@ numcodecs-zero == 0.1.2
 numcodecs_wasm == 0.2.4
 numcodecs_wasm_asinh == 0.4.0
 numcodecs_wasm_bit_round == 0.4.0
-numcodecs_wasm_ebcc == 0.1.1
+numcodecs_wasm_ebcc == 0.2.0
 numcodecs_wasm_fixed_offset_scale == 0.4.0
 numcodecs_wasm_fourier_network == 0.3.0
 numcodecs_wasm_identity == 0.4.0
