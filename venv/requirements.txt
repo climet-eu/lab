@@ -202,7 +202,7 @@ numcodecs_wasm_qpet_sperr == 0.2.2
 numcodecs_wasm_random_projection == 0.4.0
 numcodecs_wasm_reinterpret == 0.4.0
 numcodecs_wasm_round == 0.5.0
-numcodecs_wasm_sperr == 0.2.2
+numcodecs_wasm_sperr == 0.2.3
 numcodecs_wasm_stochastic_rounding == 0.2.0
 numcodecs_wasm_swizzle_reshape == 0.4.0
 numcodecs_wasm_sz3 == 0.8.4
