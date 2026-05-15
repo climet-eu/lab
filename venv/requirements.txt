@@ -196,7 +196,7 @@ numcodecs_wasm_jpeg2000 == 0.3.0
 numcodecs_wasm_lc == 0.1.0
 numcodecs_wasm_linear_quantize == 0.5.0
 numcodecs_wasm_log == 0.5.0
-numcodecs_wasm_pco == 0.3.0
+numcodecs_wasm_pco == 0.4.0
 numcodecs_wasm_pressio == 0.1.0b1
 numcodecs_wasm_qpet_sperr == 0.2.2
 numcodecs_wasm_random_projection == 0.4.0
