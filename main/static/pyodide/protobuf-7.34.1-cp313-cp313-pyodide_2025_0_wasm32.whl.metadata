@@ -1,0 +1,32 @@
+Metadata-Version: 2.4
+Name: protobuf
+Version: 7.34.1
+Summary: Protocol Buffers
+Home-page: https://developers.google.com/protocol-buffers/
+Download-URL: https://github.com/protocolbuffers/protobuf/releases
+Maintainer: protobuf@googlegroups.com
+Maintainer-email: protobuf@googlegroups.com
+License: BSD-3-Clause
+Project-URL: Source, https://github.com/protocolbuffers/protobuf
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3.14
+Requires-Python: >=3.10
+License-File: LICENSE
+Dynamic: classifier
+Dynamic: description
+Dynamic: download-url
+Dynamic: home-page
+Dynamic: license
+Dynamic: license-file
+Dynamic: maintainer
+Dynamic: maintainer-email
+Dynamic: project-url
+Dynamic: requires-python
+Dynamic: summary
+
+Protocol Buffers are Google's data interchange format

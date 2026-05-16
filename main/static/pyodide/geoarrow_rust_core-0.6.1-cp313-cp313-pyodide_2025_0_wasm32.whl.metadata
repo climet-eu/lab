@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: geoarrow-rust-core
+Version: 0.6.1
+Classifier: Programming Language :: Rust
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Requires-Dist: arro3-core>=0.4
+Requires-Dist: pyproj
+Home-Page: https://geoarrow.org/geoarrow-rs/
+Requires-Python: >=3.9
