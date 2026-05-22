@@ -121,7 +121,7 @@ hda == 2.39
 hdf5plugin == 6.0.0
 healpy == 1.19.0
 humanize == 4.15.0
-idna == 3.11
+idna == 3.16
 ImageIO == 2.37.3
 iniconfig == 2.3.0
 intake == 2.0.9
