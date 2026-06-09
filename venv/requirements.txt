@@ -314,7 +314,7 @@ url-normalize == 2.2.1
 urllib3 == 2.7.0
 varint == 1.0.2
 wcwidth == 0.6.0
-WebOb == 1.8.9
+WebOb == 1.8.10
 widgetsnbextension == 4.0.15
 wrapt == 2.1.2
 xarray == 2026.2.0
