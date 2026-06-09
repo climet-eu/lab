@@ -1,0 +1,1 @@
+(self.webpackChunkjupyterlab_myst=self.webpackChunkjupyterlab_myst||[]).push([[8705],{26122:a=>{a.exports=function(a){return{name:"Node REPL",contains:[{className:"meta",starts:{end:/ |$/,starts:{end:"$",subLanguage:"javascript"}},variants:[{begin:/^>(?=[ ]|$)/},{begin:/^\.\.\.(?=[ ]|$)/}]}]}}}}]);
