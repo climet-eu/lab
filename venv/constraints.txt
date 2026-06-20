@@ -9,7 +9,7 @@
 # python == 3.13.2
 # abi == pyodide_2025_0
 
-aiohttp == 3.13.5
+aiohttp == 3.14.1
 argon2-cffi-bindings == 25.1.0
 arro3-compute == 0.8.0
 arro3-core == 0.8.0
@@ -44,7 +44,7 @@ lxml == 6.1.0
 lz4 == 4.4.5
 MarkupSafe == 3.0.3
 matplotlib == 3.10.8
-msgpack == 1.1.2
+msgpack == 1.2.1
 ndindex == 1.10.1
 netCDF4 == 1.7.2
 numba == 0.65.0
@@ -82,7 +82,7 @@ scipy == 1.17.0
 shapely == 2.1.2
 spint == 1.0.7
 statsmodels == 0.14.6
-ujson == 5.12.1
+ujson == 5.13.0
 urllib3 == 2.7.0
 varint == 1.0.2
 widgetsnbextension == 4.0.15
