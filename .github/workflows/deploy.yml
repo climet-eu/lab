@@ -62,6 +62,8 @@ jobs:
           echo ======
           git status
 
+      - run: rm -rf pyodide/pyodide-recipes/packages/argon2-cffi-bindings/dist
+
       - name: Cache the Pyodide Docker image
         uses: AndreKurait/docker-cache@0.7.0
         with:
