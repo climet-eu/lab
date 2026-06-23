@@ -26,7 +26,7 @@ jobs:
           sudo swapon --show
 
       - name: Checkout the repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: recursive
 
@@ -148,7 +148,7 @@ jobs:
     needs: build-pyodide
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: recursive
 
@@ -173,7 +173,7 @@ jobs:
     needs: [build-pyodide, build-pypa]
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: recursive
 
@@ -217,7 +217,7 @@ jobs:
     needs: build-lock
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: recursive
 
@@ -267,7 +267,7 @@ jobs:
     needs: check-venv
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: recursive
 
@@ -307,7 +307,7 @@ jobs:
     needs: [build-pyodide, build-pypa, build-lock]
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
@@ -397,7 +397,7 @@ jobs:
     steps:
       - name: Checkout the previous dist branch
         if: github.ref_type == 'tag'
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: dist
           path: dist
