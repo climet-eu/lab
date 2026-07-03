@@ -49,7 +49,7 @@ ndindex == 1.10.1
 netCDF4 == 1.7.2
 numba == 0.65.0
 numcodecs == 0.15.1
-numcodecs_wasm == 0.2.4
+numcodecs_wasm == 0.2.5
 numpy == 2.4.4
 numpy_quaddtype == 1.0.0
 orjson == 3.11.8
