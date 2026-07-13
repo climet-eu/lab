@@ -213,7 +213,7 @@ numcodecs_wasm_zfp == 0.6.0
 numcodecs_wasm_zfp_classic == 0.4.0
 numcodecs_wasm_zlib == 0.4.0
 numcodecs_wasm_zstd == 0.4.0
-numpy == 2.4.4
+numpy == 2.4.6
 numpy_quaddtype == 1.0.0
 objsize == 0.8.0
 odc-geo == 0.5.1
