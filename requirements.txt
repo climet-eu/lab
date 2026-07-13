@@ -1,12 +1,12 @@
 # Jupyter Lite
-jupyterlite-core~=0.7.6
-jupyterlab~=4.5.0
+jupyterlite-core~=0.8.1
+jupyterlab~=4.6.0
 
 # Pyodide kernel
-jupyterlite-pyodide-kernel~=0.7.0
+jupyterlite-pyodide-kernel~=0.8.1
 
 # JupyterLite terminal with /drive access
-jupyterlite-terminal~=1.4.0
+jupyterlite-terminal~=1.5.1
 
 # JupyterLite and JupyterLab: create a fresh session directory
 a-jupyterlite-session~=0.2.3
@@ -30,7 +30,7 @@ litegitpuller~=0.3.0
 # JupyterLab: spreadsheet editor (csv/tsv)
 jupyterlab-spreadsheet-editor~=0.7.2
 # JupyterLab: render MyST Markdown cells
-jupyterlab-myst~=2.6.0
+jupyterlab-myst~=2.7.0
 # JupyterLab: view a notebook as a slideshow
 jupyterlab-slideshow~=0.3.2
 
