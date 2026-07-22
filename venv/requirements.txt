@@ -226,7 +226,7 @@ parso == 0.8.6
 partd == 1.4.2
 patsy == 1.0.2
 pdbufr == 0.14.2
-pillow == 12.2.0
+pillow == 12.3.0
 Pint == 0.25.3
 pkgconfig == 1.6.0
 platformdirs == 4.9.4

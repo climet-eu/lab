@@ -55,7 +55,7 @@ numpy_quaddtype == 1.0.0
 orjson == 3.11.8
 packaging == 26.0
 pandas == 2.3.3
-pillow == 12.2.0
+pillow == 12.3.0
 polars == 1.32.3
 protobuf == 7.34.1
 pyarrow == 23.0.1
