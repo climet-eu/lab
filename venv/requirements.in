@@ -175,6 +175,7 @@ numcodecs-bitmap-index
 numcodecs-combinators
 numcodecs-delta
 numcodecs-huffman
+numcodecs-mask
 numcodecs-observers
 numcodecs-pw-ratio
 numcodecs-replace
