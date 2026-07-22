@@ -1,0 +1,65 @@
+{
+  "name": "jupyterlab-slideshow",
+  "version": "0.3.4",
+  "description": "Lightweight presentations for JupyterLab",
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "JupyterLab Contrib Team",
+    "email": ""
+  },
+  "homepage": "https://github.com/jupyterlab-contrib/jupyterlab-slideshow",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jupyterlab-contrib/jupyterlab-slideshow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jupyterlab-contrib/jupyterlab-slideshow/issues"
+  },
+  "main": "lib/index.js",
+  "scripts": {
+    "labextension": "python ../../_scripts/labextension.py",
+    "labextension:build": "jlpm labextension build --debug .",
+    "labextension:build:cov": "tsc -b src/tsconfig.cov.json && jlpm labextension:build",
+    "watch": "jlpm labextension watch ."
+  },
+  "types": "lib/index.d.ts",
+  "dependencies": {
+    "@jupyterlab/application": "^4.1.0",
+    "@jupyterlab/apputils": "^4.2.0",
+    "@jupyterlab/fileeditor": "^4.1.0",
+    "@jupyterlab/markdownviewer": "^4.1.0",
+    "@jupyterlab/notebook": "^4.1.0",
+    "@jupyterlab/statusbar": "^4.1.0",
+    "@jupyterlab/ui-components": "^4.1.0",
+    "d3-drag": "3"
+  },
+  "devDependencies": {
+    "@deathbeds/jupyterlab-fonts": "^3.0.0",
+    "@jupyter-notebook/application": "^7.1.0",
+    "@jupyterlab/builder": "^4.0.7",
+    "@types/d3-drag": "3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "jupyterlab": {
+    "extension": "lib/plugin.js",
+    "outputDir": "../../src/_d/share/jupyter/labextensions/jupyterlab-slideshow",
+    "schemaDir": "schema",
+    "webpackConfig": "./webpack.config.js",
+    "sharedPackages": {
+      "@deathbeds/jupyterlab-fonts": {
+        "bundled": false,
+        "singleton": true
+      },
+      "d3-drag": {
+        "bundled": true
+      }
+    },
+    "_build": {
+      "load": "static/remoteEntry.08dcabaf138676b1ada8.js",
+      "extension": "./extension"
+    }
+  },
+  "packageManager": "yarn@3.5.0"
+}
