@@ -46,6 +46,8 @@ pyodide-fs-mount-http
 pyodide-http
 pyogrio
 pyproj
+pyrobuf
+pyrosm
 pyrsistent
 python-rapidjson
 PyYAML
