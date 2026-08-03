@@ -13,6 +13,7 @@ cfunits
 contourpy
 crc32c
 cykhash
+eccodes
 fiona
 frozenlist
 fsspec
@@ -33,7 +34,6 @@ netCDF4
 numba
 numcodecs
 numpy
-numpy_quaddtype
 orjson
 packaging
 pandas
