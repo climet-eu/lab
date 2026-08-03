@@ -33,7 +33,6 @@ netCDF4
 numba
 numcodecs
 numpy
-numpy_quaddtype
 orjson
 packaging
 pandas
