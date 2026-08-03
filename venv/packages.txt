@@ -13,7 +13,6 @@ cfunits
 contourpy
 crc32c
 cykhash
-eccodes
 fiona
 frozenlist
 fsspec
@@ -40,6 +39,7 @@ pandas
 pillow
 polars
 protobuf
+pyarrow
 pyerfa
 pyicon-diagnostics
 pyodc
