@@ -13,7 +13,6 @@ cfunits
 contourpy
 crc32c
 cykhash
-eccodes
 fiona
 frozenlist
 fsspec
