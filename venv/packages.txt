@@ -33,6 +33,7 @@ netCDF4
 numba
 numcodecs
 numpy
+numpy_quaddtype
 orjson
 packaging
 pandas
@@ -58,7 +59,6 @@ regex
 rpds-py
 rtree
 scikit-image
-scipy
 shapely
 spint
 ujson
