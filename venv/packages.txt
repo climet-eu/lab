@@ -58,6 +58,7 @@ regex
 rpds-py
 rtree
 scikit-image
+scipy
 shapely
 spint
 ujson
