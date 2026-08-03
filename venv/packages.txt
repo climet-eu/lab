@@ -1,11 +1,7 @@
 aiohttp
 argon2-cffi-bindings
-arro3-compute
-arro3-core
-arro3-io
 asciitree
 astropy
-blosc2
 Bottleneck
 Cartopy
 cf-python
@@ -21,7 +17,6 @@ eccodes
 fiona
 frozenlist
 fsspec
-geoarrow-rust-core
 google-crc32c
 h5py
 hdf5plugin
@@ -39,7 +34,6 @@ ndindex
 netCDF4
 numba
 numcodecs
-numcodecs_wasm
 numpy
 numpy_quaddtype
 orjson
@@ -49,7 +43,6 @@ pillow
 polars
 protobuf
 pyarrow
-pydantic_core
 pyerfa
 pyicon-diagnostics
 pyodc
