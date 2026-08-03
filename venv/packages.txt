@@ -69,7 +69,6 @@ spint
 statsmodels
 ujson
 urllib3
-varint
 widgetsnbextension
 wrapt
 zarr
