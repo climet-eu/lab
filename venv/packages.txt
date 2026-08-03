@@ -59,11 +59,8 @@ regex
 rpds-py
 rtree
 scikit-image
-scikit-learn
-scipy
 shapely
 spint
-statsmodels
 ujson
 urllib3
 widgetsnbextension
