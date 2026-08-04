@@ -223,7 +223,7 @@ jobs:
         uses: astral-sh/setup-uv@v7
 
       - name: Setup Python
-        run: uv venv --python 3.13.2
+        run: uv venv --python 3.14.2
 
       - name: Install PyYAML
         run: uv pip install PyYAML
@@ -243,7 +243,7 @@ jobs:
       - name: Check the requirements.txt file
         run: |
           rm -rf .venv
-          uv venv --python 3.13.2
+          uv venv --python 3.14.2
           uv pip install \
             -r venv/requirements.txt \
             --build-constraint venv/build-constraints.txt \
@@ -252,7 +252,7 @@ jobs:
 
       - name: Check the validity of the constraints.txt and requirements.in files
         run: |
-          uv venv --python 3.13.2
+          uv venv --python 3.14.2
           uv pip install \
             -r venv/requirements.in \
             -c venv/constraints.txt \
@@ -311,7 +311,7 @@ jobs:
         uses: astral-sh/setup-uv@v7
 
       - name: Setup Python
-        run: uv venv --python 3.13.2
+        run: uv venv --python 3.14.2
 
       - name: Setup micromamba
         uses: mamba-org/setup-micromamba@v3
