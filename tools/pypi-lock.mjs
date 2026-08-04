@@ -5,11 +5,9 @@ import { loadPyodide } from "./pyodide.mjs";
 
 const [_node_path, _script_path, requirements_path, new_lockfile_path] = argv;
 
-const requirements = readFileSync(requirements_path, { encoding: 'utf8' });
+const requirements = readFileSync(requirements_path, { encoding: "utf8" });
 
-const py = await loadPyodide({ fullStdLib: true, packages: [
-    "micropip", "test",
-] });
+const py = await loadPyodide({ packages: ["micropip", "test"] });
 
 await py.runPythonAsync(`
 import importlib.metadata
@@ -139,11 +137,6 @@ unique_imports = dict()
 for package in lock["packages"].values():
     package["depends"] = sorted(package["depends"])
 
-    if package["name"] != "libopenssl":
-        package["imports"] = sorted(get_imports_for_package(
-            package["name"], package_distributions, unique_imports
-        ))
-
     if "package_type" not in package:
         assert Path(package["file_name"]).suffix == ".whl", (
             f"{package['name']} has no package_type"
@@ -185,6 +178,6 @@ with open("/pyodide-lock.json", "w") as f:
     json.dump(lock, f, sort_keys=True)
 `);
 
-const lock = py.FS.readFile("/pyodide-lock.json", { encoding: 'utf8' });
+const lock = py.FS.readFile("/pyodide-lock.json", { encoding: "utf8" });
 
 writeFileSync(new_lockfile_path, lock);

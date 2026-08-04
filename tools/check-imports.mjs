@@ -12,12 +12,12 @@ const EXPECTED_FAILURES = [
 
 const [_node_path, _script_path, bootstrap_path] = argv;
 
-const bootstrap = readFileSync(bootstrap_path, { encoding: 'utf8' }).concat(`
+const bootstrap = readFileSync(bootstrap_path, { encoding: "utf8" }).concat(`
 assert pyodide.ffi.can_run_sync()
 patch_import_loader()
 `);
 
-const py = await loadPyodide({ fullStdLib: true, packages: ["micropip"] });
+const py = await loadPyodide({ packages: ["micropip"] });
 
 const successes = [];
 const failures = [];
@@ -28,7 +28,7 @@ for (const [package_name, package_] of Object.entries(py.lockfile.packages)) {
 
         console.log(`trying to import ${import_info} ...`);
 
-        const py = await loadPyodide({ fullStdLib: true, packages: [] });
+        const py = await loadPyodide({ packages: [] });
         await py.runPythonAsync(bootstrap);
 
         try {

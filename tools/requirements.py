@@ -69,7 +69,7 @@ for package in lock["packages"].values():
         if (
             url is not None
             and url.startswith("https://files.pythonhosted.org/packages")
-            and url.endswith("none-any.whl")
+            and url.endswith(".whl")
             and package["name"] != "micropip"
             and package["name"] != "ipyfilite"
         ):
@@ -77,7 +77,7 @@ for package in lock["packages"].values():
     else:
         assert package["file_name"].startswith(
             "https://files.pythonhosted.org/packages"
-        ) and package["file_name"].endswith("none-any.whl"), (
+        ) and package["file_name"].endswith(".whl"), (
             f"{package['name']} has no recipe but isn't a pure Package"
         )
 

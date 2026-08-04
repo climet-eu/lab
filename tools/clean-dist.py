@@ -70,7 +70,7 @@ for name, package in lock["packages"].items():
     if (
         url is not None
         and url.startswith("https://files.pythonhosted.org/packages")
-        and url.endswith("none-any.whl")
+        and url.endswith(".whl")
     ):
         packages_to_delete.add(name)
 

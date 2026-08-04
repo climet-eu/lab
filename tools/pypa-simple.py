@@ -42,7 +42,7 @@ for package in lock["packages"].values():
     if (
         url is not None
         and url.startswith("https://files.pythonhosted.org/packages")
-        and url.endswith("none-any.whl")
+        and url.endswith(".whl")
         # ipyfilite requires patches to the pure PyPi wheel
         and package["name"] != "ipyfilite"
     ):
@@ -91,6 +91,6 @@ for name, package in packages.items():
     </head>
     <body>
         <h1>Links for {normalized_name}</h1>
-        <a href="{args.pyodide_url.rstrip("/")}/{package["filename"]}#sha256={package["sha256"]}" data-dist-info-metadata data-core-metadata">{package["filename"]}</a><br> 
+        <a href="{args.pyodide_url.rstrip("/")}/{package["filename"]}#sha256={package["sha256"]}" data-dist-info-metadata data-core-metadata">{package["filename"]}</a><br>
     </body>
 </html>""")

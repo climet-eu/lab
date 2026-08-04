@@ -115,7 +115,6 @@ gribscan
 h5netcdf
 h5py
 hda
-hdf5plugin
 healpy
 humanize
 idna
@@ -311,7 +310,6 @@ uncertainties
 uritools
 url-normalize
 urllib3
-varint
 wcwidth
 WebOb
 widgetsnbextension

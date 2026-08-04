@@ -42,6 +42,7 @@ pillow
 polars
 protobuf
 pyarrow
+pydantic_core
 pyerfa
 pyicon-diagnostics
 pyodc
