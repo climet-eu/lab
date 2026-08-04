@@ -41,6 +41,7 @@ pandas
 pillow
 polars
 protobuf
+pyarrow
 pyerfa
 pyicon-diagnostics
 pyodc
