@@ -19,7 +19,6 @@ frozenlist
 fsspec
 google-crc32c
 h5py
-hdf5plugin
 healpy
 ipyfilite
 jupyterlite-cors
@@ -35,6 +34,7 @@ netCDF4
 numba
 numcodecs
 numpy
+numpy_quaddtype
 orjson
 packaging
 pandas
