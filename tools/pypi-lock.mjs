@@ -101,7 +101,7 @@ extra_requirements = [
 micropip.set_index_urls(
     [
         "http://0.0.0.0:8000/pypa/simple/{package_name}/",
-        "https://pypi.org/pypi/{package_name}/json",
+        "https://pypi.org/simple/{package_name}/",
     ]
 )
 
