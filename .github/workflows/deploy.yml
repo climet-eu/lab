@@ -201,7 +201,7 @@ jobs:
           cp venv/requirements.txt pyodide/my-requirements.txt
           cp tools/pypi-lock.mjs pyodide/static/pyodide/pypi-lock.mjs
           cd pyodide
-          ./run_docker --non-interactive python -m http.server "&" node static/pyodide/pypi-lock.mjs my-requirements.txt pyodide-lock.json
+          ./run_docker --non-interactive python -m http.server "2>" /dev/null "&" node static/pyodide/pypi-lock.mjs my-requirements.txt pyodide-lock.json
 
       - name: Upload the PyPi pyodide-lock.json artifact
         uses: actions/upload-artifact@v7
