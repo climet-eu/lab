@@ -114,6 +114,7 @@ micropip.set_constraints(
     + extra_requirements
 )
 
+micropip.logging.setup_logging()
 micropip.logging.set_log_level(2)
 
 await micropip.install(
