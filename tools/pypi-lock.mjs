@@ -114,9 +114,6 @@ micropip.set_constraints(
     + extra_requirements
 )
 
-micropip.logging.setup_logging()
-micropip.logging.set_log_level(2)
-
 await micropip.install(
     [
         r
@@ -124,7 +121,7 @@ await micropip.install(
         if len(r.strip()) > 0 and not r.startswith("#")
     ]
     + extra_requirements,
-    verbose=True,
+    verbose=2,
 )
 
 lock = json.loads(
