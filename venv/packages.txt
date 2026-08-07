@@ -19,7 +19,6 @@ frozenlist
 fsspec
 google-crc32c
 h5py
-hdf5plugin
 healpy
 ipyfilite
 jupyterlite-cors
@@ -66,7 +65,6 @@ scikit-image
 scikit-learn
 scipy
 shapely
-spint
 statsmodels
 ujson
 urllib3

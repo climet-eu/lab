@@ -74,7 +74,6 @@ scikit-image == 0.26.0
 scikit-learn == 1.8.0
 scipy == 1.18.0
 shapely == 2.1.2
-spint == 1.0.7
 statsmodels == 0.14.6
 ujson == 5.13.0
 urllib3 == 2.7.0
