@@ -5,8 +5,8 @@
 #    This list contains the locked versions of all pre-installed packages.     #
 # ============================================================================ #
 
-# python == 3.13.2
-# abi == pyodide_2025_0
+# python == 3.14.2
+# abi == pyemscripten_2026_0
 
 adjustText == 1.4.0
 affine == 2.4.0
@@ -18,6 +18,7 @@ aiosignal == 1.4.0
 annotated-doc == 0.0.5
 annotated-types == 0.8.0
 antlr4-python3-runtime == 4.13.2
+anyio == 4.14.2
 anywidget == 0.11.0
 arcosparse == 0.5.1
 argon2-cffi == 25.1.0
@@ -115,11 +116,17 @@ geoarrow-rust-core == 0.6.3
 geopandas == 1.1.4
 google-crc32c == 1.8.0
 gribscan == 0.0.16
+h11 == 0.16.0
+h2 == 4.4.1
 h5netcdf == 1.8.1
 h5py == 3.16.0
 hda == 2.39
 healpy == 1.19.0
+hpack == 4.2.0
+httpcore == 1.0.9
+httpx == 0.28.1
 humanize == 4.16.0
+hyperframe == 6.1.0
 idna == 3.18
 ImageIO == 2.37.4
 iniconfig == 2.3.0
@@ -259,6 +266,29 @@ pyrosm == 0.6.2
 pyrsistent == 0.20.0
 pyshp == 3.1.6
 pystac == 1.15.2
+pystac-core == 1.15.2
+pystac-ext-classification == 2.0.0
+pystac-ext-datacube == 2.2.0
+pystac-ext-eo == 1.1.0
+pystac-ext-file == 2.1.0
+pystac-ext-grid == 1.1.0
+pystac-ext-item-assets == 1.0.0
+pystac-ext-label == 1.0.1
+pystac-ext-mgrs == 1.0.0
+pystac-ext-mlm == 1.4.0
+pystac-ext-pointcloud == 1.0.0
+pystac-ext-projection == 2.0.0
+pystac-ext-raster == 1.1.0
+pystac-ext-render == 2.0.0
+pystac-ext-sar == 1.0.0
+pystac-ext-sat == 1.0.0
+pystac-ext-scientific == 1.0.0
+pystac-ext-storage == 2.0.0
+pystac-ext-table == 1.2.0
+pystac-ext-timestamps == 1.1.0
+pystac-ext-version == 1.2.0
+pystac-ext-view == 1.0.0
+pystac-ext-xarray-assets == 1.0.0
 pytest == 9.1.1
 python-dateutil == 2.9.0.post0
 python-rapidjson == 1.23
@@ -343,10 +373,8 @@ zfpy == 1.0.1
 # libgeos == 3.12.1
 # libhdf5 == 1.14.3
 # libiconv == 1.16
-# liblzma == 5.2.2
 # libnetcdf == 4.9.2
-# libopenblas == 0.3.28
-# libopenssl == 1.1.1w
+# libopenblas == 0.3.31
 # libproj == 9.6.2
 # libsleef == 3.9.0
 # libspatialindex == 2.1.0

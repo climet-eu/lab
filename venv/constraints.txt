@@ -6,8 +6,8 @@
 #   packages, which must be installed with exactly the lab-provided version.   #
 # ============================================================================ #
 
-# python == 3.13.2
-# abi == pyodide_2025_0
+# python == 3.14.2
+# abi == pyemscripten_2026_0
 
 aiohttp == 3.14.1
 argon2-cffi-bindings == 25.1.0
@@ -28,7 +28,6 @@ eccodes == 2.47.0
 fiona == 1.10.1
 frozenlist == 1.8.0
 fsspec == 2026.3.0
-geoarrow-rust-core == 0.6.1
 google-crc32c == 1.8.0
 h5py == 3.16.0
 healpy == 1.19.0
@@ -54,6 +53,7 @@ polars == 1.32.3
 protobuf == 7.34.1
 pyarrow == 23.0.1
 pydantic_core == 2.46.4
+pydoc_data == 1.0.0
 pyerfa == 2.0.1.5
 pyicon-diagnostics == 0.3.6
 pyodc == 1.5.0
@@ -94,10 +94,8 @@ zfpy == 1.0.1
 # libgeos == 3.12.1
 # libhdf5 == 1.14.3
 # libiconv == 1.16
-# liblzma == 5.2.2
 # libnetcdf == 4.9.2
-# libopenblas == 0.3.28
-# libopenssl == 1.1.1w
+# libopenblas == 0.3.31
 # libproj == 9.6.2
 # libsleef == 3.9.0
 # libspatialindex == 2.1.0
