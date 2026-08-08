@@ -17,7 +17,6 @@
             "@jupyterlite/pyodide-kernel-extension:kernel": {
                 "pyodideUrl": "/static/pyodide/pyodide.js",
                 "loadPyodideOptions": {
-                    "fullStdLib": true,
                     "env": {
                         "EARTHKIT_DATA_CACHE_POLICY": "off",
                         "EARTHKIT_GEO_CACHE_POLICY": "off",
