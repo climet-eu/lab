@@ -137,6 +137,10 @@ unique_imports = dict()
 for package in lock["packages"].values():
     package["depends"] = sorted(package["depends"])
 
+    package["imports"] = sorted(get_imports_for_package(
+        package["name"], package_distributions, unique_imports
+    ))
+
     if "package_type" not in package:
         assert Path(package["file_name"]).suffix == ".whl", (
             f"{package['name']} has no package_type"
