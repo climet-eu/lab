@@ -30,6 +30,7 @@
                         "ipython",
                         "micropip",
                         "pyodide-http",
+                        "pydoc_data",
                         "widgetsnbextension"
                     ]
                 }
