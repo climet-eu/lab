@@ -90,13 +90,6 @@ jobs:
             env CI=1 \
             PYODIDE_PACKAGES="" make
 
-      - name: Upload the minimal pyodide-lock.json artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: minimal-pyodide-lock.json
-          path: pyodide/dist/pyodide-lock.json
-          retention-days: 1
-
       - name: Build all required packages
         run: |
           cd pyodide
@@ -122,6 +115,13 @@ jobs:
           mkdir -p pyodide-recipes/packages/micropip/build
           touch pyodide-recipes/packages/micropip/build/ls-success
           ls -d pyodide-recipes/packages/*/build/* | xargs rm -r
+
+      - name: Upload the pyodide-lock-minimal.json artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: pyodide-lock-minimal.json
+          path: pyodide/dist/pyodide-lock-minimal.json
+          retention-days: 1
 
       - name: Upload the pyodide-lock.json artifact
         uses: actions/upload-artifact@v7

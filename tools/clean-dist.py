@@ -1,7 +1,8 @@
 import argparse
 import json
-import yaml
 from pathlib import Path
+
+import yaml
 
 parser = argparse.ArgumentParser()
 parser.add_argument("dist_path")
@@ -9,6 +10,7 @@ args = parser.parse_args()
 
 dist_path = Path(args.dist_path)
 lock_path = dist_path / "pyodide-lock.json"
+minimal_lock_path = dist_path / "pyodide-lock-minimal.json"
 recipes_path = Path("pyodide") / "pyodide-recipes" / "packages"
 
 
@@ -104,6 +106,19 @@ for package in lock["packages"].values():
     package["depends"] = sorted(package["depends"])
     package["imports"] = sorted(package["imports"])
 
+
 # write out the cleaned lockfile
 with lock_path.open("w") as f:
+    json.dump(lock, f, sort_keys=True)
+
+
+# produce the minimal lockfile
+minimal_packages = {}
+for package in ["jupyterlite-cors", "micropip", "pydoc_data", "pyodide-http"]:
+    minimal_packages[package] = lock["packages"][package]
+lock["packages"] = minimal_packages
+
+
+# write out the minimal lockfile
+with minimal_lock_path.open("w") as f:
     json.dump(lock, f, sort_keys=True)
