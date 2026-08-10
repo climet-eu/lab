@@ -331,6 +331,7 @@ termcolor == 3.3.0
 threadpoolctl == 3.6.0
 tifffile == 2026.7.31
 toolz == 1.1.0
+torch == 2.13.0
 tqdm == 4.70.0
 traitlets == 5.16.1
 traittypes == 0.2.3

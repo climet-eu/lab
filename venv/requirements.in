@@ -328,6 +328,7 @@ termcolor
 threadpoolctl
 tifffile
 toolz
+torch
 tqdm
 traitlets
 traittypes

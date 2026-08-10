@@ -66,6 +66,7 @@ scikit-learn
 scipy
 shapely
 statsmodels
+torch
 ujson
 urllib3
 widgetsnbextension
