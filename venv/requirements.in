@@ -118,6 +118,7 @@ h2
 h5netcdf
 h5py
 hda
+hdf5plugin
 healpy
 hpack
 httpcore

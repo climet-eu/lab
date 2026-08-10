@@ -121,6 +121,7 @@ h2 == 4.4.1
 h5netcdf == 1.8.1
 h5py == 3.16.0
 hda == 2.39
+hdf5plugin == 6.0.0
 healpy == 1.19.0
 hpack == 4.2.0
 httpcore == 1.0.9
