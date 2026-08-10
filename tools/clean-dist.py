@@ -114,7 +114,7 @@ with lock_path.open("w") as f:
 
 # produce the minimal lockfile
 minimal_packages = {}
-for package in ["jupyterlite-cors", "micropip", "pydoc_data", "pyodide-http"]:
+for package in ["jupyterlite-cors", "micropip", "pydoc-data", "pyodide-http"]:
     minimal_packages[package] = lock["packages"][package]
 lock["packages"] = minimal_packages
 
