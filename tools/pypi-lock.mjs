@@ -121,6 +121,7 @@ await micropip.install(
         if len(r.strip()) > 0 and not r.startswith("#")
     ]
     + extra_requirements,
+    keep_going=True,
     verbose=2,
 )
 
