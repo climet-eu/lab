@@ -19,6 +19,7 @@ frozenlist
 fsspec
 google-crc32c
 h5py
+healpy
 hdf5plugin
 ipyfilite
 jupyterlite-cors
