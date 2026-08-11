@@ -37,7 +37,6 @@ numcodecs
 numpy
 numpy_quaddtype
 orjson
-packaging
 pandas
 pillow
 polars
