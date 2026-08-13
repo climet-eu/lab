@@ -1,0 +1,8 @@
+Metadata-Version: 2.4
+Name: qubed
+Version: 0.4.11
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Rust
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Summary: Python bindings for the qubed Rust crate
+Requires-Python: >=3.8
