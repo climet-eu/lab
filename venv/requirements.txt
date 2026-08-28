@@ -297,7 +297,7 @@ python-rapidjson == 1.23
 pytz == 2026.3.post1
 pyvis == 0.3.2
 PyYAML == 6.0.3
-pyzmq == 27.1.0
+pyzmq == 27.2.0
 qubed == 0.4.11
 rasterio == 1.5.1
 referencing == 0.37.0
