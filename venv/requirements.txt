@@ -338,6 +338,8 @@ tqdm == 4.70.0
 traitlets == 5.16.1
 traittypes == 0.2.3
 typer == 0.27.1
+types-psutil == 7.2.2.20260827
+types-tqdm == 4.70.0.20260827
 typing-inspection == 0.4.3
 typing_extensions == 4.16.0
 tzdata == 2026.3

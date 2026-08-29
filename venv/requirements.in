@@ -185,6 +185,7 @@ numcodecs-huffman
 numcodecs-mask
 numcodecs-observers
 numcodecs-pw-ratio
+numcodecs-random-projection
 numcodecs-replace
 numcodecs-safeguards
 numcodecs-shuffle
@@ -334,6 +335,8 @@ tqdm
 traitlets
 traittypes
 typer
+types-psutil
+types-tqdm
 typing-inspection
 typing_extensions
 tzdata
