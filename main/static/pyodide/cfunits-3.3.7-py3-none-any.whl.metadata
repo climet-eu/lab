@@ -1,0 +1,89 @@
+Metadata-Version: 2.4
+Name: cfunits
+Version: 3.3.7
+Summary: A python interface to UNIDATA's UDUNITS-2 package with CF extensions 
+Home-page: https://bitbucket.org/cfpython/cfunits-python
+Download-URL: https://bitbucket.org/cfpython/cfunits-python/downloads
+Author: David Hassell
+Author-email: david.hassell@ncas.ac.uk
+Maintainer: David Hassell
+Maintainer-email: david.hassell@ncas.ac.uk
+License: MIT
+Keywords: cf,udunits,UNIDATA,netcdf,data,science,oceanography,meteorology,climate
+Platform: Linux
+Platform: MacOS
+Platform: Windows
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Topic :: Scientific/Engineering
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Python: >=3.6
+License-File: LICENSE
+Requires-Dist: cftime>=1.5.0
+Requires-Dist: numpy>=1.15
+Requires-Dist: packaging>=20.0
+Provides-Extra: required-c-libraries
+Requires-Dist: udunits2==2.2.20; extra == "required-c-libraries"
+Provides-Extra: documentation
+Requires-Dist: sphinx<=4,>=2; extra == "documentation"
+Requires-Dist: sphinx-copybutton; extra == "documentation"
+Requires-Dist: sphinx-toggleprompt; extra == "documentation"
+Requires-Dist: sphinxcontrib-spelling; extra == "documentation"
+Provides-Extra: pre-commit-hooks
+Requires-Dist: pre-commit; extra == "pre-commit-hooks"
+Requires-Dist: black; extra == "pre-commit-hooks"
+Requires-Dist: docformatter; extra == "pre-commit-hooks"
+Requires-Dist: flake8; extra == "pre-commit-hooks"
+Requires-Dist: pydocstyle; extra == "pre-commit-hooks"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: download-url
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: maintainer
+Dynamic: maintainer-email
+Dynamic: platform
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+*A Python interface to UNIDATA's UDUNITS-2 library with CF
+extensions*
+
+**Note: Versions 3.0.0 and later are only compatible with version Python 3. Use version 1.9 for Python 2 compatibility.**
+
+Store, combine and compare physical units and convert numeric values
+to different units.
+
+Units are as defined in `UNIDATA's UDUNITS-2 library
+<http://www.unidata.ucar.edu/software/udunits/>`_, except for
+reference time units (such as ``'days since 2000-12-1'`` in the
+``'proleptic_gregorian'`` calendar), which are handled by the `cftime
+python package <https://pypi.python.org/pypi/cftime>`_.
+
+In addition, some units are either new to, modified from, or removed
+from the standard UDUNITS-2 database in order to be more consistent
+with the `CF conventions <http://cfconventions.org/>`_.
+
+Documentation
+=============
+
+https://ncas-cms.github.io/cfunits
+
+Installation
+============
+
+https://ncas-cms.github.io/cfunits/installation.html
+
