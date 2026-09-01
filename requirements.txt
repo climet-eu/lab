@@ -3,7 +3,7 @@ jupyterlite-core~=0.8.1
 jupyterlab~=4.6.0
 
 # Pyodide kernel
-jupyterlite-pyodide-kernel @ https://jupyterlite-pyodide-kernel--337.org.readthedocs.build/en/337/_static/extensions/@jupyterlite/pyodide-kernel-extension/static/pypi/pyodide_kernel-0.9.0a1-py3-none-any.whl
+jupyterlite-pyodide-kernel @ https://jupyterlite-pyodide-kernel--337.org.readthedocs.build/en/337/_static/jupyterlite_pyodide_kernel-0.9.0a1-py3-none-any.whl
 
 # JupyterLite terminal with /drive access
 jupyterlite-terminal~=1.6.2
