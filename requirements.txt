@@ -6,7 +6,7 @@ jupyterlab~=4.6.0
 jupyterlite-pyodide-kernel @ https://jupyterlite-pyodide-kernel--337.org.readthedocs.build/en/337/_static/jupyterlite_pyodide_kernel-0.9.0a1-py3-none-any.whl
 
 # JupyterLite terminal with /drive access
-jupyterlite-terminal~=1.6.2
+# jupyterlite-terminal~=1.6.2
 
 # JupyterLite and JupyterLab: create a fresh session directory
 a-jupyterlite-session~=0.2.3
