@@ -2,6 +2,7 @@ aiohttp
 argon2-cffi-bindings
 asciitree
 astropy
+atlaslib-ecmwf
 Bottleneck
 Cartopy
 cf-python
@@ -14,6 +15,9 @@ contourpy
 crc32c
 cykhash
 eccodes
+eccodeslib
+eckit
+eckitlib
 fiona
 frozenlist
 fsspec
@@ -29,6 +33,8 @@ lxml
 lz4
 MarkupSafe
 matplotlib
+mirlib
+mir-python
 msgpack
 ndindex
 netCDF4
