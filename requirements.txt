@@ -37,7 +37,7 @@ jupyterlab-slideshow~=0.3.2
 # JupyterLab extensions with Python APIs (keep versions in sync with venv)
 
 # Python: ipywidget library for Jupyter notebooks
-ipywidgets==8.1.8
+ipywidgets==8.1.9
 
 # ipywidgets: ipyevents library for Jupyter notebooks
 ipyevents==2.0.4
