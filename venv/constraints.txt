@@ -34,7 +34,7 @@ frozenlist == 1.8.0
 fsspec == 2026.7.0
 google-crc32c == 1.8.0
 h5py == 3.16.0
-hdf5plugin == 7.1.0
+hdf5plugin == 7.0.0
 healpy == 1.20.0
 ipyfilite == 0.1.30
 kiwisolver == 1.5.1
