@@ -52,6 +52,7 @@ numcodecs == 0.15.1
 numpy == 2.4.6
 numpy_quaddtype == 1.0.0
 orjson == 3.12.0
+odclib == 1.6.3.21
 pandas == 2.3.3
 pillow == 12.3.0
 polars == 1.32.3
@@ -59,8 +60,8 @@ protobuf == 7.36.1
 pyarrow == 25.0.1
 pydantic_core == 2.46.5
 pyerfa == 2.0.1.5
-pyicon-diagnostics == 0.3.6
-pyodc == 1.5.0
+pyicon-diagnostics == 0.4.0
+pyodc == 1.6.0
 pyogrio == 0.13.0
 pyproj == 3.8.0
 pyrobuf == 0.9.3
@@ -103,6 +104,7 @@ zfpy == 1.0.1
 # libiconv == 1.16
 # libmir == 1.29.0
 # libnetcdf == 4.9.2
+# libodc == 1.6.3
 # libopenblas == 0.3.31
 # libproj == 9.6.2
 # libsleef == 3.9.0

@@ -4,7 +4,7 @@ import { argv, exit } from "process";
 import { loadPyodide } from "./pyodide.mjs";
 
 const EXPECTED_FAILURES = [
-    // assumes a poltly dash environment, which we do not provide
+    // assumes a plotly dash environment, which we do not provide
     "itables_for_dash[itables]",
 ];
 

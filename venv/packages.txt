@@ -41,6 +41,7 @@ numba
 numcodecs
 numpy
 numpy_quaddtype
+odclib
 orjson
 pandas
 pillow
@@ -50,7 +51,6 @@ pyarrow
 pydantic_core
 pyerfa
 pyicon-diagnostics
-pyodc
 pyodide-fs-mount-http
 pyodide-http
 pyogrio
