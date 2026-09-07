@@ -228,10 +228,10 @@ numcodecs_wasm_zstd
 numpy
 numpy_quaddtype
 objsize
-odclib
 odc-geo
 odc-loader
 odc-stac
+odclib
 orjson
 packaging
 pandas
