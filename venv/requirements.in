@@ -80,14 +80,12 @@ deprecation
 dill
 docstring_parser
 donfig
-earthkit-climate
 earthkit-data
 earthkit-geo
 earthkit-hydro
 earthkit-meteo
 earthkit-plots
 earthkit-plots-default-styles
-earthkit-regrid
 earthkit-time
 earthkit-transforms
 earthkit-utils
@@ -109,6 +107,7 @@ fire
 flexcache
 flexparser
 fonttools
+formulaic
 frozendict
 frozenlist
 fsspec
@@ -135,6 +134,7 @@ iniconfig
 intake
 intake-esm
 intake-xarray
+interface_meta
 ipdb
 ipyevents
 ipyfilite
