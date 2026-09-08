@@ -237,6 +237,7 @@ packaging
 pandas
 parso
 partd
+pathlib-abc
 patsy
 pdbufr
 pillow
@@ -349,6 +350,7 @@ typing_extensions
 tzdata
 ujson
 uncertainties
+universal-pathlib
 uritools
 url-normalize
 urllib3
