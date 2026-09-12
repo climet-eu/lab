@@ -1,0 +1,90 @@
+Metadata-Version: 2.5
+Name: zarr
+Version: 3.3.0
+Summary: An implementation of chunked, compressed, N-dimensional arrays for Python
+Project-URL: issues, https://github.com/zarr-developers/zarr-python/issues
+Project-URL: changelog, https://zarr.readthedocs.io/en/stable/release-notes.html
+Project-URL: Discussions, https://github.com/zarr-developers/zarr-python/discussions
+Project-URL: documentation, https://zarr.readthedocs.io/
+Project-URL: homepage, https://github.com/zarr-developers/zarr-python
+Author-email: Alistair Miles <alimanfoo@googlemail.com>
+Maintainer: jakirkham, Norman Rzepka, Ryan Abernathey, David Stansby, Deepak Cherian
+Maintainer-email: Davis Bennett <davis.v.bennett@gmail.com>, Josh Moore <josh@openmicroscopy.org>, Joe Hamman <joe@earthmover.io>, Juan Nunez-Iglesias <juan.nunez-iglesias@monash.edu>, Martin Durant <mdurant@anaconda.com>, Tom Augspurger <tom.w.augspurger@gmail.com>
+License-Expression: MIT
+License-File: LICENSE.txt
+Keywords: Python,compressed,ndimensional-arrays,zarr
+Classifier: Development Status :: 6 - Mature
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: Science/Research
+Classifier: Operating System :: Unix
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3.14
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.12
+Requires-Dist: donfig>=0.8
+Requires-Dist: google-crc32c>=1.5
+Requires-Dist: numcodecs>=0.14
+Requires-Dist: numpy>=2
+Requires-Dist: packaging>=22.0
+Requires-Dist: typing-extensions>=4.14
+Provides-Extra: cast-value-rs
+Requires-Dist: cast-value-rs; extra == 'cast-value-rs'
+Provides-Extra: cli
+Requires-Dist: typer; extra == 'cli'
+Provides-Extra: gpu
+Requires-Dist: cupy-cuda12x; (sys_platform != 'darwin') and extra == 'gpu'
+Provides-Extra: optional
+Requires-Dist: universal-pathlib; extra == 'optional'
+Provides-Extra: remote
+Requires-Dist: fsspec>=2023.10.0; extra == 'remote'
+Requires-Dist: obstore>=0.5.1; extra == 'remote'
+Description-Content-Type: text/markdown
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/zarr-developers/community/main/logos/logo2.png"><br>
+</div>
+
+# Zarr
+
+[![Latest Release](https://badge.fury.io/py/zarr.svg)](https://pypi.org/project/zarr/)
+[![CondaForge](https://anaconda.org/conda-forge/zarr/badges/version.svg)](https://anaconda.org/anaconda/zarr/)
+[![Package Status](https://img.shields.io/pypi/status/zarr.svg)](https://pypi.org/project/zarr/)
+[![License](https://img.shields.io/pypi/l/zarr.svg)](https://github.com/zarr-developers/zarr-python/blob/main/LICENSE.txt)
+[![Coverage](https://codecov.io/gh/zarr-developers/zarr-python/branch/main/graph/badge.svg)](https://app.codecov.io/gh/zarr-developers/zarr-python)
+[![Downloads](https://static.pepy.tech/badge/zarr)](https://zarr.readthedocs.io/en/stable/)
+[![Developer Chat](https://img.shields.io/badge/zulip-join_chat-brightgreen.svg)](https://ossci.zulipchat.com/#narrow/channel/423692-Zarr-Python)
+[![Citation](https://zenodo.org/badge/DOI/10.5281/zenodo.3773450.svg)](https://doi.org/10.5281/zenodo.3773450)
+
+## What is it?
+
+Zarr is a Python package providing an implementation of compressed, chunked, N-dimensional arrays, designed for use in parallel computing. See the [documentation](https://zarr.readthedocs.io/en/stable/) for more information.
+
+## Main Features
+
+- [**Create**](https://zarr.readthedocs.io/en/stable/user-guide/arrays/#creating-an-array) N-dimensional arrays with any NumPy `dtype`.
+- [**Chunk arrays**](https://zarr.readthedocs.io/en/stable/user-guide/performance/#chunk-optimizations) along any dimension.
+- [**Compress**](https://zarr.readthedocs.io/en/stable/user-guide/arrays/#compressors) and/or filter chunks using any NumCodecs codec.
+- [**Store arrays**](https://zarr.readthedocs.io/en/stable/user-guide/storage/) in memory, on disk, inside a zip file, on S3, etc...
+- [**Read**](https://zarr.readthedocs.io/en/stable/user-guide/arrays/#reading-and-writing-data) an array [**concurrently**](https://zarr.readthedocs.io/en/stable/user-guide/performance/#parallel-computing-and-synchronization) from multiple threads or processes.
+- [**Write**](https://zarr.readthedocs.io/en/stable/user-guide/arrays/#reading-and-writing-data) to an array concurrently from multiple threads or processes.
+- Organize arrays into hierarchies via [**groups**](https://zarr.readthedocs.io/en/stable/quick-start/#hierarchical-groups).
+
+## Where to get it
+
+Zarr can be installed from PyPI using `pip`:
+
+```bash
+pip install zarr
+```
+
+or via `conda`:
+
+```bash
+conda install -c conda-forge zarr
+```
+
+For more details, including how to install from source, see the [installation documentation](https://zarr.readthedocs.io/en/stable/#installation).
