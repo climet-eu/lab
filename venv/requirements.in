@@ -62,6 +62,9 @@ cloudpickle
 cmcrameri
 cmocean
 comm
+compression-recommendations
+compression-requirement-checks
+compression-requirement-safeguards
 compression-safeguards
 conflator
 contourpy
