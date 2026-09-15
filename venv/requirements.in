@@ -334,6 +334,7 @@ spint
 spreg
 stack-data
 statsmodels
+strictyaml
 sympy
 tblib
 tenacity
@@ -345,6 +346,7 @@ torch
 tqdm
 traitlets
 traittypes
+typed_classproperties
 typer
 types-psutil
 types-tqdm
