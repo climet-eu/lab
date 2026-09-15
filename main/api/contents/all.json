@@ -1,0 +1,71 @@
+{
+  "content": [
+    {
+      "content": null,
+      "created": "2026-09-15T04:45:13.940016Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2026-09-15T04:45:05.631337Z",
+      "mimetype": null,
+      "name": "requirements.in",
+      "path": "requirements.in",
+      "size": 4987,
+      "type": "file",
+      "writable": false
+    },
+    {
+      "content": null,
+      "created": "2026-09-15T04:45:13.940299Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2026-09-15T04:45:05.631377Z",
+      "mimetype": "text/plain",
+      "name": "requirements.txt",
+      "path": "requirements.txt",
+      "size": 9176,
+      "type": "file",
+      "writable": false
+    },
+    {
+      "content": null,
+      "created": "2026-09-15T04:45:13.939760Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2026-09-15T04:45:05.630808Z",
+      "mimetype": "text/plain",
+      "name": "constraints.txt",
+      "path": "constraints.txt",
+      "size": 2655,
+      "type": "file",
+      "writable": false
+    },
+    {
+      "content": null,
+      "created": "2026-09-15T04:45:13.939435Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2026-09-15T04:45:05.629860Z",
+      "mimetype": "text/markdown",
+      "name": "README.md",
+      "path": "README.md",
+      "size": 4191,
+      "type": "file",
+      "writable": false
+    }
+  ],
+  "created": "2026-09-15T04:45:13.940016Z",
+  "format": "json",
+  "hash": null,
+  "hash_algorithm": null,
+  "last_modified": "2026-09-15T04:45:13.940016Z",
+  "mimetype": null,
+  "name": "",
+  "path": "",
+  "size": null,
+  "type": "directory",
+  "writable": true
+}

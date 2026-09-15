@@ -1,0 +1,6 @@
+Metadata-Version: 2.4
+Name: mirlib
+Version: 1.29.0.21
+Requires-Dist: eccodeslib==2.47.3.21
+Requires-Dist: eckitlib==2.1.0.21
+Requires-Dist: atlaslib-ecmwf==0.46.0.21

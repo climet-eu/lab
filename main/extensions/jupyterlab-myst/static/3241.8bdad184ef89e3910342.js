@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkjupyterlab_myst=self.webpackChunkjupyterlab_myst||[]).push([[3241],{93241(e,t,r){var o;r.r(t),r.d(t,{SourceFileKind:()=>o}),function(e){e.Article="Article",e.Notebook="Notebook",e.Part="Part"}(o||(o={}))}}]);

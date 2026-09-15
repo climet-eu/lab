@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunk_deathbeds_jupyterlab_font_anonymous_pro=self.webpackChunk_deathbeds_jupyterlab_font_anonymous_pro||[]).push([[454],{454:(e,a,o)=>{o.r(a),o.d(a,{default:()=>s});const s=o.p+"39417367415e7eb8d5109626d89a0b69.woff2"}}]);
+//# sourceMappingURL=454.580b01df7aec46940fb2.js.map?v=580b01df7aec46940fb2
