@@ -1,12 +1,12 @@
 # Jupyter Lite
-jupyterlite-core~=0.8.6
+jupyterlite-core~=0.8.7
 jupyterlab~=4.6.0
 
 # Pyodide kernel
 jupyterlite-pyodide-kernel~=0.8.6
 
 # JupyterLite terminal with /drive access
-jupyterlite-terminal~=1.7.0
+jupyterlite-terminal~=1.7.1
 
 # JupyterLite and JupyterLab: create a fresh session directory
 a-jupyterlite-session~=0.2.3
@@ -18,7 +18,7 @@ a-jupyterlite-query-config~=0.2.3
 # JupyterLab: guided tour
 # jupyterlab-tour~=4.0.0
 # JupyterLab: dark theme
-jupyterlab-night~=0.5.0
+jupyterlab-night~=0.5.2
 # JupyterLab: import files from URLs
 jupyterlab-open-url-parameter~=0.4.0
 # JupyterLite: import a GitHub repo from its URL
@@ -32,7 +32,7 @@ jupyterlab-spreadsheet-editor~=0.7.2
 # JupyterLab: render MyST Markdown cells
 jupyterlab-myst~=2.7.0
 # JupyterLab: view a notebook as a slideshow
-jupyterlab-slideshow~=0.3.2
+jupyterlab-slideshow~=0.3.4
 
 # JupyterLab extensions with Python APIs (keep versions in sync with venv)
 
