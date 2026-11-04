@@ -29,7 +29,7 @@ arraypartition == 1.2.0
 arro3-compute == 0.8.2
 arro3-core == 0.8.2
 arro3-io == 0.8.2
-asciitree == 0.3.3
+asciitree == 1.0.0
 astropy == 8.0.1
 astropy-iers-data == 0.2026.8.31.0.57.9
 asttokens == 3.0.2
@@ -70,7 +70,7 @@ compression-requirement-checks == 0.1.0a1
 compression-requirement-safeguards == 0.1.0a1
 compression-safeguards == 1.0.0rc3
 conflator == 0.1.8
-contourpy == 1.3.3
+contourpy == 1.4.0
 copernicusmarine == 2.4.1
 covjson-pydantic == 0.8.0
 covjsonkit == 0.2.23
@@ -181,7 +181,7 @@ MetPy == 1.7.1
 mir-python == 1.29.0.21
 mirlib == 1.29.0.21
 mpmath == 1.3.0
-msgpack == 1.2.2
+msgpack == 1.2.4
 multidict == 6.7.1
 multiurl == 0.3.9
 narwhals == 2.25.0
@@ -262,8 +262,8 @@ psygnal == 0.15.1
 pure_eval == 0.2.3
 pyarrow == 25.0.1
 pycparser == 3.0
-pydantic == 2.13.5
-pydantic_core == 2.46.5
+pydantic == 2.14.2
+pydantic_core == 2.50.2
 pydap == 3.5.10
 pyerfa == 2.0.1.5
 pyfive == 1.1.2

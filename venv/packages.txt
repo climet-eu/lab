@@ -1,6 +1,4 @@
 aiohttp
-argon2-cffi-bindings
-asciitree
 astropy
 atlaslib-ecmwf
 Bottleneck
@@ -11,7 +9,6 @@ cfdm
 cffi
 cftime
 cfunits
-contourpy
 crc32c
 cykhash
 earthkit-plots
@@ -35,7 +32,6 @@ MarkupSafe
 matplotlib
 mirlib
 mir-python
-msgpack
 ndindex
 netCDF4
 numba
@@ -49,7 +45,6 @@ pillow
 polars
 protobuf
 pyarrow
-pydantic_core
 pyerfa
 pyicon-diagnostics
 pyodide-fs-mount-http
