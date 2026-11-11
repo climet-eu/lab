@@ -1,0 +1,4 @@
+Metadata-Version: 2.4
+Name: odclib
+Version: 1.6.3.21
+Requires-Dist: eckitlib==2.1.0.21
